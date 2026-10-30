@@ -46,8 +46,11 @@ th{background:#e4efff;color:#173b70}
  .report-info{grid-template-columns:1fr}
  .btn{padding:10px;font-size:13px}
 }
-@media(max-width:420px){.fields{grid-template-columns:1fr}.actions .btn{flex:1}}
-@media print{
+@media(min-width:1024px){
+  .layout.report-visible{grid-template-columns:190px minmax(0,1fr) 480px}
+  #report{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+}
+ @media print{
  body{background:white;color:black}
  header,nav,.no-print,#entry,#reportTitle,main>section.card:not(#report){display:none!important}
  .layout{display:block;padding:0;margin:0}
@@ -161,6 +164,7 @@ function toggleReport(){
  if(show&&!$("pname").value.trim()){alert("يرجى إدخال اسم المريض أولاً.");return}
  if(show)updateReport();
  $("report").style.display=show?"block":"none";
+document.querySelector('.layout').classList.toggle('report-visible', show);
  $("reportMessage").textContent=show?"تم إظهار فورمة النتيجة.":"فورمة النتيجة مخفية حالياً.";
 }
 function savePatient(){
@@ -175,7 +179,7 @@ function showSaved(){
 }
 function loadPatient(i){const p=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")[i];if(!p)return;for(const k of ["pid","pname","age","gender","phone","doctor","date","sample","notes"])$(k).value=p[k]||"";demoTests.splice(0,demoTests.length,...p.tests.map(t=>[...t]));renderTests();$("saved").hidden=true;$("entry").hidden=false;document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});}
 function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
-function go(id,btn){if(id==="saved"){showSaved();return}document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});$("saved").hidden=true;document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active")}
+function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";document.querySelector('.layout').classList.remove('report-visible');$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
 $("date").value=new Date().toISOString().slice(0,10);
 function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("ar-IQ")+" — "+d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"})}
 tick();setInterval(tick,60000);
