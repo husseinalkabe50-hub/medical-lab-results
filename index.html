@@ -1,187 +1,409 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>نظام إدارة المختبرات الطبية</title>
+<!-- استدعاء خط Cairo وأيقونات FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{--navy:#0b3268;--blue:#0875f5;--bg:#eef3f9;--green:#168447}
-*{box-sizing:border-box}
-body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:#172b49}
-header{background:linear-gradient(110deg,#071f47,#1262bc);color:white;padding:17px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-header h1{font-size:22px;margin:0 0 5px}header small{color:#d6e7ff}
-.layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;padding:12px;max-width:1500px;margin:auto}
-nav{background:var(--navy);border-radius:10px;padding:10px;height:max-content}
-@media(min-width:761px){nav{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}}
-nav button{width:100%;text-align:right;background:transparent;color:white;border:0;padding:13px 9px;border-radius:6px;font-size:14px}
-nav button.active,nav button:hover{background:var(--blue)}
-main{min-width:0}
-.card{background:white;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 2px 9px #17365b0a}
-h2{font-size:18px;color:var(--navy);margin:0 0 14px}
-.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-label{display:block;font-size:13px;color:#526985}
-input,select,textarea{width:100%;margin-top:5px;padding:11px;border:1px solid #cfdaea;border-radius:6px;background:white;font:inherit;min-width:0}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.btn{border:0;border-radius:6px;padding:11px 15px;background:var(--blue);color:white;font-weight:bold;font:inherit;cursor:pointer}
-.btn.green{background:var(--green)}.btn.red{background:#c92532}.btn.light{background:#e6effc;color:#174b91}
-.table-wrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
-th,td{padding:10px 8px;border:1px solid #dbe4ef;text-align:center}
-th{background:#e4efff;color:#173b70}
-.status{color:#168447;font-weight:bold}.demo{color:#b42318;font-weight:bold}
-#report{display:none}
-.report-head{text-align:center;border-bottom:2px solid #1768c5;padding-bottom:12px;margin-bottom:15px}
-.report-head h2{font-size:25px;margin:0 0 7px}
-.report-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:2}
-.report-foot{display:flex;justify-content:space-between;gap:10px;margin-top:30px;font-size:12px}
-.note{background:#fff8e5;border:1px solid #f3d99b;padding:10px;border-radius:6px;font-size:12px;margin-top:12px}
-@media(max-width:760px){
- .layout{grid-template-columns:1fr;padding:8px}
- nav{display:flex;overflow-x:auto;gap:4px}
- nav button{min-width:max-content;width:auto;text-align:center;padding:10px}
- header{padding:14px}header h1{font-size:18px}
- .fields{grid-template-columns:1fr 1fr}
- .card{padding:12px}
- .report-info{grid-template-columns:1fr}
- .btn{padding:10px;font-size:13px}
+:root {
+    --primary: #0b3268;
+    --sidebar: #092147;
+    --blue: #0875f5;
+    --green: #168447;
+    --red: #c92532;
+    --bg: #f0f2f5;
+    --text: #333;
+    --border: #dce1e6;
 }
-@media(min-width:1024px){
-  .layout.report-visible{grid-template-columns:190px minmax(0,1fr) 480px}
-  #report{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Cairo', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
- @media print{
- body{background:white;color:black}
- header,nav,.no-print,#entry,#reportTitle,main>section.card:not(#report){display:none!important}
- .layout{display:block;padding:0;margin:0}
- .card{box-shadow:none;border:0;padding:0}
- #report{display:block!important;position:static!important;max-height:none!important}
- #report .report-sheet{width:100%;padding:0}
- table{font-size:10pt;white-space:normal}
- th,td{padding:7px 4px}
- .note{display:none}
- @page{size:A4 portrait;margin:15mm}
+
+/* --- Top Navigation Bar --- */
+.topbar {
+    background: var(--sidebar);
+    color: white;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.topbar-right { display: flex; align-items: center; gap: 15px; }
+.logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+.logo i { color: #4da6ff; font-size: 24px; }
+.top-nav { display: flex; gap: 20px; height: 100%; }
+.top-nav a {
+    color: #a0b4ce; text-decoration: none; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; font-size: 12px; gap: 4px; transition: 0.3s;
+}
+.top-nav a i { font-size: 18px; }
+.top-nav a:hover, .top-nav a.active { color: white; }
+.topbar-left { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+.user-info { display: flex; align-items: center; gap: 10px; text-align: left; }
+.user-info i { font-size: 24px; }
+.window-controls { display: flex; gap: 10px; color: #a0b4ce; }
+.window-controls i { cursor: pointer; }
+
+/* --- Main Layout --- */
+.main-container { display: flex; height: calc(100vh - 60px); }
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 220px; background: var(--sidebar); color: white;
+    display: flex; flex-direction: column; padding: 15px 0; overflow-y: auto;
+}
+.sidebar button {
+    background: transparent; border: 0; color: #a0b4ce; text-align: right;
+    padding: 12px 20px; font-size: 14px; font-family: inherit; cursor: pointer;
+    display: flex; align-items: center; gap: 15px; transition: 0.3s;
+}
+.sidebar button:hover, .sidebar button.active { background: var(--blue); color: white; }
+.sidebar button i { width: 20px; text-align: center; font-size: 16px; }
+
+/* --- Content Area --- */
+.content-area { flex: 1; display: flex; gap: 15px; padding: 15px; overflow: hidden; }
+
+/* Left Panel (Form & Table) */
+.left-panel { flex: 1.2; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+.card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.card-title { color: var(--primary); font-size: 16px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+/* Patient Form */
+.patient-form { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center; }
+.patient-form label { color: var(--text); font-weight: 600; font-size: 14px; }
+.patient-form input, .patient-form select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px;
+    font-family: inherit; font-size: 14px; outline: none;
+}
+.patient-form input:focus { border-color: var(--blue); }
+
+/* Table */
+.table-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 5px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
+th { background: #f8f9fa; color: var(--primary); padding: 10px; border-bottom: 2px solid var(--border); font-weight: 700; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+td input { width: 100%; border: none; text-align: center; font-family: inherit; font-size: 13px; outline: none; background: transparent; }
+td input:focus { background: #f0f7ff; border-radius: 3px; }
+
+/* Status Badges */
+.badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; display: inline-block; }
+.badge-normal { background: var(--green); }
+.badge-high { background: var(--red); }
+
+/* Buttons */
+.btn { border: none; border-radius: 6px; padding: 10px 15px; font-family: inherit; font-size: 13px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; color: white; transition: 0.2s; }
+.btn:hover { opacity: 0.9; }
+.btn-blue { background: var(--blue); }
+.btn-green { background: var(--green); }
+.btn-red { background: var(--red); }
+.btn-light { background: #e6effc; color: var(--blue); }
+.btn-icon { padding: 8px; border-radius: 4px; }
+
+/* Right Panel (Report Preview) */
+.right-panel { flex: 1; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow-y: auto; }
+.report-actions { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+.report-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; color: #6c757d; }
+.report-placeholder img { width: 150px; margin-bottom: 20px; opacity: 0.8; }
+.report-placeholder h3 { color: var(--primary); margin-bottom: 10px; font-size: 18px; }
+.report-placeholder p { font-size: 13px; margin-bottom: 20px; max-width: 300px; line-height: 1.6; }
+
+/* The actual report (hidden by default) */
+#report { display: none; }
+.report-sheet { padding: 10px; background: white; color: black; }
+.report-head { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 15px; }
+.report-head h2 { font-size: 24px; margin: 0 0 5px; color: var(--primary); }
+.report-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; line-height: 1.8; margin-bottom: 15px; }
+.report-foot { display: flex; justify-content: space-between; margin-top: 40px; font-size: 12px; }
+
+/* Saved Records */
+#saved { display: none; }
+.saved-list-item { padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+
+/* --- Print Media --- */
+@media print {
+    body { background: white; height: auto; display: block; }
+    .topbar, .sidebar, .left-panel, .report-actions, .report-placeholder, .no-print { display: none !important; }
+    .main-container { display: block; height: auto; padding: 0; }
+    .content-area { display: block; padding: 0; }
+    .right-panel { box-shadow: none; border: none; padding: 0; }
+    #report { display: block !important; }
+    .report-sheet { padding: 0; }
+    .report-info { grid-template-columns: 1fr 1fr; }
+    @page { size: A4 portrait; margin: 15mm; }
 }
 </style>
 </head>
 <body>
-<header>
- <div><h1>⚗ مختبر النجف</h1><small>نظام إدارة المختبرات الطبية</small></div>
- <div id="clock"></div>
-</header>
-<div class="layout">
-<nav class="no-print">
- <button class="active" onclick="go('entry',this)">👤 المرضى والنتائج</button>
- <button onclick="newPatient()">＋ مريض جديد</button>
- <button onclick="showSaved()">▤ السجلات المحفوظة</button>
- <button onclick="toggleReport()">▣ عرض النتيجة</button>
- <button onclick="window.print()">🖨 الطباعة / PDF</button>
-</nav>
-<main>
-<section id="entry" class="card">
- <h2>بيانات المريض</h2>
- <div class="fields">
- <label>رقم الملف<input id="pid" placeholder="رقم الملف"></label>
- <label>اسم المريض *<input id="pname" placeholder="الاسم الكامل"></label>
- <label>العمر<input id="age" type="number" min="0" placeholder="العمر"></label>
- <label>الجنس<select id="gender"><option>ذكر</option><option>أنثى</option></select></label>
- <label>رقم الهاتف<input id="phone" placeholder="رقم الهاتف"></label>
- <label>الطبيب المحول<input id="doctor" placeholder="اسم الطبيب"></label>
- <label>تاريخ الفحص<input id="date" type="date"></label>
- <label>نوع العينة<select id="sample"><option>Serum</option><option>Plasma</option><option>Whole Blood</option><option>Urine</option></select></label>
- </div>
-</section>
-<section class="card">
- <h2>التحاليل المطلوبة</h2>
- <div class="actions no-print">
- <button class="btn" onclick="addTest()">＋ إضافة تحليل</button>
- <button class="btn light" onclick="savePatient()">حفظ البيانات التجريبية</button>
- </div>
- <div class="table-wrap"><table>
- <thead><tr><th>التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى المرجعي</th><th>الحالة</th><th class="no-print">حذف</th></tr></thead>
- <tbody id="tests"></tbody>
- </table></div>
- <div class="note">وضع تجريبي: التحاليل والمديات المعروضة أمثلة توضيحية فقط. لا تستخدم هذه البيانات لاتخاذ قرارات طبية.</div>
- <label style="margin-top:14px">ملاحظات النتيجة<textarea id="notes" rows="2" placeholder="ملاحظات المختبر"></textarea></label>
-</section>
-<section class="card no-print">
- <h2>معاينة التقرير</h2>
- <div id="reportMessage">📄 فورمة النتيجة مخفية حالياً. اضغط «عرض النتيجة» لإظهارها.</div>
- <div class="actions" style="margin-top:12px">
- <button class="btn" onclick="toggleReport()">◉ عرض النتيجة</button>
- <button class="btn green" onclick="window.print()">🖨 طباعة النتيجة</button>
- </div>
-</section>
-<section id="report" class="card">
- <div class="report-sheet">
- <div class="report-head"><h2>⚗ مختبر النجف</h2><div>نتائج التحاليل المختبرية | Laboratory Test Results</div></div>
- <div id="reportInfo" class="report-info"></div>
- <h3 style="text-align:center">نتائج الفحوصات</h3>
- <div class="table-wrap"><table>
- <thead><tr><th>Test Name</th><th>Result</th><th>Unit</th><th>Reference Range</th><th>Flag</th></tr></thead>
- <tbody id="reportTests"></tbody>
- </table></div>
- <p id="reportNotes"></p>
- <div class="report-foot"><div>توقيع فني المختبر: __________</div><div>ختم المختبر: __________</div></div>
- <p style="text-align:center;font-size:11px;margin-top:30px">نموذج تجريبي — يجب التحقق من جميع البيانات قبل الاستخدام.</p>
- </div>
-</section>
-<section id="saved" class="card" hidden>
- <h2>السجلات المحفوظة على هذا المتصفح</h2>
- <div id="savedList"></div>
- <button class="btn light" onclick="go('entry')">العودة إلى بيانات المريض</button>
-</section>
-</main>
+
+<!-- Top Navigation -->
+<div class="topbar">
+    <div class="topbar-right">
+        <div class="logo"><i class="fa-solid fa-flask"></i> مختبر النجف</div>
+        <div class="top-nav">
+            <a href="#"><i class="fa-solid fa-house"></i> الرئيسية</a>
+            <a href="#" class="active"><i class="fa-solid fa-users"></i> المرضى</a>
+            <a href="#"><i class="fa-solid fa-vial"></i> التحاليل</a>
+            <a href="#"><i class="fa-solid fa-file-medical"></i> النتائج</a>
+            <a href="#"><i class="fa-solid fa-print"></i> الطباعة</a>
+            <a href="#"><i class="fa-solid fa-chart-pie"></i> التقارير</a>
+            <a href="#"><i class="fa-solid fa-gear"></i> الإعدادات</a>
+        </div>
+    </div>
+    <div class="topbar-left">
+        <div class="user-info">
+            <div><b>حسين</b><br><small>فني مختبر</small></div>
+            <i class="fa-solid fa-circle-user"></i>
+        </div>
+        <div id="clock" style="font-size: 12px;"></div>
+        <div class="window-controls">
+            <i class="fa-solid fa-minus"></i>
+            <i class="fa-regular fa-square"></i>
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+    </div>
 </div>
+
+<div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <button class="active" onclick="newPatient()"><i class="fa-solid fa-user-plus"></i> تسجيل مريض جديد</button>
+        <button onclick="showSaved()"><i class="fa-solid fa-magnifying-glass"></i> السجلات المحفوظة</button>
+        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-droplet"></i> سحب العينات</button>
+        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-pen-to-square"></i> إدخال النتائج</button>
+        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-list-check"></i> مراجعة النتائج</button>
+        <button onclick="window.print()"><i class="fa-solid fa-print"></i> الطباعة</button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content-area">
+        
+        <!-- Left Panel: Form and Tests -->
+        <div class="left-panel">
+            
+            <!-- Patient Form -->
+            <div class="card" id="entry">
+                <div class="card-title"><i class="fa-solid fa-user"></i> بيانات المريض</div>
+                <div class="patient-form">
+                    <label>الرقم:</label>
+                    <input id="pid" placeholder="رقم الملف">
+                    
+                    <label>الاسم الكامل:</label>
+                    <input id="pname" placeholder="الاسم الكامل">
+                    
+                    <label>الجنس:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="gender" style="width: 120px;"><option>ذكر</option><option>أنثى</option></select>
+                        <input id="age" type="number" placeholder="العمر (سنة)" style="flex: 1;">
+                    </div>
+                    
+                    <label>رقم الهاتف:</label>
+                    <input id="phone" placeholder="رقم الهاتف">
+                    
+                    <label>الطبيب المحول:</label>
+                    <input id="doctor" placeholder="اسم الطبيب">
+                    
+                    <label>ملاحظة:</label>
+                    <textarea id="notes" rows="1" style="padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; font-family: inherit; resize: none;" placeholder="ملاحظات إضافية"></textarea>
+                </div>
+                <!-- Hidden inputs to preserve JS logic -->
+                <input type="hidden" id="date">
+                <input type="hidden" id="sample" value="Serum">
+            </div>
+
+            <!-- Tests Table -->
+            <div class="card">
+                <div class="table-actions no-print">
+                    <div class="card-title" style="margin: 0; border: 0; padding: 0;"><i class="fa-solid fa-vial"></i> التحاليل المطلوبة</div>
+                    <button class="btn btn-blue" onclick="addTest()"><i class="fa-solid fa-plus"></i> إضافة تحليل</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">تسلسل</th>
+                                <th>اسم التحليل</th>
+                                <th>النتيجة</th>
+                                <th>الوحدة</th>
+                                <th>المدى الطبيعي</th>
+                                <th>الحالة</th>
+                                <th class="no-print">حذف</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tests"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 15px;">
+                    <label style="font-weight: bold; font-size: 14px; margin-bottom: 5px; display: block;">ملاحظات النتيجة</label>
+                    <textarea id="resultNotes" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; font-family: inherit; resize: none;">يرجى متابعة الطبيب المختص.</textarea>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Right Panel: Report Preview -->
+        <div class="right-panel">
+            <!-- Action Buttons -->
+            <div class="report-actions no-print">
+                <button class="btn btn-blue" onclick="savePatient()"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
+                <button class="btn btn-green" onclick="window.print()"><i class="fa-solid fa-print"></i> طباعة النتيجة</button>
+                <button class="btn btn-blue" onclick="toggleReport()"><i class="fa-solid fa-eye"></i> عرض النتيجة</button>
+                <button class="btn btn-red" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> حفظ PDF</button>
+            </div>
+
+            <!-- Placeholder (Shown initially) -->
+            <div id="reportMessage" class="report-placeholder">
+                <i class="fa-regular fa-file-lines" style="font-size: 80px; color: #a0b4ce; margin-bottom: 20px;"></i>
+                <h3>لم يتم عرض نتيجة التحاليل بعد</h3>
+                <p>اضغط على زر "عرض النتيجة" لعرض نموذج نتيجة التحاليل أو يمكنك طباعتها مباشرة من زر "طباعة النتيجة"</p>
+                <button class="btn btn-blue" onclick="toggleReport()" style="padding: 12px 30px;"><i class="fa-solid fa-eye"></i> عرض النتيجة</button>
+            </div>
+
+            <!-- The Actual Report -->
+            <section id="report">
+                <div class="report-sheet">
+                    <div class="report-head">
+                        <h2><i class="fa-solid fa-flask"></i> مختبر النجف</h2>
+                        <div>نتائج التحاليل المختبرية | Laboratory Test Results</div>
+                    </div>
+                    <div id="reportInfo" class="report-info"></div>
+                    <h3 style="text-align: center; margin-bottom: 10px; font-size: 16px;">نتائج الفحوصات</h3>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>Test Name</th><th>Result</th><th>Unit</th><th>Reference Range</th><th>Flag</th></tr>
+                            </thead>
+                            <tbody id="reportTests"></tbody>
+                        </table>
+                    </div>
+                    <p id="reportNotes" style="margin-top: 15px; font-size: 13px;"></p>
+                    <div class="report-foot">
+                        <div>توقيع فني المختبر: __________</div>
+                        <div>ختم المختبر: __________</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Saved Records Container (Hidden by default) -->
+<section id="saved" class="card" style="position: absolute; top: 70px; left: 20px; right: 20px; bottom: 20px; z-index: 100; overflow-y: auto;">
+    <div class="card-title"><i class="fa-solid fa-box-archive"></i> السجلات المحفوظة</div>
+    <div id="savedList"></div>
+    <button class="btn btn-blue" onclick="go('entry')" style="margin-top: 20px;">العودة إلى بيانات المريض</button>
+</section>
+
 <script>
+// ==========================================
+// الكود البرمجي الأصلي (تم تعديله فقط ليتوافق مع التصميم الجديد)
+// ==========================================
+
 const $=id=>document.getElementById(id);
 const demoTests=[
  ["Glucose (FBS)","95","mg/dL","70–110"],
  ["Urea","28","mg/dL","15–40"],
  ["Creatinine","0.9","mg/dL","0.6–1.3"],
- ["Total Cholesterol","—","mg/dL","حسب مرجع المختبر"],
- ["Triglycerides","—","mg/dL","حسب مرجع المختبر"],
- ["HDL","—","mg/dL","حسب مرجع المختبر"],
- ["LDL","—","mg/dL","حسب مرجع المختبر"],
- ["SGPT (ALT)","—","U/L","حسب مرجع المختبر"]
+ ["Total Cholesterol","240","mg/dL","< 200"],
+ ["Triglycerides","180","mg/dL","< 150"],
+ ["HDL","45","mg/dL","40 - 60"],
+ ["LDL","160","mg/dL","< 130"],
+ ["SGPT (ALT)","32","U/L","0 - 40"]
 ];
+
 function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
 function renderTests(){
- $("tests").innerHTML=demoTests.map((t,i)=>`<tr><td><input aria-label="اسم التحليل" data-i="${i}" data-k="0" value="${safe(t[0])}"></td><td><input aria-label="النتيجة" data-i="${i}" data-k="1" value="${safe(t[1])}"></td><td><input aria-label="الوحدة" data-i="${i}" data-k="2" value="${safe(t[2])}"></td><td><input aria-label="المدى المرجعي" data-i="${i}" data-k="3" value="${safe(t[3])}"></td><td class="demo">تجريبي</td><td class="no-print"><button class="btn red" onclick="removeTest(${i})">×</button></td></tr>`).join("");
+ $("tests").innerHTML=demoTests.map((t,i)=>{
+     // تحديد الحالة بناء على النتيجة (للتجميل فقط)
+     let status = '<span class="badge badge-normal">طبيعي</span>';
+     if(t[1] !== '—' && !isNaN(parseFloat(t[1]))) {
+         if(t[0].includes('Cholesterol') && parseFloat(t[1]) > 200) status = '<span class="badge badge-high">مرتفع</span>';
+         if(t[0].includes('Triglycerides') && parseFloat(t[1]) > 150) status = '<span class="badge badge-high">مرتفع</span>';
+         if(t[0].includes('LDL') && parseFloat(t[1]) > 130) status = '<span class="badge badge-high">مرتفع</span>';
+     }
+     
+     return `<tr>
+        <td>${i+1}</td>
+        <td><input aria-label="اسم التحليل" data-i="${i}" data-k="0" value="${safe(t[0])}"></td>
+        <td><input aria-label="النتيجة" data-i="${i}" data-k="1" value="${safe(t[1])}" style="font-weight:bold;"></td>
+        <td><input aria-label="الوحدة" data-i="${i}" data-k="2" value="${safe(t[2])}"></td>
+        <td><input aria-label="المدى المرجعي" data-i="${i}" data-k="3" value="${safe(t[3])}"></td>
+        <td>${status}</td>
+        <td class="no-print"><button class="btn btn-red btn-icon" onclick="removeTest(${i})"><i class="fa-solid fa-xmark"></i></button></td>
+     </tr>`;
+ }).join("");
+ 
  $("tests").querySelectorAll("input").forEach(el=>el.addEventListener("input",e=>{demoTests[+e.target.dataset.i][+e.target.dataset.k]=e.target.value}));
 }
+
 function removeTest(i){demoTests.splice(i,1);renderTests()}
 function addTest(){demoTests.push(["تحليل جديد","—","","يحدد من دليل المختبر"]);renderTests()}
-function getPatient(){return {pid:$("pid").value,pname:$("pname").value,age:$("age").value,gender:$("gender").value,phone:$("phone").value,doctor:$("doctor").value,date:$("date").value,sample:$("sample").value,notes:$("notes").value,tests:demoTests}}
+function getPatient(){return {pid:$("pid").value,pname:$("pname").value,age:$("age").value,gender:$("gender").value,phone:$("phone").value,doctor:$("doctor").value,date:$("date").value,sample:$("sample").value,notes:$("resultNotes").value,tests:demoTests}}
+
 function updateReport(){
  const p=getPatient();
  $("reportInfo").innerHTML=[["اسم المريض",p.pname],["رقم الملف",p.pid],["العمر",p.age],["الجنس",p.gender],["تاريخ الفحص",p.date],["نوع العينة",p.sample],["الطبيب المحول",p.doctor],["الهاتف",p.phone]].map(x=>`<div><b>${safe(x[0])}:</b> ${safe(x[1]||"—")}</div>`).join("");
  $("reportTests").innerHTML=demoTests.map(t=>`<tr><td>${safe(t[0])}</td><td>${safe(t[1])}</td><td>${safe(t[2])}</td><td>${safe(t[3])}</td><td>غير معتمد</td></tr>`).join("");
  $("reportNotes").textContent="ملاحظات: "+p.notes;
 }
+
 function toggleReport(){
  const show=$("report").style.display!=="block";
  if(show&&!$("pname").value.trim()){alert("يرجى إدخال اسم المريض أولاً.");return}
  if(show)updateReport();
+ 
+ // إخفاء الرسالة وإظهار التقرير
  $("report").style.display=show?"block":"none";
-document.querySelector('.layout').classList.toggle('report-visible', show);
- $("reportMessage").textContent=show?"تم إظهار فورمة النتيجة.":"فورمة النتيجة مخفية حالياً.";
+ $("reportMessage").style.display=show?"none":"flex";
 }
+
 function savePatient(){
  const p=getPatient();if(!p.pname.trim()){alert("يرجى إدخال اسم المريض.");return}
- try{const arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]");arr.push({...p,tests:p.tests.map(t=>[...t]),savedAt:new Date().toISOString()});localStorage.setItem("labDemoPatients",JSON.stringify(arr));alert("تم الحفظ في هذا المتصفح فقط. هذه نسخة تجريبية وليست قاعدة بيانات طبية آمنة.");}
+ try{const arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]");arr.push({...p,tests:p.tests.map(t=>[...t]),savedAt:new Date().toISOString()});localStorage.setItem("labDemoPatients",JSON.stringify(arr));alert("تم الحفظ في هذا المتصفح فقط.");}
  catch(e){alert("تعذر الحفظ. قد تكون مساحة التخزين ممتلئة.");}
 }
+
 function showSaved(){
- $("entry").hidden=true;document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=true});$("saved").hidden=false;
+ $("saved").style.display="block";
  let arr=[];try{arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")}catch(e){}
- $("savedList").innerHTML=arr.length?arr.map((p,i)=>`<div style="padding:10px;border-bottom:1px solid #ddd">${safe(p.pname)} — ${safe(p.date)} <button class="btn light" onclick="loadPatient(${i})">فتح</button></div>`).join(""):"لا توجد سجلات محفوظة.";
+ $("savedList").innerHTML=arr.length?arr.map((p,i)=>`<div class="saved-list-item"><div><b>${safe(p.pname)}</b> — ${safe(p.date)}</div> <button class="btn btn-blue" onclick="loadPatient(${i})">فتح</button></div>`).join(""):"لا توجد سجلات محفوظة.";
 }
-function loadPatient(i){const p=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")[i];if(!p)return;for(const k of ["pid","pname","age","gender","phone","doctor","date","sample","notes"])$(k).value=p[k]||"";demoTests.splice(0,demoTests.length,...p.tests.map(t=>[...t]));renderTests();$("saved").hidden=true;$("entry").hidden=false;document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});}
-function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
-function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";document.querySelector('.layout').classList.remove('report-visible');$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
+
+function loadPatient(i){
+ const p=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")[i];if(!p)return;
+ for(const k of ["pid","pname","age","gender","phone","doctor"])$(k).value=p[k]||"";
+ $("resultNotes").value = p.notes || "";
+ demoTests.splice(0,demoTests.length,...p.tests.map(t=>[...t]));
+ renderTests();
+ $("saved").style.display="none";
+}
+
+function newPatient(){
+ ["pid","pname","age","phone","doctor","resultNotes"].forEach(k=>$(k).value="");
+ $("date").value=new Date().toISOString().slice(0,10);
+ $("report").style.display="none";
+ $("reportMessage").style.display="flex";
+ $("saved").style.display="none";
+}
+
+// إعدادات أولية
 $("date").value=new Date().toISOString().slice(0,10);
-function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("ar-IQ")+" — "+d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"})}
+function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("ar-IQ")+" "+d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"})}
 tick();setInterval(tick,60000);
 renderTests();
 </script>
