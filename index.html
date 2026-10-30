@@ -8,11 +8,12 @@
 <style>
 :root{--navy:#0b3268;--blue:#0875f5;--bg:#eef3f9;--green:#168447}
 *{box-sizing:border-box}
-body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:#172b49}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:#172b49}
 header{background:linear-gradient(110deg,#071f47,#1262bc);color:white;padding:17px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 header h1{font-size:22px;margin:0 0 5px}header small{color:#d6e7ff}
 .layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;padding:12px;max-width:1500px;margin:auto}
 nav{background:var(--navy);border-radius:10px;padding:10px;height:max-content}
+@media(min-width:761px){nav{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto}}
 nav button{width:100%;text-align:right;background:transparent;color:white;border:0;padding:13px 9px;border-radius:6px;font-size:14px}
 nav button.active,nav button:hover{background:var(--blue)}
 main{min-width:0}
@@ -176,7 +177,8 @@ function loadPatient(i){const p=JSON.parse(localStorage.getItem("labDemoPatients
 function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
 function go(id,btn){if(id==="saved"){showSaved();return}document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});$("saved").hidden=true;document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active")}
 $("date").value=new Date().toISOString().slice(0,10);
-$("clock").textContent=new Date().toLocaleDateString("ar-IQ");
+function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("ar-IQ")+" — "+d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"})}
+tick();setInterval(tick,60000);
 renderTests();
 </script>
 </body>
