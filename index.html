@@ -1,411 +1,930 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>نظام إدارة المختبرات الطبية</title>
-<!-- استدعاء خط Cairo وأيقونات FontAwesome -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="mobile-web-app-capable" content="yes">
+<title>قفزة الجزر — نموذج 3D</title>
 <style>
-:root {
-    --primary: #0b3268;
-    --sidebar: #092147;
-    --blue: #0875f5;
-    --green: #168447;
-    --red: #c92532;
-    --bg: #f0f2f5;
-    --text: #333;
-    --border: #dce1e6;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-    font-family: 'Cairo', Tahoma, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #0b1220;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic", sans-serif;
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  #app { position: fixed; inset: 0; }
+  #app canvas { display: block; width: 100%; height: 100%; }
+
+  /* ---------- HUD ---------- */
+  #hud {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: max(10px, env(safe-area-inset-top)) 14px 0 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    direction: rtl;
+    pointer-events: none;
+    z-index: 5;
+  }
+  #score {
+    background: rgba(8, 18, 35, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  #restartBtn {
+    pointer-events: auto;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(8, 18, 35, 0.55);
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  #restartBtn:active { background: rgba(60, 130, 200, 0.7); }
+
+  /* ---------- Touch controls ---------- */
+  #controls { position: fixed; inset: 0; pointer-events: none; z-index: 4; }
+
+  #joystick {
+    position: absolute;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 132px; height: 132px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    border: 2px solid rgba(255, 255, 255, 0.30);
+    pointer-events: auto;
+    touch-action: none;
+  }
+  #knob {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 56px; height: 56px;
+    margin-left: -28px; margin-top: -28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    will-change: transform;
+  }
+
+  #jumpBtn {
+    position: absolute;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(26px, env(safe-area-inset-bottom));
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    background: rgba(80, 200, 255, 0.35);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 800;
+    font-family: inherit;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: pointer;
+  }
+  #jumpBtn.active {
+    background: rgba(80, 200, 255, 0.75);
+    transform: scale(0.94);
+  }
+
+  /* ---------- Overlays ---------- */
+  .overlay {
+    position: fixed;
+    inset: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-}
-
-/* --- Top Navigation Bar --- */
-.topbar {
-    background: var(--sidebar);
-    color: white;
-    height: 60px;
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    text-align: center;
+    direction: rtl;
+    background: radial-gradient(circle at 50% 35%, rgba(20, 40, 70, 0.75), rgba(6, 12, 24, 0.94));
     z-index: 10;
-}
-.topbar-right { display: flex; align-items: center; gap: 15px; }
-.logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; }
-.logo i { color: #4da6ff; font-size: 24px; }
-.top-nav { display: flex; gap: 20px; height: 100%; }
-.top-nav a {
-    color: #a0b4ce; text-decoration: none; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; font-size: 12px; gap: 4px; transition: 0.3s;
-}
-.top-nav a i { font-size: 18px; }
-.top-nav a:hover, .top-nav a.active { color: white; }
-.topbar-left { display: flex; align-items: center; gap: 20px; font-size: 13px; }
-.user-info { display: flex; align-items: center; gap: 10px; text-align: left; }
-.user-info i { font-size: 24px; }
-.window-controls { display: flex; gap: 10px; color: #a0b4ce; }
-.window-controls i { cursor: pointer; }
+  }
+  .overlay h1 {
+    margin: 0;
+    font-size: clamp(26px, 7vw, 42px);
+    letter-spacing: 0.5px;
+  }
+  .overlay p {
+    margin: 0;
+    max-width: 520px;
+    font-size: clamp(14px, 4vw, 18px);
+    line-height: 1.8;
+    color: #cfe3ff;
+  }
+  .overlay button {
+    margin-top: 10px;
+    padding: 15px 38px;
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 800;
+    color: #06203a;
+    background: linear-gradient(180deg, #8ef0b0, #43d67f);
+    box-shadow: 0 6px 0 #2aa25c, 0 10px 22px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+  }
+  .overlay button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #2aa25c;
+  }
 
-/* --- Main Layout --- */
-.main-container { display: flex; height: calc(100vh - 60px); }
+  .hidden { display: none !important; }
 
-/* --- Sidebar --- */
-.sidebar {
-    width: 220px; background: var(--sidebar); color: white;
-    display: flex; flex-direction: column; padding: 15px 0; overflow-y: auto;
-}
-.sidebar button {
-    background: transparent; border: 0; color: #a0b4ce; text-align: right;
-    padding: 12px 20px; font-size: 14px; font-family: inherit; cursor: pointer;
-    display: flex; align-items: center; gap: 15px; transition: 0.3s;
-}
-.sidebar button:hover, .sidebar button.active { background: var(--blue); color: white; }
-.sidebar button i { width: 20px; text-align: center; font-size: 16px; }
-
-/* --- Content Area --- */
-.content-area { flex: 1; display: flex; gap: 15px; padding: 15px; overflow: hidden; }
-
-/* Left Panel (Form & Table) */
-.left-panel { flex: 1.2; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
-.card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-.card-title { color: var(--primary); font-size: 16px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-
-/* Patient Form */
-.patient-form { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center; }
-.patient-form label { color: var(--text); font-weight: 600; font-size: 14px; }
-.patient-form input, .patient-form select {
-    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px;
-    font-family: inherit; font-size: 14px; outline: none;
-}
-.patient-form input:focus { border-color: var(--blue); }
-
-/* Table */
-.table-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 5px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; }
-th { background: #f8f9fa; color: var(--primary); padding: 10px; border-bottom: 2px solid var(--border); font-weight: 700; }
-td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
-td input { width: 100%; border: none; text-align: center; font-family: inherit; font-size: 13px; outline: none; background: transparent; }
-td input:focus { background: #f0f7ff; border-radius: 3px; }
-
-/* Status Badges */
-.badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; color: white; display: inline-block; }
-.badge-normal { background: var(--green); }
-.badge-high { background: var(--red); }
-
-/* Buttons */
-.btn { border: none; border-radius: 6px; padding: 10px 15px; font-family: inherit; font-size: 13px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; color: white; transition: 0.2s; }
-.btn:hover { opacity: 0.9; }
-.btn-blue { background: var(--blue); }
-.btn-green { background: var(--green); }
-.btn-red { background: var(--red); }
-.btn-light { background: #e6effc; color: var(--blue); }
-.btn-icon { padding: 8px; border-radius: 4px; }
-
-/* Right Panel (Report Preview) */
-.right-panel { flex: 1; background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow-y: auto; }
-.report-actions { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-.report-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; color: #6c757d; }
-.report-placeholder img { width: 150px; margin-bottom: 20px; opacity: 0.8; }
-.report-placeholder h3 { color: var(--primary); margin-bottom: 10px; font-size: 18px; }
-.report-placeholder p { font-size: 13px; margin-bottom: 20px; max-width: 300px; line-height: 1.6; }
-
-/* The actual report (hidden by default) */
-#report { display: none; }
-.report-sheet { padding: 10px; background: white; color: black; }
-.report-head { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 15px; }
-.report-head h2 { font-size: 24px; margin: 0 0 5px; color: var(--primary); }
-.report-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; line-height: 1.8; margin-bottom: 15px; }
-.report-foot { display: flex; justify-content: space-between; margin-top: 40px; font-size: 12px; }
-
-/* Saved Records */
-#saved { display: none; }
-.saved-list-item { padding: 10px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-
-/* --- Print Media --- */
-@media print {
-    body { background: white; height: auto; display: block; }
-    .topbar, .sidebar, .left-panel, .report-actions, .report-placeholder, .no-print { display: none !important; }
-    .main-container { display: block; height: auto; padding: 0; }
-    .content-area { display: block; padding: 0; }
-    .right-panel { box-shadow: none; border: none; padding: 0; }
-    #report { display: block !important; }
-    .report-sheet { padding: 0; }
-    .report-info { grid-template-columns: 1fr 1fr; }
-    @page { size: A4 portrait; margin: 15mm; }
-}
+  /* ---------- Small landscape screens ---------- */
+  @media (orientation: landscape) and (max-height: 520px) {
+    #joystick { width: 104px; height: 104px; }
+    #knob { width: 44px; height: 44px; margin-left: -22px; margin-top: -22px; }
+    #jumpBtn { width: 78px; height: 78px; font-size: 15px; }
+    .overlay h1 { font-size: 22px; }
+    .overlay p { font-size: 13px; line-height: 1.6; }
+    .overlay button { padding: 12px 28px; font-size: 16px; }
+    #score { font-size: 14px; padding: 6px 12px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Top Navigation -->
-<div class="topbar">
-    <div class="topbar-right">
-        <div class="logo"><i class="fa-solid fa-flask"></i> مختبر النجف</div>
-        <div class="top-nav">
-            <a href="#"><i class="fa-solid fa-house"></i> الرئيسية</a>
-            <a href="#" class="active"><i class="fa-solid fa-users"></i> المرضى</a>
-            <a href="#"><i class="fa-solid fa-vial"></i> التحاليل</a>
-            <a href="#"><i class="fa-solid fa-file-medical"></i> النتائج</a>
-            <a href="#"><i class="fa-solid fa-print"></i> الطباعة</a>
-            <a href="#"><i class="fa-solid fa-chart-pie"></i> التقارير</a>
-            <a href="#"><i class="fa-solid fa-gear"></i> الإعدادات</a>
-        </div>
-    </div>
-    <div class="topbar-left">
-        <div class="user-info">
-            <div><b>حسين</b><br><small>فني مختبر</small></div>
-            <i class="fa-solid fa-circle-user"></i>
-        </div>
-        <div id="clock" style="font-size: 12px;"></div>
-        <div class="window-controls">
-            <i class="fa-solid fa-minus"></i>
-            <i class="fa-regular fa-square"></i>
-            <i class="fa-solid fa-xmark"></i>
-        </div>
-    </div>
+<div id="app"></div>
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+  <div id="score">النقاط: <span id="scoreVal">0</span></div>
+  <button id="restartBtn" aria-label="إعادة المحاولة">↻</button>
 </div>
 
-<div class="main-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <button class="active" onclick="newPatient()"><i class="fa-solid fa-user-plus"></i> تسجيل مريض جديد</button>
-        <button onclick="showSaved()"><i class="fa-solid fa-magnifying-glass"></i> السجلات المحفوظة</button>
-        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-droplet"></i> سحب العينات</button>
-        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-pen-to-square"></i> إدخال النتائج</button>
-        <button onclick="alert('قيد التطوير')"><i class="fa-solid fa-list-check"></i> مراجعة النتائج</button>
-        <button onclick="window.print()"><i class="fa-solid fa-print"></i> الطباعة</button>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="content-area">
-        
-        <!-- Left Panel: Form and Tests -->
-        <div class="left-panel">
-            
-            <!-- Patient Form -->
-            <div class="card" id="entry">
-                <div class="card-title"><i class="fa-solid fa-user"></i> بيانات المريض</div>
-                <div class="patient-form">
-                    <label>الرقم:</label>
-                    <input id="pid" placeholder="رقم الملف">
-                    
-                    <label>الاسم الكامل:</label>
-                    <input id="pname" placeholder="الاسم الكامل">
-                    
-                    <label>الجنس:</label>
-                    <div style="display: flex; gap: 10px;">
-                        <select id="gender" style="width: 120px;"><option>ذكر</option><option>أنثى</option></select>
-                        <input id="age" type="number" placeholder="العمر (سنة)" style="flex: 1;">
-                    </div>
-                    
-                    <label>رقم الهاتف:</label>
-                    <input id="phone" placeholder="رقم الهاتف">
-                    
-                    <label>الطبيب المحول:</label>
-                    <input id="doctor" placeholder="اسم الطبيب">
-                    
-                    <label>ملاحظة:</label>
-                    <textarea id="notes" rows="1" style="padding: 8px 10px; border: 1px solid var(--border); border-radius: 5px; font-family: inherit; resize: none;" placeholder="ملاحظات إضافية"></textarea>
-                </div>
-                <!-- Hidden inputs to preserve JS logic -->
-                <input type="hidden" id="date">
-                <input type="hidden" id="sample" value="Serum">
-            </div>
-
-            <!-- Tests Table -->
-            <div class="card">
-                <div class="table-actions no-print">
-                    <div class="card-title" style="margin: 0; border: 0; padding: 0;"><i class="fa-solid fa-vial"></i> التحاليل المطلوبة</div>
-                    <button class="btn btn-blue" onclick="addTest()"><i class="fa-solid fa-plus"></i> إضافة تحليل</button>
-                </div>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 40px;">تسلسل</th>
-                                <th>اسم التحليل</th>
-                                <th>النتيجة</th>
-                                <th>الوحدة</th>
-                                <th>المدى الطبيعي</th>
-                                <th>الحالة</th>
-                                <th class="no-print">حذف</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tests"></tbody>
-                    </table>
-                </div>
-                <div style="margin-top: 15px;">
-                    <label style="font-weight: bold; font-size: 14px; margin-bottom: 5px; display: block;">ملاحظات النتيجة</label>
-                    <textarea id="resultNotes" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; font-family: inherit; resize: none;">يرجى متابعة الطبيب المختص.</textarea>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- Right Panel: Report Preview -->
-        <div class="right-panel">
-            <!-- Action Buttons -->
-            <div class="report-actions no-print">
-                <button class="btn btn-blue" onclick="savePatient()"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
-                <button class="btn btn-green" onclick="window.print()"><i class="fa-solid fa-print"></i> طباعة النتيجة</button>
-                <button class="btn btn-blue" onclick="toggleReport()"><i class="fa-solid fa-eye"></i> عرض النتيجة</button>
-                <button class="btn btn-red" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> حفظ PDF</button>
-            </div>
-
-            <!-- Placeholder (Shown initially) -->
-            <div id="reportMessage" class="report-placeholder">
-                <i class="fa-regular fa-file-lines" style="font-size: 80px; color: #a0b4ce; margin-bottom: 20px;"></i>
-                <h3>لم يتم عرض نتيجة التحاليل بعد</h3>
-                <p>اضغط على زر "عرض النتيجة" لعرض نموذج نتيجة التحاليل أو يمكنك طباعتها مباشرة من زر "طباعة النتيجة"</p>
-                <button class="btn btn-blue" onclick="toggleReport()" style="padding: 12px 30px;"><i class="fa-solid fa-eye"></i> عرض النتيجة</button>
-            </div>
-
-            <!-- The Actual Report -->
-            <section id="report">
-                <div class="report-sheet">
-                    <div class="report-head">
-                        <h2><i class="fa-solid fa-flask"></i> مختبر النجف</h2>
-                        <div>نتائج التحاليل المختبرية | Laboratory Test Results</div>
-                    </div>
-                    <div id="reportInfo" class="report-info"></div>
-                    <h3 style="text-align: center; margin-bottom: 10px; font-size: 16px;">نتائج الفحوصات</h3>
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr><th>Test Name</th><th>Result</th><th>Unit</th><th>Reference Range</th><th>Flag</th></tr>
-                            </thead>
-                            <tbody id="reportTests"></tbody>
-                        </table>
-                    </div>
-                    <p id="reportNotes" style="margin-top: 15px; font-size: 13px;"></p>
-                    <div class="report-foot">
-                        <div>توقيع فني المختبر: __________</div>
-                        <div>ختم المختبر: __________</div>
-                    </div>
-                </div>
-            </section>
-        </div>
-        
-    </div>
+<!-- Touch controls -->
+<div id="controls" class="hidden">
+  <div id="joystick"><div id="knob"></div></div>
+  <button id="jumpBtn">قفز</button>
 </div>
 
-<!-- Saved Records Container (Hidden by default) -->
-<section id="saved" class="card" style="position: absolute; top: 70px; left: 20px; right: 20px; bottom: 20px; z-index: 100; overflow-y: auto;">
-    <div class="card-title"><i class="fa-solid fa-box-archive"></i> السجلات المحفوظة</div>
-    <div id="savedList"></div>
-    <button class="btn btn-blue" onclick="go('entry')" style="margin-top: 20px;">العودة إلى بيانات المريض</button>
-</section>
+<!-- Start screen -->
+<div id="startOverlay" class="overlay">
+  <h1>قفزة الجزر</h1>
+  <p>
+    اقفز بين المنصات العائمة واجمع العملات الذهبية.<br>
+    استخدم عصا التحكم للحركة، وزر «قفز» للقفز.<br>
+    على الحاسوب: WASD أو الأسهم + مسافة.
+  </p>
+  <button id="startBtn">ابدأ اللعب</button>
+</div>
+
+<!-- End screen -->
+<div id="endOverlay" class="overlay hidden">
+  <h1 id="endTitle">سقطت!</h1>
+  <p id="endText">لا بأس، حاول مرة أخرى.</p>
+  <button id="retryBtn">إعادة المحاولة</button>
+</div>
+
+<!-- Fatal error screen -->
+<div id="fatal" class="overlay hidden">
+  <h1>تعذّر التشغيل</h1>
+  <p id="fatalMsg"></p>
+</div>
+
+<!-- Three.js pinned version from a reliable CDN -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 
 <script>
-// ==========================================
-// الكود البرمجي الأصلي (تم تعديله فقط ليتوافق مع التصميم الجديد)
-// ==========================================
+(function () {
+  'use strict';
 
-const $=id=>document.getElementById(id);
-const demoTests=[
- ["Glucose (FBS)","95","mg/dL","70–110"],
- ["Urea","28","mg/dL","15–40"],
- ["Creatinine","0.9","mg/dL","0.6–1.3"],
- ["Total Cholesterol","240","mg/dL","< 200"],
- ["Triglycerides","180","mg/dL","< 150"],
- ["HDL","45","mg/dL","40 - 60"],
- ["LDL","160","mg/dL","< 130"],
- ["SGPT (ALT)","32","U/L","0 - 40"]
-];
+  function $(id) { return document.getElementById(id); }
 
-function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function fatal(msg) {
+    var f = $('fatal');
+    if (f) {
+      $('fatalMsg').textContent = msg;
+      f.classList.remove('hidden');
+    }
+    ['startOverlay', 'endOverlay', 'hud', 'controls'].forEach(function (id) {
+      var el = $(id);
+      if (el) el.classList.add('hidden');
+    });
+  }
 
-function renderTests(){
- $("tests").innerHTML=demoTests.map((t,i)=>{
-     // تحديد الحالة بناء على النتيجة (للتجميل فقط)
-     let status = '<span class="badge badge-normal">طبيعي</span>';
-     if(t[1] !== '—' && !isNaN(parseFloat(t[1]))) {
-         if(t[0].includes('Cholesterol') && parseFloat(t[1]) > 200) status = '<span class="badge badge-high">مرتفع</span>';
-         if(t[0].includes('Triglycerides') && parseFloat(t[1]) > 150) status = '<span class="badge badge-high">مرتفع</span>';
-         if(t[0].includes('LDL') && parseFloat(t[1]) > 130) status = '<span class="badge badge-high">مرتفع</span>';
-     }
-     
-     return `<tr>
-        <td>${i+1}</td>
-        <td><input aria-label="اسم التحليل" data-i="${i}" data-k="0" value="${safe(t[0])}"></td>
-        <td><input aria-label="النتيجة" data-i="${i}" data-k="1" value="${safe(t[1])}" style="font-weight:bold;"></td>
-        <td><input aria-label="الوحدة" data-i="${i}" data-k="2" value="${safe(t[2])}"></td>
-        <td><input aria-label="المدى المرجعي" data-i="${i}" data-k="3" value="${safe(t[3])}"></td>
-        <td>${status}</td>
-        <td class="no-print"><button class="btn btn-red btn-icon" onclick="removeTest(${i})"><i class="fa-solid fa-xmark"></i></button></td>
-     </tr>`;
- }).join("");
- 
- $("tests").querySelectorAll("input").forEach(el=>el.addEventListener("input",e=>{demoTests[+e.target.dataset.i][+e.target.dataset.k]=e.target.value}));
-}
+  /* =========================================================
+     1) Environment checks (CDN + WebGL)
+     ========================================================= */
+  if (typeof THREE === 'undefined') {
+    fatal('تعذّر تحميل مكتبة Three.js من الشبكة (CDN). تأكد من اتصال الإنترنت ثم أعد تحميل الصفحة.');
+    return;
+  }
 
-function removeTest(i){demoTests.splice(i,1);renderTests()}
-function addTest(){demoTests.push(["تحليل جديد","—","","يحدد من دليل المختبر"]);renderTests()}
-function getPatient(){return {pid:$("pid").value,pname:$("pname").value,age:$("age").value,gender:$("gender").value,phone:$("phone").value,doctor:$("doctor").value,date:$("date").value,sample:$("sample").value,notes:$("resultNotes").value,tests:demoTests}}
+  var webglOK = false;
+  try {
+    var probe = document.createElement('canvas');
+    webglOK = !!(window.WebGLRenderingContext &&
+      (probe.getContext('webgl') || probe.getContext('experimental-webgl')));
+  } catch (e) {
+    webglOK = false;
+  }
+  if (!webglOK) {
+    fatal('متصفحك لا يدعم WebGL. حدّث Chrome أو فعّل تسريع الرسومات من إعدادات المتصفح.');
+    return;
+  }
 
-function updateReport(){
- const p=getPatient();
- $("reportInfo").innerHTML=[["اسم المريض",p.pname],["رقم الملف",p.pid],["العمر",p.age],["الجنس",p.gender],["تاريخ الفحص",p.date],["نوع العينة",p.sample],["الطبيب المحول",p.doctor],["الهاتف",p.phone]].map(x=>`<div><b>${safe(x[0])}:</b> ${safe(x[1]||"—")}</div>`).join("");
- $("reportTests").innerHTML=demoTests.map(t=>`<tr><td>${safe(t[0])}</td><td>${safe(t[1])}</td><td>${safe(t[2])}</td><td>${safe(t[3])}</td><td>غير معتمد</td></tr>`).join("");
- $("reportNotes").textContent="ملاحظات: "+p.notes;
-}
+  /* =========================================================
+     2) Configuration
+     ========================================================= */
+  var GRAVITY = 25.0;          // units / s^2
+  var JUMP_V = 9.8;            // initial jump velocity
+  var MOVE_SPEED = 7.0;        // horizontal speed
+  var MAX_FALL = 28.0;         // terminal velocity
+  var PLAYER_RADIUS = 0.32;    // forgiving edge radius
+  var KILL_Y = -12.0;          // fall-off threshold
+  var COYOTE_TIME = 0.10;      // grace period after leaving a ledge
+  var JUMP_BUFFER = 0.15;      // remembers an early jump press
+  var PLATFORM_THICKNESS = 0.8;
 
-function toggleReport(){
- const show=$("report").style.display!=="block";
- if(show&&!$("pname").value.trim()){alert("يرجى إدخال اسم المريض أولاً.");return}
- if(show)updateReport();
- 
- // إخفاء الرسالة وإظهار التقرير
- $("report").style.display=show?"block":"none";
- $("reportMessage").style.display=show?"none":"flex";
-}
+  // Course layout: center x/z, full width/depth, top surface height.
+  var PLATFORM_DEFS = [
+    { x:  0.0, z:   0.0, w: 6.0, d: 6.0, top: 0.0, color: 0x63d471 },
+    { x:  0.0, z:  -8.0, w: 4.4, d: 4.4, top: 0.6, color: 0xf2a65a },
+    { x:  2.2, z: -15.0, w: 3.6, d: 3.6, top: 1.4, color: 0x8e7dff },
+    { x: -1.0, z: -22.0, w: 4.0, d: 4.0, top: 0.6, color: 0x4fc3f7 },
+    { x:  0.5, z: -28.5, w: 3.2, d: 3.2, top: 1.6, color: 0xffd166 },
+    { x:  0.0, z: -35.0, w: 3.2, d: 3.2, top: 2.4, color: 0xef6f6c },
+    { x:  3.0, z: -41.0, w: 4.0, d: 4.0, top: 1.4, color: 0x5ec8c0 },
+    { x:  0.5, z: -48.0, w: 7.0, d: 7.0, top: 1.0, color: 0xf78fb3 }
+  ];
 
-function savePatient(){
- const p=getPatient();if(!p.pname.trim()){alert("يرجى إدخال اسم المريض.");return}
- try{const arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]");arr.push({...p,tests:p.tests.map(t=>[...t]),savedAt:new Date().toISOString()});localStorage.setItem("labDemoPatients",JSON.stringify(arr));alert("تم الحفظ في هذا المتصفح فقط.");}
- catch(e){alert("تعذر الحفظ. قد تكون مساحة التخزين ممتلئة.");}
-}
+  /* =========================================================
+     3) Renderer / scene / camera
+     ========================================================= */
+  var app = $('app');
+  var renderer;
 
-function showSaved(){
- $("saved").style.display="block";
- let arr=[];try{arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")}catch(e){}
- $("savedList").innerHTML=arr.length?arr.map((p,i)=>`<div class="saved-list-item"><div><b>${safe(p.pname)}</b> — ${safe(p.date)}</div> <button class="btn btn-blue" onclick="loadPatient(${i})">فتح</button></div>`).join(""):"لا توجد سجلات محفوظة.";
-}
+  try {
+    renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
+  } catch (err) {
+    fatal('تعذّر إنشاء سياق WebGL على هذا الجهاز.');
+    return;
+  }
 
-function loadPatient(i){
- const p=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")[i];if(!p)return;
- for(const k of ["pid","pname","age","gender","phone","doctor"])$(k).value=p[k]||"";
- $("resultNotes").value = p.notes || "";
- demoTests.splice(0,demoTests.length,...p.tests.map(t=>[...t]));
- renderTests();
- $("saved").style.display="none";
-}
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  app.appendChild(renderer.domElement);
 
-function newPatient(){
- ["pid","pname","age","phone","doctor","resultNotes"].forEach(k=>$(k).value="");
- $("date").value=new Date().toISOString().slice(0,10);
- $("report").style.display="none";
- $("reportMessage").style.display="flex";
- $("saved").style.display="none";
-}
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x9fd8ff);
+  scene.fog = new THREE.Fog(0x9fd8ff, 46, 96);
 
-// إعدادات أولية
-$("date").value=new Date().toISOString().slice(0,10);
-function tick(){const d=new Date();$("clock").textContent=d.toLocaleDateString("ar-IQ")+" "+d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"})}
-tick();setInterval(tick,60000);
-renderTests();
+  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 260);
+  camera.position.set(0, 7, 12);
+
+  // Lighting: cheap, no shadow maps (best for mid-range phones).
+  var hemi = new THREE.HemisphereLight(0xffffff, 0x6b7a90, 0.95);
+  hemi.position.set(0, 60, 0);
+  scene.add(hemi);
+
+  var sun = new THREE.DirectionalLight(0xffffff, 0.75);
+  sun.position.set(-9, 18, 9);
+  scene.add(sun);
+
+  /* =========================================================
+     4) World building
+     ========================================================= */
+  var platforms = [];          // collision data
+  var platformsGroup = new THREE.Group();
+  var coinsGroup = new THREE.Group();
+  var coins = [];
+  scene.add(platformsGroup);
+  scene.add(coinsGroup);
+
+  function buildPlatforms() {
+    for (var i = 0; i < PLATFORM_DEFS.length; i++) {
+      var d = PLATFORM_DEFS[i];
+
+      var bodyMat = new THREE.MeshLambertMaterial({ color: d.color });
+      var body = new THREE.Mesh(
+        new THREE.BoxGeometry(d.w, PLATFORM_THICKNESS, d.d),
+        bodyMat
+      );
+      body.position.set(d.x, d.top - PLATFORM_THICKNESS / 2, d.z);
+      platformsGroup.add(body);
+
+      // Lighter "cap" on top for a low-poly grassy look.
+      var capColor = new THREE.Color(d.color).lerp(new THREE.Color(0xffffff), 0.28);
+      var cap = new THREE.Mesh(
+        new THREE.BoxGeometry(d.w, 0.14, d.d),
+        new THREE.MeshLambertMaterial({ color: capColor })
+      );
+      cap.position.set(d.x, d.top - 0.07, d.z);
+      platformsGroup.add(cap);
+
+      platforms.push({
+        minX: d.x - d.w / 2,
+        maxX: d.x + d.w / 2,
+        minZ: d.z - d.d / 2,
+        maxZ: d.z + d.d / 2,
+        top: d.top
+      });
+    }
+  }
+
+  function buildCoins() {
+    var coinGeo = new THREE.CylinderGeometry(0.34, 0.34, 0.1, 14);
+    var coinMat = new THREE.MeshLambertMaterial({
+      color: 0xffd54f,
+      emissive: 0x8a6200
+    });
+
+    for (var i = 0; i < PLATFORM_DEFS.length; i++) {
+      var p = PLATFORM_DEFS[i];
+      var g = new THREE.Group();
+      var mesh = new THREE.Mesh(coinGeo, coinMat);
+      mesh.rotation.x = Math.PI / 2;
+      g.add(mesh);
+      g.position.set(p.x, p.top + 2.0, p.z);
+      coinsGroup.add(g);
+      coins.push({
+        group: g,
+        x: p.x,
+        y: p.top + 2.0,
+        z: p.z,
+        taken: false
+      });
+    }
+  }
+
+  function buildScenery() {
+    // Cheap floating low-poly rocks in the background. Static, no animation.
+    var palette = [0x8e7dff, 0x5ec8c0, 0xf78fb3, 0x4fc3f7, 0xffd166];
+    for (var i = 0; i < 14; i++) {
+      var size = 0.9 + Math.random() * 1.8;
+      var geo = new THREE.IcosahedronGeometry(size, 0);
+      var mat = new THREE.MeshLambertMaterial({ color: palette[i % palette.length] });
+      var rock = new THREE.Mesh(geo, mat);
+      var side = (i % 2 === 0) ? 1 : -1;
+      rock.position.set(
+        side * (11 + Math.random() * 12),
+        -9 + Math.random() * 20,
+        -Math.random() * 70 + 8
+      );
+      rock.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+      scene.add(rock);
+    }
+  }
+
+  /* =========================================================
+     5) Player
+     ========================================================= */
+  var playerGroup = new THREE.Group();
+  scene.add(playerGroup);
+
+  (function buildPlayer() {
+    var skinMat = new THREE.MeshLambertMaterial({ color: 0xffd7a8 });
+    var shirtMat = new THREE.MeshLambertMaterial({ color: 0x2f80ed });
+    var pantsMat = new THREE.MeshLambertMaterial({ color: 0x1b3a63 });
+    var eyeMat = new THREE.MeshBasicMaterial({ color: 0x14213a });
+
+    var torso = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.6, 0.42), shirtMat);
+    torso.position.y = 0.72;
+    playerGroup.add(torso);
+
+    var head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.46, 0.46), skinMat);
+    head.position.y = 1.22;
+    playerGroup.add(head);
+
+    // Face looks toward -Z (the direction of travel).
+    var eyeGeo = new THREE.BoxGeometry(0.08, 0.1, 0.06);
+    var eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeL.position.set(-0.11, 1.26, -0.24);
+    var eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeR.position.set(0.11, 1.26, -0.24);
+    playerGroup.add(eyeL, eyeR);
+
+    var legGeo = new THREE.BoxGeometry(0.2, 0.4, 0.24);
+    var legL = new THREE.Mesh(legGeo, pantsMat);
+    legL.position.set(-0.16, 0.2, 0);
+    var legR = new THREE.Mesh(legGeo, pantsMat);
+    legR.position.set(0.16, 0.2, 0);
+    playerGroup.add(legL, legR);
+
+    var armGeo = new THREE.BoxGeometry(0.16, 0.44, 0.2);
+    var armL = new THREE.Mesh(armGeo, skinMat);
+    armL.position.set(-0.4, 0.78, 0);
+    var armR = new THREE.Mesh(armGeo, skinMat);
+    armR.position.set(0.4, 0.78, 0);
+    playerGroup.add(armL, armR);
+  })();
+
+  // Fake blob shadow (much cheaper than real shadow maps).
+  var shadowMat = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0.28,
+    depthWrite: false
+  });
+  var shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), shadowMat);
+  shadowMesh.rotation.x = -Math.PI / 2;
+  scene.add(shadowMesh);
+
+  var player = {
+    pos: new THREE.Vector3(0, 0, 0),   // feet position
+    vel: new THREE.Vector3(0, 0, 0),
+    grounded: true,
+    coyote: COYOTE_TIME
+  };
+
+  /* =========================================================
+     6) Input state
+     ========================================================= */
+  var keys = Object.create(null);
+  var joyVec = { x: 0, y: 0 };       // x = right, y = screen down
+  var joyPointerId = null;
+  var jumpBufferTimer = 0;
+  var walkPhase = 0;
+
+  function requestJump() {
+    jumpBufferTimer = JUMP_BUFFER;
+  }
+
+  /* =========================================================
+     7) Game state
+     ========================================================= */
+  var state = 'menu';                // 'menu' | 'playing' | 'over'
+  var score = 0;
+  var scoreEl = $('scoreVal');
+
+  var camOffset = new THREE.Vector3(0, 7, 11);
+  var lookAtPos = new THREE.Vector3();
+  var tmpDesiredCam = new THREE.Vector3();
+  var tmpDesiredLook = new THREE.Vector3();
+
+  function updateCameraOffset() {
+    var a = camera.aspect;
+    if (a < 0.85) {            // portrait phone
+      camOffset.set(0, 7.6, 12.8);
+    } else if (a < 1.35) {     // tablet / square
+      camOffset.set(0, 7.0, 11.0);
+    } else {                   // landscape
+      camOffset.set(0, 6.0, 9.6);
+    }
+  }
+
+  function updateCamera(dt, snap) {
+    tmpDesiredCam.copy(player.pos).add(camOffset);
+    tmpDesiredLook.set(player.pos.x, player.pos.y + 1.2, player.pos.z - 2.5);
+
+    var tc = snap ? 1 : (1 - Math.exp(-7 * dt));
+    var tl = snap ? 1 : (1 - Math.exp(-10 * dt));
+
+    camera.position.lerp(tmpDesiredCam, tc);
+    lookAtPos.lerp(tmpDesiredLook, tl);
+    camera.lookAt(lookAtPos);
+  }
+
+  function updateShadow() {
+    var groundY = -Infinity;
+
+    for (var i = 0; i < platforms.length; i++) {
+      var p = platforms[i];
+      if (player.pos.x + 0.3 > p.minX && player.pos.x - 0.3 < p.maxX &&
+          player.pos.z + 0.3 > p.minZ && player.pos.z - 0.3 < p.maxZ) {
+        if (p.top <= player.pos.y + 0.05 && p.top > groundY) {
+          groundY = p.top;
+        }
+      }
+    }
+
+    if (groundY === -Infinity) {
+      shadowMesh.visible = false;
+      return;
+    }
+
+    var h = player.pos.y - groundY;
+    if (h > 9) {
+      shadowMesh.visible = false;
+      return;
+    }
+
+    shadowMesh.visible = true;
+    shadowMesh.position.set(player.pos.x, groundY + 0.03, player.pos.z);
+    var s = Math.max(0.4, 1 - h * 0.075);
+    shadowMesh.scale.set(s, s, s);
+    shadowMat.opacity = 0.30 * Math.max(0.18, 1 - h * 0.1);
+  }
+
+  function lerpAngle(a, b, t) {
+    var TWO_PI = Math.PI * 2;
+    var d = (b - a + Math.PI) % TWO_PI;
+    if (d < 0) d += TWO_PI;
+    d -= Math.PI;
+    return a + d * t;
+  }
+
+  /* =========================================================
+     8) Core gameplay update
+     ========================================================= */
+  function updatePlayer(dt) {
+    /* ---- gather input ---- */
+    var ix = 0, iz = 0;
+    if (keys['KeyW'] || keys['ArrowUp'])    iz += 1;
+    if (keys['KeyS'] || keys['ArrowDown'])  iz -= 1;
+    if (keys['KeyA'] || keys['ArrowLeft'])  ix -= 1;
+    if (keys['KeyD'] || keys['ArrowRight']) ix += 1;
+
+    ix += joyVec.x;
+    iz += -joyVec.y;                     // stick up = forward
+
+    var inLen = Math.sqrt(ix * ix + iz * iz);
+    if (inLen > 1) { ix /= inLen; iz /= inLen; }
+    var moving = inLen > 0.08;
+
+    /* ---- horizontal movement (world axes; camera is fixed behind) ---- */
+    player.vel.x = ix * MOVE_SPEED;
+    player.vel.z = -iz * MOVE_SPEED;
+
+    player.pos.x += player.vel.x * dt;
+    player.pos.z += player.vel.z * dt;
+
+    /* ---- jump (buffered + coyote time, never in mid-air twice) ---- */
+    if (jumpBufferTimer > 0) jumpBufferTimer -= dt;
+
+    if (player.grounded) {
+      player.coyote = COYOTE_TIME;
+    } else if (player.coyote > 0) {
+      player.coyote -= dt;
+    }
+
+    if (jumpBufferTimer > 0 && player.coyote > 0) {
+      player.vel.y = JUMP_V;
+      player.grounded = false;
+      player.coyote = 0;
+      jumpBufferTimer = 0;
+    }
+
+    /* ---- gravity + vertical integration ---- */
+    player.vel.y -= GRAVITY * dt;
+    if (player.vel.y < -MAX_FALL) player.vel.y = -MAX_FALL;
+
+    var prevFeet = player.pos.y;
+    player.pos.y += player.vel.y * dt;
+
+    /* ---- landing / platform collision ---- */
+    var landed = false;
+    if (player.vel.y <= 0) {
+      for (var i = 0; i < platforms.length; i++) {
+        var p = platforms[i];
+        var overlapX = (player.pos.x + PLAYER_RADIUS > p.minX) &&
+                       (player.pos.x - PLAYER_RADIUS < p.maxX);
+        var overlapZ = (player.pos.z + PLAYER_RADIUS > p.minZ) &&
+                       (player.pos.z - PLAYER_RADIUS < p.maxZ);
+
+        if (overlapX && overlapZ &&
+            prevFeet >= p.top - 0.03 && player.pos.y <= p.top) {
+          player.pos.y = p.top;
+          player.vel.y = 0;
+          landed = true;
+          break;
+        }
+      }
+    }
+    player.grounded = landed;
+
+    /* ---- fell off the course ---- */
+    if (player.pos.y < KILL_Y) {
+      endRound('سقطت!', 'لا بأس، اضغط الزر لتبدأ من جديد.');
+      return;
+    }
+
+    /* ---- coin pickup ---- */
+    var pcx = player.pos.x;
+    var pcy = player.pos.y + 0.7;
+    var pcz = player.pos.z;
+    var pickupR2 = 1.1 * 1.1;
+
+    for (var c = 0; c < coins.length; c++) {
+      var coin = coins[c];
+      if (coin.taken) continue;
+      var dx = pcx - coin.x;
+      var dy = pcy - coin.y;
+      var dz = pcz - coin.z;
+      if (dx * dx + dy * dy + dz * dz < pickupR2) {
+        coin.taken = true;
+        coin.group.visible = false;
+        score++;
+        scoreEl.textContent = String(score);
+      }
+    }
+
+    if (score >= coins.length) {
+      endRound('🎉 أحسنت!', 'جمعت كل العملات الذهبية. اضغط الزر للعب مرة أخرى.');
+      return;
+    }
+
+    /* ---- apply to mesh ---- */
+    var bob = 0;
+    if (player.grounded && moving) {
+      walkPhase += dt * 11;
+      bob = Math.abs(Math.sin(walkPhase)) * 0.06;
+    } else {
+      walkPhase = 0;
+    }
+    playerGroup.position.set(player.pos.x, player.pos.y + bob, player.pos.z);
+
+    if (moving) {
+      var targetYaw = Math.atan2(-player.vel.x, -player.vel.z);
+      playerGroup.rotation.y = lerpAngle(playerGroup.rotation.y, targetYaw, 1 - Math.exp(-14 * dt));
+    }
+  }
+
+  function updateCoins(dt) {
+    for (var i = 0; i < coins.length; i++) {
+      if (coins[i].group.visible) {
+        coins[i].group.rotation.y += dt * 2.4;
+      }
+    }
+  }
+
+  /* =========================================================
+     9) Round control
+     ========================================================= */
+  function resetRound() {
+    player.pos.set(0, 0, 0);
+    player.vel.set(0, 0, 0);
+    player.grounded = true;
+    player.coyote = COYOTE_TIME;
+    jumpBufferTimer = 0;
+    walkPhase = 0;
+
+    playerGroup.position.copy(player.pos);
+    playerGroup.rotation.y = 0;
+
+    score = 0;
+    scoreEl.textContent = '0';
+
+    for (var i = 0; i < coins.length; i++) {
+      coins[i].taken = false;
+      coins[i].group.visible = true;
+    }
+
+    joyVec.x = 0;
+    joyVec.y = 0;
+    joyPointerId = null;
+    $('knob').style.transform = 'translate(0px, 0px)';
+
+    updateCamera(0, true);
+    updateShadow();
+  }
+
+  function startPlaying() {
+    resetRound();
+    state = 'playing';
+
+    $('startOverlay').classList.add('hidden');
+    $('endOverlay').classList.add('hidden');
+    $('hud').classList.remove('hidden');
+    $('controls').classList.remove('hidden');
+
+    // Discard accumulated time so the first frame is not a huge jump.
+    clock.getDelta();
+    startLoop();
+  }
+
+  function endRound(title, text) {
+    state = 'over';
+    $('endTitle').textContent = title;
+    $('endText').textContent = text;
+    $('endOverlay').classList.remove('hidden');
+    $('controls').classList.add('hidden');
+  }
+
+  /* =========================================================
+     10) Main loop (with pause on hidden tab)
+     ========================================================= */
+  var clock = new THREE.Clock();
+  var rafId = null;
+
+  function loop() {
+    rafId = requestAnimationFrame(loop);
+
+    var dt = Math.min(clock.getDelta(), 0.05);
+
+    if (state === 'playing') {
+      updatePlayer(dt);
+      if (state === 'playing') updateShadow();
+    }
+
+    updateCoins(dt);
+    updateCamera(dt, false);
+    renderer.render(scene, camera);
+  }
+
+  function startLoop() {
+    if (rafId !== null) return;
+    clock.getDelta();          // reset delta timer
+    loop();
+  }
+
+  function stopLoop() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      stopLoop();
+    } else {
+      startLoop();
+    }
+  });
+
+  /* =========================================================
+     11) Resize handling
+     ========================================================= */
+  function onResize() {
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+
+    camera.aspect = w / h;
+    updateCameraOffset();
+    camera.updateProjectionMatrix();
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(w, h);
+  }
+
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', function () {
+    setTimeout(onResize, 250);
+  });
+
+  /* =========================================================
+     12) Keyboard
+     ========================================================= */
+  var PREVENT_KEYS = {
+    KeyW: 1, KeyA: 1, KeyS: 1, KeyD: 1,
+    ArrowUp: 1, ArrowDown: 1, ArrowLeft: 1, ArrowRight: 1,
+    Space: 1
+  };
+
+  window.addEventListener('keydown', function (e) {
+    var code = e.code;
+    if (PREVENT_KEYS[code]) e.preventDefault();
+
+    if (code === 'Enter' || code === 'NumpadEnter') {
+      if (state !== 'playing') startPlaying();
+      return;
+    }
+
+    if (keys[code]) return;    // ignore auto-repeat
+    keys[code] = true;
+
+    if (code === 'Space' && state === 'playing') requestJump();
+  });
+
+  window.addEventListener('keyup', function (e) {
+    keys[e.code] = false;
+  });
+
+  /* =========================================================
+     13) Touch: virtual joystick
+     ========================================================= */
+  var joyEl = $('joystick');
+  var knobEl = $('knob');
+
+  function joyUpdate(e) {
+    var rect = joyEl.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+
+    var dx = e.clientX - cx;
+    var dy = e.clientY - cy;
+
+    var maxR = rect.width / 2 - 20;
+    var len = Math.sqrt(dx * dx + dy * dy);
+
+    if (len > maxR && len > 0) {
+      dx = dx / len * maxR;
+      dy = dy / len * maxR;
+      len = maxR;
+    }
+
+    knobEl.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+
+    var nx = dx / maxR;
+    var ny = dy / maxR;
+    var mag = Math.sqrt(nx * nx + ny * ny);
+
+    var DEAD = 0.18;
+    if (mag < DEAD) {
+      joyVec.x = 0;
+      joyVec.y = 0;
+    } else {
+      var scaled = Math.min(1, (mag - DEAD) / (1 - DEAD)) / mag;
+      joyVec.x = nx * scaled;
+      joyVec.y = ny * scaled;
+    }
+  }
+
+  function joyEnd(e) {
+    if (e && e.pointerId !== undefined && e.pointerId !== joyPointerId) return;
+    joyPointerId = null;
+    joyVec.x = 0;
+    joyVec.y = 0;
+    knobEl.style.transform = 'translate(0px,0px)';
+  }
+
+  joyEl.addEventListener('pointerdown', function (e) {
+    if (joyPointerId !== null) return;
+    joyPointerId = e.pointerId;
+    try { joyEl.setPointerCapture(e.pointerId); } catch (err) {}
+    joyUpdate(e);
+    e.preventDefault();
+  });
+
+  joyEl.addEventListener('pointermove', function (e) {
+    if (e.pointerId !== joyPointerId) return;
+          joyUpdate(e);
+    e.preventDefault();
+  });
+
+  joyEl.addEventListener('pointerup', joyEnd);
+  joyEl.addEventListener('pointercancel', joyEnd);
+  joyEl.addEventListener('lostpointercapture', joyEnd);
+
+  /* =========================================================
+     14) Touch: jump button
+     ========================================================= */
+  var jumpBtn = $('jumpBtn');
+
+  jumpBtn.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    jumpBtn.classList.add('active');
+    if (state === 'playing') requestJump();
+  });
+
+  jumpBtn.addEventListener('pointerup', function () {
+    jumpBtn.classList.remove('active');
+  });
+
+  jumpBtn.addEventListener('pointercancel', function () {
+    jumpBtn.classList.remove('active');
+  });
+
+  jumpBtn.addEventListener('pointerleave', function () {
+    jumpBtn.classList.remove('active');
+  });
+
+  /* =========================================================
+     15) UI buttons
+     ========================================================= */
+  $('startBtn').addEventListener('click', startPlaying);
+  $('retryBtn').addEventListener('click', startPlaying);
+
+  $('restartBtn').addEventListener('click', function () {
+    if (state === 'playing' || state === 'over') {
+      startPlaying();
+    }
+  });
+
+  /* =========================================================
+     16) Initialize and start
+     ========================================================= */
+  buildPlatforms();
+  buildCoins();
+  buildScenery();
+
+  // Set up camera / renderer sizing before placing the player.
+  onResize();
+
+  // Place the player at the start and reset coins/score.
+  resetRound();
+
+  // Render the scene behind the start screen and keep the loop alive.
+  startLoop();
+
+})();
 </script>
 </body>
 </html>
