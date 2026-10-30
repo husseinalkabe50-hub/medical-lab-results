@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نظام إدارة المختبرات الطبية</title>
+<style>
+:root{--navy:#0b3268;--blue:#0875f5;--bg:#eef3f9;--green:#168447}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:#172b49}
+header{background:linear-gradient(110deg,#071f47,#1262bc);color:white;padding:17px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header h1{font-size:22px;margin:0 0 5px}header small{color:#d6e7ff}
+.layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;padding:12px;max-width:1500px;margin:auto}
+nav{background:var(--navy);border-radius:10px;padding:10px;height:max-content}
+nav button{width:100%;text-align:right;background:transparent;color:white;border:0;padding:13px 9px;border-radius:6px;font-size:14px}
+nav button.active,nav button:hover{background:var(--blue)}
+main{min-width:0}
+.card{background:white;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 2px 9px #17365b0a}
+h2{font-size:18px;color:var(--navy);margin:0 0 14px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label{display:block;font-size:13px;color:#526985}
+input,select,textarea{width:100%;margin-top:5px;padding:11px;border:1px solid #cfdaea;border-radius:6px;background:white;font:inherit;min-width:0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn{border:0;border-radius:6px;padding:11px 15px;background:var(--blue);color:white;font-weight:bold;font:inherit;cursor:pointer}
+.btn.green{background:var(--green)}.btn.red{background:#c92532}.btn.light{background:#e6effc;color:#174b91}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:10px 8px;border:1px solid #dbe4ef;text-align:center}
+th{background:#e4efff;color:#173b70}
+.status{color:#168447;font-weight:bold}.demo{color:#b42318;font-weight:bold}
+#report{display:none}
+.report-head{text-align:center;border-bottom:2px solid #1768c5;padding-bottom:12px;margin-bottom:15px}
+.report-head h2{font-size:25px;margin:0 0 7px}
+.report-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;line-height:2}
+.report-foot{display:flex;justify-content:space-between;gap:10px;margin-top:30px;font-size:12px}
+.note{background:#fff8e5;border:1px solid #f3d99b;padding:10px;border-radius:6px;font-size:12px;margin-top:12px}
+@media(max-width:760px){
+ .layout{grid-template-columns:1fr;padding:8px}
+ nav{display:flex;overflow-x:auto;gap:4px}
+ nav button{min-width:max-content;width:auto;text-align:center;padding:10px}
+ header{padding:14px}header h1{font-size:18px}
+ .fields{grid-template-columns:1fr 1fr}
+ .card{padding:12px}
+ .report-info{grid-template-columns:1fr}
+ .btn{padding:10px;font-size:13px}
+}
+@media(max-width:420px){.fields{grid-template-columns:1fr}.actions .btn{flex:1}}
+@media print{
+ body{background:white;color:black}
+ header,nav,.no-print,#entry,#reportTitle{display:none!important}
+ .layout{display:block;padding:0;margin:0}
+ .card{box-shadow:none;border:0;padding:0}
+ #report{display:block!important}
+ #report .report-sheet{width:100%;padding:8mm}
+ table{font-size:10pt;white-space:normal}
+ th,td{padding:7px 4px}
+ .note{display:none}
+ @page{size:A4;margin:10mm}
+}
+</style>
+</head>
+<body>
+<header>
+ <div><h1>⚗ مختبر النجف</h1><small>نظام إدارة المختبرات الطبية</small></div>
+ <div id="clock"></div>
+</header>
+<div class="layout">
+<nav class="no-print">
+ <button class="active" onclick="go('entry',this)">👤 المرضى والنتائج</button>
+ <button onclick="newPatient()">＋ مريض جديد</button>
+ <button onclick="showSaved()">▤ السجلات المحفوظة</button>
+ <button onclick="toggleReport()">▣ عرض النتيجة</button>
+ <button onclick="window.print()">🖨 الطباعة / PDF</button>
+</nav>
+<main>
+<section id="entry" class="card">
+ <h2>بيانات المريض</h2>
+ <div class="fields">
+ <label>رقم الملف<input id="pid" placeholder="رقم الملف"></label>
+ <label>اسم المريض *<input id="pname" placeholder="الاسم الكامل"></label>
+ <label>العمر<input id="age" type="number" min="0" placeholder="العمر"></label>
+ <label>الجنس<select id="gender"><option>ذكر</option><option>أنثى</option></select></label>
+ <label>رقم الهاتف<input id="phone" placeholder="رقم الهاتف"></label>
+ <label>الطبيب المحول<input id="doctor" placeholder="اسم الطبيب"></label>
+ <label>تاريخ الفحص<input id="date" type="date"></label>
+ <label>نوع العينة<select id="sample"><option>Serum</option><option>Plasma</option><option>Whole Blood</option><option>Urine</option></select></label>
+ </div>
+</section>
+<section class="card">
+ <h2>التحاليل المطلوبة</h2>
+ <div class="actions no-print">
+ <button class="btn" onclick="addTest()">＋ إضافة تحليل</button>
+ <button class="btn light" onclick="savePatient()">حفظ البيانات التجريبية</button>
+ </div>
+ <div class="table-wrap"><table>
+ <thead><tr><th>التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى المرجعي</th><th>الحالة</th><th class="no-print">حذف</th></tr></thead>
+ <tbody id="tests"></tbody>
+ </table></div>
+ <div class="note">وضع تجريبي: التحاليل والمديات المعروضة أمثلة توضيحية فقط. لا تستخدم هذه البيانات لاتخاذ قرارات طبية.</div>
+ <label style="margin-top:14px">ملاحظات النتيجة<textarea id="notes" rows="2" placeholder="ملاحظات المختبر"></textarea></label>
+</section>
+<section class="card no-print">
+ <h2>معاينة التقرير</h2>
+ <div id="reportMessage">📄 فورمة النتيجة مخفية حالياً. اضغط «عرض النتيجة» لإظهارها.</div>
+ <div class="actions" style="margin-top:12px">
+ <button class="btn" onclick="toggleReport()">◉ عرض النتيجة</button>
+ <button class="btn green" onclick="window.print()">🖨 طباعة النتيجة</button>
+ </div>
+</section>
+<section id="report" class="card">
+ <div class="report-sheet">
+ <div class="report-head"><h2>⚗ مختبر النجف</h2><div>نتائج التحاليل المختبرية | Laboratory Test Results</div></div>
+ <div id="reportInfo" class="report-info"></div>
+ <h3 style="text-align:center">نتائج الفحوصات</h3>
+ <div class="table-wrap"><table>
+ <thead><tr><th>Test Name</th><th>Result</th><th>Unit</th><th>Reference Range</th><th>Flag</th></tr></thead>
+ <tbody id="reportTests"></tbody>
+ </table></div>
+ <p id="reportNotes"></p>
+ <div class="report-foot"><div>توقيع فني المختبر: __________</div><div>ختم المختبر: __________</div></div>
+ <p style="text-align:center;font-size:11px;margin-top:30px">نموذج تجريبي — يجب التحقق من جميع البيانات قبل الاستخدام.</p>
+ </div>
+</section>
+<section id="saved" class="card" hidden>
+ <h2>السجلات المحفوظة على هذا المتصفح</h2>
+ <div id="savedList"></div>
+ <button class="btn light" onclick="go('entry')">العودة إلى بيانات المريض</button>
+</section>
+</main>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const demoTests=[
+ ["Glucose (FBS)","95","mg/dL","70–110"],
+ ["Urea","28","mg/dL","15–40"],
+ ["Creatinine","0.9","mg/dL","0.6–1.3"],
+ ["Total Cholesterol","—","mg/dL","حسب مرجع المختبر"],
+ ["Triglycerides","—","mg/dL","حسب مرجع المختبر"],
+ ["HDL","—","mg/dL","حسب مرجع المختبر"],
+ ["LDL","—","mg/dL","حسب مرجع المختبر"],
+ ["SGPT (ALT)","—","U/L","حسب مرجع المختبر"]
+];
+function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderTests(){
+ $("tests").innerHTML=demoTests.map((t,i)=>`<tr><td><input aria-label="اسم التحليل" data-i="${i}" data-k="0" value="${safe(t[0])}"></td><td><input aria-label="النتيجة" data-i="${i}" data-k="1" value="${safe(t[1])}"></td><td><input aria-label="الوحدة" data-i="${i}" data-k="2" value="${safe(t[2])}"></td><td><input aria-label="المدى المرجعي" data-i="${i}" data-k="3" value="${safe(t[3])}"></td><td class="demo">تجريبي</td><td class="no-print"><button class="btn red" onclick="removeTest(${i})">×</button></td></tr>`).join("");
+ $("tests").querySelectorAll("input").forEach(el=>el.addEventListener("input",e=>{demoTests[+e.target.dataset.i][+e.target.dataset.k]=e.target.value}));
+}
+function removeTest(i){demoTests.splice(i,1);renderTests()}
+function addTest(){demoTests.push(["تحليل جديد","—","","يحدد من دليل المختبر"]);renderTests()}
+function getPatient(){return {pid:$("pid").value,pname:$("pname").value,age:$("age").value,gender:$("gender").value,phone:$("phone").value,doctor:$("doctor").value,date:$("date").value,sample:$("sample").value,notes:$("notes").value,tests:demoTests}}
+function updateReport(){
+ const p=getPatient();
+ $("reportInfo").innerHTML=[["اسم المريض",p.pname],["رقم الملف",p.pid],["العمر",p.age],["الجنس",p.gender],["تاريخ الفحص",p.date],["نوع العينة",p.sample],["الطبيب المحول",p.doctor],["الهاتف",p.phone]].map(x=>`<div><b>${safe(x[0])}:</b> ${safe(x[1]||"—")}</div>`).join("");
+ $("reportTests").innerHTML=demoTests.map(t=>`<tr><td>${safe(t[0])}</td><td>${safe(t[1])}</td><td>${safe(t[2])}</td><td>${safe(t[3])}</td><td>غير معتمد</td></tr>`).join("");
+ $("reportNotes").textContent="ملاحظات: "+p.notes;
+}
+function toggleReport(){
+ const show=$("report").style.display!=="block";
+ if(show&&!$("pname").value.trim()){alert("يرجى إدخال اسم المريض أولاً.");return}
+ if(show)updateReport();
+ $("report").style.display=show?"block":"none";
+ $("reportMessage").textContent=show?"تم إظهار فورمة النتيجة.":"فورمة النتيجة مخفية حالياً.";
+}
+function savePatient(){
+ const p=getPatient();if(!p.pname.trim()){alert("يرجى إدخال اسم المريض.");return}
+ try{const arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]");arr.push({...p,tests:p.tests.map(t=>[...t]),savedAt:new Date().toISOString()});localStorage.setItem("labDemoPatients",JSON.stringify(arr));alert("تم الحفظ في هذا المتصفح فقط. هذه نسخة تجريبية وليست قاعدة بيانات طبية آمنة.");}
+ catch(e){alert("تعذر الحفظ. قد تكون مساحة التخزين ممتلئة.");}
+}
+function showSaved(){
+ $("entry").hidden=true;document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=true});$("saved").hidden=false;
+ let arr=[];try{arr=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")}catch(e){}
+ $("savedList").innerHTML=arr.length?arr.map((p,i)=>`<div style="padding:10px;border-bottom:1px solid #ddd">${safe(p.pname)} — ${safe(p.date)} <button class="btn light" onclick="loadPatient(${i})">فتح</button></div>`).join(""):"لا توجد سجلات محفوظة.";
+}
+function loadPatient(i){const p=JSON.parse(localStorage.getItem("labDemoPatients")||"[]")[i];if(!p)return;for(const k of ["pid","pname","age","gender","phone","doctor","date","sample","notes"])$(k).value=p[k]||"";demoTests.splice(0,demoTests.length,...p.tests.map(t=>[...t]));renderTests();$("saved").hidden=true;$("entry").hidden=false;document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});}
+function newPatient(){["pid","pname","age","phone","doctor","notes"].forEach(k=>$(k).value="");$("date").value=new Date().toISOString().slice(0,10);$("report").style.display="none";$("reportMessage").textContent="فورمة النتيجة مخفية حالياً.";go("entry")}
+function go(id,btn){if(id==="saved"){showSaved();return}document.querySelectorAll("main>section.card").forEach(s=>{if(s.id!=="saved")s.hidden=false});$("saved").hidden=true;document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active")}
+$("date").value=new Date().toISOString().slice(0,10);
+$("clock").textContent=new Date().toLocaleDateString("ar-IQ");
+renderTests();
+</script>
+</body>
+</html>
