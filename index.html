@@ -6,14 +6,16 @@
 <title>مختبر النجف | نظام إدارة المختبرات الطبية</title>
 <style>
 :root{--navy:#07366f;--navy2:#082a53;--blue:#0864ed;--blue2:#0a56d5;--green:#078b2c;--red:#d20b17;--ink:#102b59;--muted:#58708e;--line:#d7e1ed;--panel:#fff;--bg:#e9f1fa}
-*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#dce9f7,#f4f8fd);color:#152d50;font-size:14px;min-height:100vh;overflow-x:hidden}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html, body { max-width: 100vw; overflow-x: hidden; margin: 0; padding: 0; }
+body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#dce9f7,#f4f8fd);color:#152d50;font-size:14px;min-height:100vh;}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
-.app{margin:8px auto;max-width:1800px;min-height:calc(100vh - 16px);border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #092b5525;background:#f1f6fc;border:1px solid #a8c2df;display:flex;flex-direction:column}
+.app{margin:8px auto;max-width:1800px;min-height:calc(100vh - 16px);border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #092b5525;background:#f1f6fc;border:1px solid #a8c2df;display:flex;flex-direction:column;width: 100%;}
 .topbar{height:106px;flex-shrink:0;background:linear-gradient(110deg,#062c59,#064a9a);color:white;display:flex;align-items:center;padding:12px 22px;gap:22px;box-shadow:0 3px 10px #07254d30;z-index:10}
 .brand{display:flex;align-items:center;gap:15px;min-width:300px}.brand-mark{width:58px;height:68px;display:grid;place-items:center;font-size:50px;color:#fff}.brand h1{margin:0;font-size:30px;line-height:1.3;font-weight:750;white-space:nowrap}.brand p{margin:3px 0 0;font-size:16px;white-space:nowrap}
 .topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600;transition: all 0.1s;}.navitem .ico{font-size:28px;line-height:1}.navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
 .userbox{display:flex;align-items:center;gap:12px;background:#052d60aa;border:1px solid #ffffff10;padding:8px 12px;border-radius:12px;white-space:nowrap}.userbox strong{display:block;font-size:15px}.userbox small{opacity:.85}.avatar{width:42px;height:42px;border-radius:50%;background:#dceafa;color:#14529c;display:grid;place-items:center;font-size:24px}
-.workspace{display:flex;flex:1;min-height:0}
+.workspace{display:flex;flex:1;min-height:0;width: 100%;}
 
 /* القائمة الجانبية */
 .sidebar{width:240px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px;z-index:5}
@@ -21,32 +23,72 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .sidebtn .ico{font-size:25px;width:27px;text-align:center}.sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
 .sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}.labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
 
-.main{flex:1;min-width:0;padding:12px;display:grid;grid-template-columns:minmax(420px, .93fr) minmax(420px,1.07fr);gap:13px}
-.leftcol,.rightcol{min-width:0;display:flex;flex-direction:column;gap:10px}.card{background:#fff;border:1px solid #e4ebf3;border-radius:10px;box-shadow:0 2px 8px #244b7410;padding:12px}
-.section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:19px;font-weight:750;margin-bottom:10px}.section-title .titleico{color:#1470e8;font-size:22px;margin-right:8px}
-.patient-grid{display:grid;grid-template-columns:1fr 105px;gap:7px 12px;align-items:center}.field-label{font-size:15px;color:#3e587a;font-weight:650}.field{width:100%;height:40px;border:1px solid #d3deeb;border-radius:6px;padding:6px 10px;color:#263d5b;background:#fff;box-shadow:inset 0 1px 2px #183d5a08;outline:none}.field:focus,textarea:focus{border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c}.inline-fields{display:flex;gap:7px;align-items:center}.inline-fields .field{min-width:0}.age{width:80px;flex-shrink:0}
+.main{flex:1;min-width:0;padding:12px;display:grid;grid-template-columns:minmax(420px, .93fr) minmax(420px,1.07fr);gap:13px; width: 100%; max-width: 100%;}
+.leftcol,.rightcol{min-width:0;display:flex;flex-direction:column;gap:10px; width: 100%;}
+.card{background:#fff;border:1px solid #e4ebf3;border-radius:10px;box-shadow:0 2px 8px #244b7410;padding:12px; width: 100%; box-sizing: border-box;}
+.section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:19px;font-weight:750;margin-bottom:10px; flex-wrap: wrap; gap: 10px;}
+.section-title .titleico{color:#1470e8;font-size:22px;margin-right:8px}
+
+/* حقول المريض الجديدة */
+.patient-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px; width: 100%;}
+.field-group { display: flex; flex-direction: row; align-items: center; gap: 10px; width: 100%; }
+.field-group .field-label { width: 110px; flex-shrink: 0; text-align: left; font-size: 14px; font-weight: 650; color: #3e587a;}
+.field-group .field, .field-group .inline-fields { flex: 1; width: 100%; }
+.field{width:100%;height:40px;border:1px solid #d3deeb;border-radius:6px;padding:6px 10px;color:#263d5b;background:#fff;box-shadow:inset 0 1px 2px #183d5a08;outline:none; box-sizing: border-box;}
+.field:focus,textarea:focus{border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c}
+.inline-fields{display:flex;gap:7px;align-items:center; width: 100%;}
+.inline-fields .field{min-width:0; flex: 1;}
 
 /* أزرار ثلاثية الأبعاد 3D */
-.btn{border-radius:8px;padding:12px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:white;font-weight:700;transition:.1s;margin-bottom:4px;}
+.btn{border-radius:8px;padding:12px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:white;font-weight:700;transition:.1s;margin-bottom:4px; box-sizing: border-box;}
 .btn:active{transform:translateY(4px); box-shadow:none !important;}
 .btn.blue{background:linear-gradient(135deg,#0870f7,#0753d4);box-shadow:0 4px 0 #052b75, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.green{background:linear-gradient(135deg,#0c9a35,#087c27);box-shadow:0 4px 0 #044f18, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.red{background:linear-gradient(135deg,#e01725,#bd0712);box-shadow:0 4px 0 #70040a, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0;box-shadow:0 4px 0 #c4d4e8, 0 4px 6px rgba(0,0,0,0.1);}
-.btn.small{padding:8px 12px}.btn .ico{font-size:19px}.actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px}.actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px}
+.btn.small{padding:8px 12px}.btn .ico{font-size:19px}
+.actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px; width: 100%; box-sizing: border-box;}
+.actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px; width: 100%;}
 
-.tests-card{padding:10px}.table-wrap{overflow-x:auto;border:1px solid #dce5ef;border-radius:6px;-webkit-overflow-scrolling:touch;}table{width:100%;border-collapse:collapse;min-width:470px;font-size:12.5px}th{background:#eef4fb;color:#314d70;font-weight:750}td,th{padding:7px 5px;border-bottom:1px solid #e0e8f1;text-align:center;white-space:nowrap}tbody tr:hover{background:#f4f8fe}tbody tr:last-child td{border-bottom:0}.test-name{text-align:left;direction:ltr}.status{display:inline-block;border-radius:5px;padding:4px 9px;color:#fff;font-weight:700;min-width:54px}.normal{background:#078d2d}.high{background:#d20b1b}.low{background:#e18b00}.pending{background:#8a94a6}.result-high{color:#d20b1b;font-weight:800}.result-normal{color:#172b45;font-weight:700}input[type=checkbox]{accent-color:#0967e8;width:18px;height:18px;vertical-align:middle}
-textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-radius:6px;padding:10px;outline:none}
-.rightcol{gap:10px}.result-panel{flex:1;min-height:530px;display:flex;align-items:center;justify-content:center;text-align:center;padding:35px 25px}.empty-state{max-width:520px}.empty-illustration{width:270px;height:270px;margin:0 auto 18px;position:relative;display:grid;place-items:center}.empty-illustration:before{content:"";position:absolute;width:245px;height:220px;background:#e4efff;border-radius:48% 52% 54% 46%;transform:rotate(-14deg)}.doc-icon{position:relative;width:150px;height:205px;background:#fff;border:4px solid #104c9d;border-radius:13px 13px 13px 13px;box-shadow:0 4px 10px #0b458019;display:flex;flex-direction:column;align-items:center;padding:18px 17px;gap:11px}.doc-icon:after{content:"";position:absolute;top:-4px;right:-4px;width:30px;height:30px;background:#e4efff;border-left:4px solid #104c9d;border-bottom:4px solid #104c9d;clip-path:polygon(0 0,100% 100%,0 100%)}.flask{font-size:42px;color:#104c9d;line-height:1.2}.line{height:7px;background:#a9bed8;border-radius:5px;width:100%}.chart-bars{display:flex;align-items:end;gap:6px;height:35px;margin-right:8px}.chart-bars span{width:12px;background:#4486d8;border-radius:2px 2px 0 0}.chart-bars span:nth-child(1){height:13px}.chart-bars span:nth-child(2){height:23px}.chart-bars span:nth-child(3){height:34px}.empty-state h2{font-size:25px;color:#0a2d65;margin:10px 0 16px}.empty-state p{font-size:19px;line-height:1.8;color:#5d7290;margin:0 auto 26px}.show-btn{min-width:260px;font-size:18px;padding:15px 25px}
-.result-view{width:100%;max-width:760px;text-align:right;display:none}.result-view h2{text-align:center;color:#0a2d65}.result-header{display:flex;justify-content:space-between;gap:10px;border-bottom:2px solid #1254a0;padding-bottom:12px;margin-bottom:15px}.result-header h2{margin:0;text-align:right}.result-table{width:100%;font-size:14px}.result-table td,.result-table th{padding:10px 7px}.result-note{margin-top:15px;background:#f4f8fd;padding:12px;border-radius:7px;line-height:1.7}.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#092e58;color:white;padding:12px 18px;border-radius:9px;box-shadow:0 5px 20px #0003;display:none;z-index:999;white-space:nowrap;}
+.tests-card{padding:10px; width: 100%; box-sizing: border-box;}
+.table-wrap{overflow-x:auto;border:1px solid #dce5ef;border-radius:6px;-webkit-overflow-scrolling:touch; width: 100%; max-width: 100%; display: block;}
+table{width:100%;border-collapse:collapse;min-width:470px;font-size:12.5px}
+th{background:#eef4fb;color:#314d70;font-weight:750}
+td,th{padding:7px 5px;border-bottom:1px solid #e0e8f1;text-align:center;white-space:nowrap}
+tbody tr:hover{background:#f4f8fe}tbody tr:last-child td{border-bottom:0}
+.test-name{text-align:left;direction:ltr}
+.status{display:inline-block;border-radius:5px;padding:4px 9px;color:#fff;font-weight:700;min-width:54px}
+.normal{background:#078d2d}.high{background:#d20b1b}.low{background:#e18b00}.pending{background:#8a94a6}
+input[type=checkbox]{accent-color:#0967e8;width:18px;height:18px;vertical-align:middle}
+textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-radius:6px;padding:10px;outline:none; box-sizing: border-box;}
+
+/* صفحة النتيجة */
+.result-panel{flex:1;min-height:530px;display:flex;align-items:center;justify-content:center;text-align:center;padding:35px 25px; width: 100%; box-sizing: border-box;}
+.result-view{width:100%;max-width:760px;text-align:right;display:none}
+.result-view h2{text-align:center;color:#0a2d65}
+.result-header{display:flex;justify-content:space-between;gap:10px;border-bottom:2px solid #1254a0;padding-bottom:12px;margin-bottom:15px}
+.result-header h2{margin:0;text-align:right}
+.result-table{width:100%;font-size:14px}
+.result-table td,.result-table th{padding:10px 7px}
+.result-note{margin-top:15px;background:#f4f8fd;padding:12px;border-radius:7px;line-height:1.7}
+
+/* الرسائل والنوافذ */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#092e58;color:white;padding:12px 18px;border-radius:9px;box-shadow:0 5px 20px #0003;display:none;z-index:999;white-space:nowrap; font-weight: bold;}
 .modal-backdrop{position:fixed;inset:0;background:#031b36a8;display:none;align-items:center;justify-content:center;padding:15px;z-index:100;backdrop-filter:blur(2px);}
-.modal{background:white;border-radius:12px;width:min(550px,100%);padding:20px;box-shadow:0 20px 60px #0004;max-height:90vh;overflow-y:auto;}
+.modal{background:white;border-radius:12px;width:min(550px,100%);padding:20px;box-shadow:0 20px 60px #0004;max-height:90vh;overflow-y:auto; box-sizing: border-box;}
 .modal h3{margin:0 0 16px;color:#0a3268}.modal .field{margin-bottom:12px}.modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:12px}
 
-/* استعلامات الوسائط (Responsive) */
-@media(max-width:1250px){.topbar{gap:10px;padding:10px}.brand{min-width:230px}.brand h1{font-size:24px}.brand p{font-size:13px}.navitem{min-width:60px;padding:6px}.navitem span:last-child{font-size:12px}.userbox{display:none}.sidebar{width:205px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}.actionbar{grid-template-columns:repeat(2,1fr)}}
+/* ========================================= */
+/* استعلامات الوسائط (Responsive) للهواتف */
+/* ========================================= */
+@media(max-width:1250px){
+  .topbar{gap:10px;padding:10px}.brand{min-width:230px}.brand h1{font-size:24px}.brand p{font-size:13px}
+  .navitem{min-width:60px;padding:6px}.navitem span:last-child{font-size:12px}.userbox{display:none}
+  .sidebar{width:205px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}
+  .actionbar{grid-template-columns:repeat(2,1fr)}
+  .patient-grid{grid-template-columns:1fr;}
+}
 
-/* تصميم الهواتف والأجهزة اللوحية */
 @media(max-width:900px){
   .app{margin:0;border-radius:0;min-height:100vh;border:none;}
   .topbar{height:auto;flex-wrap:wrap;padding:10px;gap:10px;}
@@ -70,26 +112,21 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   .main{grid-template-columns:1fr;padding:10px;gap:10px;}
   .rightcol{order:2;}.leftcol{order:1;}
   
-  /* ترتيب الحقول فوق بعضها */
-  .patient-grid{grid-template-columns:1fr;gap:10px;}
-  .field-label{display:block;margin-bottom:-5px;font-size:14px;text-align:right;}
-  .inline-fields{width:100%;}
-  .age{width:100%;}
+  /* تحويل حقول المريض لعمود واحد */
+  .patient-grid{grid-template-columns:1fr;gap:8px;}
+  .field-group { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .field-group .field-label { width: 100%; text-align: right; font-size: 13px;}
   
   .actionbar{grid-template-columns:1fr 1fr;gap:10px;}
   .actionbar .btn{padding:14px 8px;font-size:14px;}
-  .empty-illustration{transform:scale(.85);margin:-10px auto;}
-  .show-btn{width:100%;}
-  
-  /* تصغير الجداول لتناسب الهاتف */
-  table{font-size:12px;}
-  th,td{padding:8px 4px;}
 }
 
 @media(max-width:480px){
-  .field{padding:8px 10px;font-size:15px;} /* خط أكبر للكتابة */
+  .field{padding:8px 10px;font-size:15px;}
   .actionbar{grid-template-columns:1fr;}
   .btn{width:100%;}
+  .section-title { flex-direction: column; align-items: stretch; }
+  .section-title button { width: 100%; }
   .result-header{flex-direction:column;text-align:center;}
   .result-header h2{text-align:center;margin-bottom:5px;}
 }
@@ -103,7 +140,6 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   .app{box-shadow:none;border:0;margin:0;max-width:none;border-radius:0;min-height:0;}
   .workspace,.main,.rightcol{display:block;padding:0;}
   .card.result-panel{border:0;box-shadow:none;min-height:0;padding:0;}
-  .empty-state{display:none!important;}
   .result-view{display:block!important;max-width:none;}
   .table-wrap{overflow:visible;border:0;}
   table{min-width:0;font-size:12px;}
@@ -149,9 +185,9 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <div id="dashboardView" class="page-view active" style="grid-column: 1 / -1; display: flex; gap: 13px;">
     <div class="leftcol" style="flex: 1;">
       <div class="card" style="text-align: center; padding: 50px 20px;">
-        <h2 style="color: #0a2d65; font-size: 28px;">مرحباً بك في نظام إدارة المختبرات</h2>
-        <p style="color: #5d7290; font-size: 16px; margin-bottom: 30px;">يرجى اختيار "تسجيل مريض جديد" من القائمة للبدء.</p>
-        <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto;">تسجيل مريض جديد الآن</button>
+        <h2 style="color: #0a2d65; font-size: 24px;">مرحباً بك في نظام إدارة المختبرات</h2>
+        <p style="color: #5d7290; font-size: 16px; margin-bottom: 30px;">يرجى اختيار "تسجيل مريض جديد" للبدء.</p>
+        <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto; width: 100%; max-width: 300px;">تسجيل مريض جديد</button>
       </div>
     </div>
   </div>
@@ -159,43 +195,65 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <!-- صفحة تسجيل مريض جديد -->
   <div id="registrationView" class="page-view" style="grid-column: 1 / -1; flex-direction: column; gap: 10px;">
     <div class="card">
-      <div class="section-title"><span>بيانات المريض والتسجيل</span><span class="titleico">♟</span></div>
+      <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
       <div class="patient-grid">
-        <div class="inline-fields">
-          <input id="regDate" class="field readonly-field" readonly aria-label="التاريخ" placeholder="التاريخ">
-          <input id="regTime" class="field readonly-field" readonly aria-label="الوقت" placeholder="الوقت">
+        
+        <!-- حقول المريض منظمة بشكل يمنع التمدد -->
+        <div class="field-group">
+          <label class="field-label">التاريخ / الوقت:</label>
+          <div class="inline-fields">
+            <input id="regDate" class="field readonly-field" readonly placeholder="التاريخ">
+            <input id="regTime" class="field readonly-field" readonly placeholder="الوقت">
+          </div>
         </div>
-        <label class="field-label">التاريخ / الوقت:</label>
-        
-        <input id="patientId" class="field readonly-field" value="2026-00125" aria-label="رقم المريض">
-        <label class="field-label" for="patientId">رقم الملف:</label>
-        
-        <input id="patientName" class="field" value="علي حسن محمد" aria-label="الاسم الكامل">
-        <label class="field-label" for="patientName">الاسم الكامل:</label>
-        
-        <div class="inline-fields">
-            <input id="age" class="field age" type="number" value="32" min="0" aria-label="العمر" placeholder="العمر">
+
+        <div class="field-group">
+          <label class="field-label" for="patientId">رقم الملف:</label>
+          <input id="patientId" class="field readonly-field" value="2026-00125">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="patientName">الاسم الكامل:</label>
+          <input id="patientName" class="field" value="علي حسن محمد">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">الجنس / العمر:</label>
+          <div class="inline-fields">
             <select id="gender" class="field"><option>الذكر</option><option>الأنثى</option></select>
+            <input id="age" class="field age" type="number" value="32" min="0" placeholder="العمر">
+          </div>
         </div>
-        <label class="field-label">الجنس / العمر:</label>
-        
-        <input id="phone" class="field" value="07812345678" aria-label="رقم الهاتف" placeholder="الهاتف">
-        <label class="field-label" for="phone">رقم الهاتف:</label>
-        
-        <input id="doctor" class="field" value="د. أحمد الساعدي" aria-label="الطبيب المحول" placeholder="الطبيب">
-        <label class="field-label" for="doctor">الطبيب المحول:</label>
-        
-        <input id="patientNote" class="field" aria-label="ملاحظة" placeholder="ملاحظة">
-        <label class="field-label" for="patientNote">ملاحظة:</label>
+
+        <div class="field-group">
+          <label class="field-label" for="phone">رقم الهاتف:</label>
+          <input id="phone" class="field" value="07812345678">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="doctor">الطبيب المحول:</label>
+          <input id="doctor" class="field" value="د. أحمد الساعدي">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="patientNote">ملاحظة:</label>
+          <input id="patientNote" class="field">
+        </div>
+
       </div>
     </div>
 
     <div class="card tests-card">
-      <div class="section-title"><span>التحاليل المطلوبة <span class="titleico">⚗</span></span><button class="btn blue small" id="addTest">＋ إضافة</button></div>
-      <div class="table-wrap"><table id="testsTable">
-        <thead><tr><th><input type="checkbox" id="selectAll" checked aria-label="تحديد الكل"></th><th>الحالة</th><th>المدى</th><th>الوحدة</th><th>النتيجة</th><th>اسم التحليل</th><th>ت</th></tr></thead>
-        <tbody></tbody>
-      </table></div>
+      <div class="section-title">
+        <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
+        <button class="btn blue small" id="addTest">＋ إضافة تحليل</button>
+      </div>
+      <div class="table-wrap">
+        <table id="testsTable">
+          <thead><tr><th><input type="checkbox" id="selectAll" checked></th><th>الحالة</th><th>المدى</th><th>الوحدة</th><th>النتيجة</th><th>اسم التحليل</th><th>ت</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
 
     <div class="card">
@@ -213,7 +271,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 
   <!-- صفحة عرض النتيجة للطباعة -->
   <div id="resultViewPage" class="page-view" style="grid-column: 1 / -1;">
-    <div class="card result-panel" style="min-height: 600px; align-items: flex-start; padding: 20px;">
+    <div class="card result-panel">
       <div class="result-view" id="resultView" style="display:block;">
         <div class="result-header"><div><h2>مختبر النجف</h2><div>نظام إدارة المختبرات الطبية</div></div><div><b>تقرير نتائج التحاليل</b><br><span id="reportDate"></span></div></div>
         <h2>بيانات المريض</h2>
@@ -237,15 +295,14 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">إضافة تحليل جديد</h3>
-    
-    <input class="field" id="searchTestInput" placeholder="ابحث عن اسم التحليل..." style="margin-bottom: 10px;">
+    <input class="field" id="searchTestInput" placeholder="ابحث عن اسم التحليل...">
     <div id="testList" style="max-height: 200px; overflow-y: auto; border: 1px solid #d3deeb; border-radius: 6px; background: #f9fbff; margin-bottom: 15px;"></div>
     
     <div style="background: #eef4fb; padding: 10px; border-radius: 6px; border: 1px solid #d7e1ed;">
       <h4 style="margin: 0 0 8px 0; color: #0a3268; font-size: 14px;">أو أضف تحليلاً يدوياً:</h4>
       <div style="display: flex; flex-direction: column; gap: 5px;">
         <input class="field" id="manualName" placeholder="اسم التحليل *">
-        <div style="display: flex; gap: 5px;">
+        <div style="display: flex; gap: 5px; width: 100%;">
             <input class="field" id="manualUnit" placeholder="الوحدة" style="flex: 1;">
             <input class="field" id="manualRange" placeholder="المدى (1-5)" style="flex: 1;">
         </div>
@@ -386,11 +443,10 @@ function showPage(pageId) {
             $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
         }
     }
-    window.scrollTo(0,0); // التمرير لأعلى عند تغيير الصفحة
+    window.scrollTo(0,0);
   }
 }
 
-// بناء واجهة النتيجة
 function buildResultView() {
   const name=$('#patientName').value.trim();
   if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return false;}
@@ -407,13 +463,11 @@ function buildResultView() {
   return true;
 }
 
-// الأزرار الرئيسية
 $('#showBtn').onclick = () => { if(buildResultView()) showPage('resultViewPage'); };
 $('#printBtn').onclick = () => { if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(), 300); } };
 $('#startNewPatientBtn').onclick = () => { document.querySelector('[data-action="new"]').click(); };
 $$('.back-to-home').forEach(btn => btn.onclick = () => showPage('dashboardView'));
 
-// زر الحفظ
 $('#saveBtn').onclick = () => {
   const record={id:$('#patientId').value,name:$('#patientName').value,date:$('#regDate').value,time:$('#regTime').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
   try{
@@ -426,7 +480,6 @@ $('#saveBtn').onclick = () => {
   }catch(e){ toast('تعذر الحفظ'); }
 };
 
-// نافذة التحاليل
 $('#addTest').onclick=()=>{ $('#modalBackdrop').style.display='flex'; $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value=''; renderTestList(''); $('#searchTestInput').focus(); };
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
@@ -463,7 +516,6 @@ $('#confirmManualAdd').onclick = () => {
 
 $('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
 
-// تفعيل أزرار القائمة الجانبية
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
   const action=b.dataset.action;
   $$('.sidebtn').forEach(x=>x.classList.remove('active'));
@@ -511,7 +563,6 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
   }
 });
 
-// تفعيل أزرار الشريط العلوي
 $$('.topnav .navitem').forEach(b=>b.onclick=()=>{ 
   $$('.topnav .navitem').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
@@ -522,3 +573,4 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').st
 </script>
 </body>
 </html>
+
