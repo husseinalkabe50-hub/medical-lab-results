@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>مختبر النجف - نظام إدارة المختبرات</title>
+
+  <!-- ✅ importmap لتحميل React و ReactDOM -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@18.3.1",
+      "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+    }
+  }
+  </script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +50,11 @@
   </style>
 </head>
 <body class="bg-slate-100">
-  <div id="root"></div>
+  <div id="root">
+    <div style="padding:30px;text-align:center;font-family:Tajawal,sans-serif;color:#475569;">
+      جاري تحميل النظام...
+    </div>
+  </div>
 
   <script type="module">
     import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
@@ -310,385 +325,368 @@
       }, []);
       return { toasts, push };
     }
- // ============ APP ============
-function App() {
-  const [patient, setPatient] = useState(() => loadLS(LS_KEYS.current, EMPTY_PATIENT));
-  const [tests, setTests] = useState(() => loadLS(LS_KEYS.current + '_tests', DEFAULT_TESTS));
-  const [patients, setPatients] = useState(() => loadLS(LS_KEYS.patients, []));
-  const [note, setNote] = useState(() => loadLS(LS_KEYS.current + '_note', ''));
-  const [showAdd, setShowAdd] = useState(false);
-  const [modal, setModal] = useState(null); // 'view' | 'print' | 'pdf'
-  const [query, setQuery] = useState('');
-  const [catFilter, setCatFilter] = useState('الكل');
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [showPatients, setShowPatients] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const { toasts, push } = useToasts();
-  const printRef = useRef(null);
 
-  // حفظ تلقائي
-  useEffect(() => { saveLS(LS_KEYS.current, patient); }, [patient]);
-  useEffect(() => { saveLS(LS_KEYS.current + '_tests', tests); }, [tests]);
-  useEffect(() => { saveLS(LS_KEYS.current + '_note', note); }, [note]);
+    // ============ APP ============
+    function App() {
+      const [patient, setPatient] = useState(() => loadLS(LS_KEYS.current, EMPTY_PATIENT));
+      const [tests, setTests] = useState(() => loadLS(LS_KEYS.current + '_tests', DEFAULT_TESTS));
+      const [patients, setPatients] = useState(() => loadLS(LS_KEYS.patients, []));
+      const [note, setNote] = useState(() => loadLS(LS_KEYS.current + '_note', ''));
+      const [showAdd, setShowAdd] = useState(false);
+      const [modal, setModal] = useState(null);
+      const [query, setQuery] = useState('');
+      const [catFilter, setCatFilter] = useState('الكل');
+      const [drawerOpen, setDrawerOpen] = useState(false);
+      const [showPatients, setShowPatients] = useState(false);
+      const [busy, setBusy] = useState(false);
+      const { toasts, push } = useToasts();
+      const printRef = useRef(null);
 
-  // Esc لإغلاق المودالات
-  useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === 'Escape') {
-        setShowAdd(false); setModal(null); setDrawerOpen(false); setShowPatients(false);
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
+      useEffect(() => { saveLS(LS_KEYS.current, patient); }, [patient]);
+      useEffect(() => { saveLS(LS_KEYS.current + '_tests', tests); }, [tests]);
+      useEffect(() => { saveLS(LS_KEYS.current + '_note', note); }, [note]);
 
-  const filteredCatalog = useMemo(() => {
-    let list = FLAT_CATALOG;
-    if (catFilter !== 'الكل') list = list.filter(x => x.cat === catFilter);
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      list = list.filter(x => x.name.toLowerCase().includes(q) || x.cat.includes(q));
-    }
-    return list;
-  }, [query, catFilter]);
+      useEffect(() => {
+        const onKey = (e) => {
+          if (e.key === 'Escape') {
+            setShowAdd(false); setModal(null); setDrawerOpen(false); setShowPatients(false);
+          }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, []);
 
-  // ===== Actions =====
-  const updatePatient = (patch) => setPatient(p => ({ ...p, ...patch }));
+      const filteredCatalog = useMemo(() => {
+        let list = FLAT_CATALOG;
+        if (catFilter !== 'الكل') list = list.filter(x => x.cat === catFilter);
+        if (query.trim()) {
+          const q = query.trim().toLowerCase();
+          list = list.filter(x => x.name.toLowerCase().includes(q) || x.cat.includes(q));
+        }
+        return list;
+      }, [query, catFilter]);
 
-  const validatePatient = () => {
-    if (!patient.name.trim()) { push('الاسم مطلوب', 'error'); return false; }
-    if (!patient.age || isNaN(+patient.age)) { push('العمر غير صالح', 'error'); return false; }
-    if (!patient.phone.trim()) { push('رقم الهاتف مطلوب', 'error'); return false; }
-    return true;
-  };
+      const updatePatient = (patch) => setPatient(p => ({ ...p, ...patch }));
 
-  const savePatient = () => {
-    if (!validatePatient()) return;
-    const snapshot = {
-      ...patient,
-      id: patient.id || uid(),
-      number: patient.number || `P-${Date.now().toString().slice(-6)}`,
-      tests: tests.map(t => ({ ...t, status: calcStatus(t.result, t.range) })),
-      note,
-      savedAt: new Date().toISOString(),
-    };
-    setPatient(p => ({ ...p, id: snapshot.id, number: snapshot.number }));
-    setPatients(prev => {
-      const idx = prev.findIndex(p => p.id === snapshot.id);
-      const next = idx >= 0 ? prev.map((p, i) => i === idx ? snapshot : p) : [snapshot, ...prev];
-      saveLS(LS_KEYS.patients, next);
-      return next;
-    });
-    push('تم حفظ بيانات المريض بنجاح');
-  };
+      const validatePatient = () => {
+        if (!patient.name.trim()) { push('الاسم مطلوب', 'error'); return false; }
+        if (!patient.age || isNaN(+patient.age)) { push('العمر غير صالح', 'error'); return false; }
+        if (!patient.phone.trim()) { push('رقم الهاتف مطلوب', 'error'); return false; }
+        return true;
+      };
 
-  const newPatient = () => {
-    setPatient(EMPTY_PATIENT);
-    setTests(DEFAULT_TESTS.map(t => ({ ...t, id: uid(), result: '' })));
-    setNote('');
-    push('نموذج مريض جديد');
-  };
+      const savePatient = () => {
+        if (!validatePatient()) return;
+        const snapshot = {
+          ...patient,
+          id: patient.id || uid(),
+          number: patient.number || `P-${Date.now().toString().slice(-6)}`,
+          tests: tests.map(t => ({ ...t, status: calcStatus(t.result, t.range) })),
+          note,
+          savedAt: new Date().toISOString(),
+        };
+        setPatient(p => ({ ...p, id: snapshot.id, number: snapshot.number }));
+        setPatients(prev => {
+          const idx = prev.findIndex(p => p.id === snapshot.id);
+          const next = idx >= 0 ? prev.map((p, i) => i === idx ? snapshot : p) : [snapshot, ...prev];
+          saveLS(LS_KEYS.patients, next);
+          return next;
+        });
+        push('تم حفظ بيانات المريض بنجاح');
+      };
 
-  const loadPatient = (p) => {
-    setPatient({
-      id: p.id, number: p.number, name: p.name, gender: p.gender,
-      age: p.age, phone: p.phone, doctor: p.doctor, notes: p.notes,
-    });
-    setTests(p.tests.map(t => ({ ...t, id: t.id || uid() })));
-    setNote(p.note || '');
-    setShowPatients(false);
-    push(`تم فتح ملف ${p.name}`);
-  };
+      const newPatient = () => {
+        setPatient(EMPTY_PATIENT);
+        setTests(DEFAULT_TESTS.map(t => ({ ...t, id: uid(), result: '' })));
+        setNote('');
+        push('نموذج مريض جديد');
+      };
 
-  const deletePatient = (id) => {
-    setPatients(prev => {
-      const next = prev.filter(p => p.id !== id);
-      saveLS(LS_KEYS.patients, next);
-      return next;
-    });
-    push('تم حذف ملف المريض');
-  };
+      const loadPatient = (p) => {
+        setPatient({
+          id: p.id, number: p.number, name: p.name, gender: p.gender,
+          age: p.age, phone: p.phone, doctor: p.doctor, notes: p.notes,
+        });
+        setTests(p.tests.map(t => ({ ...t, id: t.id || uid() })));
+        setNote(p.note || '');
+        setShowPatients(false);
+        push(`تم فتح ملف ${p.name}`);
+      };
 
-  const addTest = (item) => {
-    if (tests.find(t => t.name === item.name)) { push('التحليل موجود مسبقاً', 'error'); return; }
-    setTests(prev => [...prev, {
-      id: uid(), name: item.name, result: '', unit: item.unit, range: item.range, checked: true,
-    }]);
-    push(`تمت إضافة ${item.name}`);
-  };
+      const deletePatient = (id) => {
+        setPatients(prev => {
+          const next = prev.filter(p => p.id !== id);
+          saveLS(LS_KEYS.patients, next);
+          return next;
+        });
+        push('تم حذف ملف المريض');
+      };
 
-  const removeTest = (id) => {
-    setTests(prev => prev.filter(t => t.id !== id));
-  };
+      const addTest = (item) => {
+        if (tests.find(t => t.name === item.name)) { push('التحليل موجود مسبقاً', 'error'); return; }
+        setTests(prev => [...prev, {
+          id: uid(), name: item.name, result: '', unit: item.unit, range: item.range, checked: true,
+        }]);
+        push(`تمت إضافة ${item.name}`);
+      };
 
-  const toggleTest = (id) => {
-    setTests(prev => prev.map(t => t.id === id ? { ...t, checked: !t.checked } : t));
-  };
+      const removeTest = (id) => {
+        setTests(prev => prev.filter(t => t.id !== id));
+      };
 
-  const setResult = (id, val) => {
-    setTests(prev => prev.map(t => t.id === id ? { ...t, result: val } : t));
-  };
+      const toggleTest = (id) => {
+        setTests(prev => prev.map(t => t.id === id ? { ...t, checked: !t.checked } : t));
+      };
 
-  // ===== Print / PDF =====
-  const doPrint = () => {
-    setBusy(true);
-    setTimeout(() => {
-      window.print();
-      setBusy(false);
-    }, 150);
-  };
+      const setResult = (id, val) => {
+        setTests(prev => prev.map(t => t.id === id ? { ...t, result: val } : t));
+      };
 
-  const doPdf = async () => {
-    if (!printRef.current) return;
-    setBusy(true);
-    try {
-      await html2pdf().set({
-        margin: 10,
-        filename: `result-${patient.number || 'patient'}-${Date.now()}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      }).from(printRef.current).save();
-      push('تم حفظ PDF');
-    } catch (e) {
-      push('فشل حفظ PDF', 'error');
-    } finally {
-      setBusy(false);
-    }
-  };
+      const doPrint = () => {
+        setBusy(true);
+        setTimeout(() => {
+          window.print();
+          setBusy(false);
+        }, 150);
+      };
 
-  // ===== WhatsApp =====
-  const sendWhatsApp = () => {
-    const checked = tests.filter(t => t.checked);
-    const lines = checked.map(t => {
-      const st = calcStatus(t.result, t.range);
-      return `${t.name}: ${t.result || '-'} ${t.unit} (${st})`;
-    }).join('\n');
-    const msg = `نتيجة تحاليل ${patient.name || 'المريض'} - ${patient.number || ''}\n\n${lines}\n\n${note ? 'ملاحظات: ' + note : ''}`;
-    const phone = (patient.phone || '').replace(/[^0-9]/g, '');
-    if (!phone) { push('رقم الهاتف مطلوب', 'error'); return; }
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
-  };
+      const doPdf = async () => {
+        if (!printRef.current) return;
+        setBusy(true);
+        try {
+          await html2pdf().set({
+            margin: 10,
+            filename: `result-${patient.number || 'patient'}-${Date.now()}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          }).from(printRef.current).save();
+          push('تم حفظ PDF');
+        } catch (e) {
+          push('فشل حفظ PDF', 'error');
+        } finally {
+          setBusy(false);
+        }
+      };
 
-  const headerMenu = [
-    { label: 'الرئيسية', icon: IconHome },
-    { label: 'المريض', icon: IconUser },
-    { label: 'التحاليل', icon: IconTest },
-    { label: 'النتائج', icon: IconFile },
-    { label: 'الطباعة', icon: IconPrint },
-    { label: 'التقارير', icon: IconChart },
-    { label: 'الإعدادات', icon: IconSettings },
-  ];
+      const sendWhatsApp = () => {
+        const checked = tests.filter(t => t.checked);
+        const lines = checked.map(t => {
+          const st = calcStatus(t.result, t.range);
+          return `${t.name}: ${t.result || '-'} ${t.unit} (${st})`;
+        }).join('\n');
+        const msg = `نتيجة تحاليل ${patient.name || 'المريض'} - ${patient.number || ''}\n\n${lines}\n\n${note ? 'ملاحظات: ' + note : ''}`;
+        const phone = (patient.phone || '').replace(/[^0-9]/g, '');
+        if (!phone) { push('رقم الهاتف مطلوب', 'error'); return; }
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+      };
 
-  const sideMenu = [
-    { label: 'تسجيل مريض جديد', icon: IconUserPlus, action: () => { newPatient(); setDrawerOpen(false); } },
-    { label: 'قائمة المرضى', icon: IconUsers, action: () => { setShowPatients(true); setDrawerOpen(false); } },
-    { label: 'سحب العينات', icon: IconFlask, action: () => push('قريباً') },
-    { label: 'إدخال النتائج', icon: IconFile, action: () => push('قريباً') },
-    { label: 'مراجعة النتائج', icon: IconCheck, action: () => push('قريباً') },
-    { label: 'الطباعة', icon: IconPrint, action: () => setModal('print') },
-    { label: 'التقارير والإحصائيات', icon: IconChart, action: () => push('قريباً') },
-    { label: 'إدارة الأجهزة', icon: IconActivity, action: () => push('قريباً') },
-    { label: 'النسخ الاحتياطي', icon: IconDB, action: () => push('قريباً') },
-    { label: 'الإعدادات العامة', icon: IconSettings, action: () => push('قريباً') },
-  ];
+      const headerMenu = [
+        { label: 'الرئيسية', icon: IconHome },
+        { label: 'المريض', icon: IconUser },
+        { label: 'التحاليل', icon: IconTest },
+        { label: 'النتائج', icon: IconFile },
+        { label: 'الطباعة', icon: IconPrint },
+        { label: 'التقارير', icon: IconChart },
+        { label: 'الإعدادات', icon: IconSettings },
+      ];
 
-  // ===== RENDER =====
-  return h('div', {
-    dir: 'rtl',
-    className: 'min-h-screen bg-[#f1f5f9] text-[#0f172a] overflow-x-clip',
-    style: { paddingTop: 'var(--safe-area-inset-top)', boxSizing: 'border-box' }
-  }, [
-    // ===== HEADER =====
-    h('header', { key: 'header', className: 'min-h-[70px] bg-[#1e293b] text-white flex flex-wrap lg:flex-nowrap items-center justify-between px-3 lg:px-6 py-2 lg:py-0 sticky z-30 shadow-md gap-2', style: { top: 'var(--safe-area-inset-top)' } }, [
-      h('div', { key: 'brand', className: 'flex items-center gap-2.5 order-1' }, [
-        h('button', { key: 'm', onClick: () => setDrawerOpen(true), className: 'lg:hidden w-11 h-11 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center', 'aria-label': 'القائمة' }, h(IconMenu, { size: 20 })),
-        h('div', { key: 'logo', className: 'w-9 h-9 rounded-lg bg-[#2563eb] flex items-center justify-center' }, h(IconFlask, { size: 20 })),
-        h('div', { key: 't', className: 'leading-tight' }, [
-          h('div', { key: 'a', className: 'font-extrabold text-[16px] lg:text-[19px]' }, 'مختبر النجف'),
-          h('div', { key: 'b', className: 'text-[11px] text-slate-300 hidden sm:block' }, 'نظام إدارة المختبرات الطبية'),
-        ]),
-      ]),
-      h('nav', { key: 'nav', className: 'hidden lg:flex items-center gap-1' }, headerMenu.map(m =>
-        h('button', { key: m.label, onClick: () => push('قريباً'), className: 'flex flex-col items-center gap-1 px-4 py-2 rounded-lg text-[11px] text-slate-300 hover:bg-white/10 hover:text-white transition-all min-h-[44px]' }, [
-          h(m.icon, { key: 'i', size: 18 }),
-          h('span', { key: 's', className: 'font-medium whitespace-nowrap' }, m.label),
-        ])
-      )),
-      h('div', { key: 'user', className: 'flex items-center gap-2 lg:gap-4 shrink-0 ml-auto lg:ml-0' }, [
-        h('div', { key: 'n', className: 'hidden lg:flex flex-col items-end leading-tight' }, [
-          h('span', { key: 'a', className: 'text-[13px] font-bold' }, 'حسين فني مختبر'),
-          h('span', { key: 'b', className: 'text-[11px] text-slate-300' }, todayAr()),
-        ]),
-        h('div', { key: 'av', className: 'w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-[12px] font-bold' }, 'ح'),
-      ]),
-    ]),
+      const sideMenu = [
+        { label: 'تسجيل مريض جديد', icon: IconUserPlus, action: () => { newPatient(); setDrawerOpen(false); } },
+        { label: 'قائمة المرضى', icon: IconUsers, action: () => { setShowPatients(true); setDrawerOpen(false); } },
+        { label: 'سحب العينات', icon: IconFlask, action: () => push('قريباً') },
+        { label: 'إدخال النتائج', icon: IconFile, action: () => push('قريباً') },
+        { label: 'مراجعة النتائج', icon: IconCheck, action: () => push('قريباً') },
+        { label: 'الطباعة', icon: IconPrint, action: () => setModal('print') },
+        { label: 'التقارير والإحصائيات', icon: IconChart, action: () => push('قريباً') },
+        { label: 'إدارة الأجهزة', icon: IconActivity, action: () => push('قريباً') },
+        { label: 'النسخ الاحتياطي', icon: IconDB, action: () => push('قريباً') },
+        { label: 'الإعدادات العامة', icon: IconSettings, action: () => push('قريباً') },
+      ];
 
-    // ===== MOBILE TABS =====
-    h('div', { key: 'tabs', className: 'lg:hidden bg-[#1e293b] border-t border-white/10 flex overflow-x-auto scrollbar-none gap-1.5 px-3 py-2.5 sticky z-20', style: { top: 'calc(56px + var(--safe-area-inset-top))' } },
-      h('div', { className: 'flex gap-1.5 whitespace-nowrap' }, headerMenu.map(m =>
-        h('button', { key: m.label, onClick: () => push('قريباً'), className: 'shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-medium bg-white/10 text-slate-300 hover:bg-white/15 min-h-[36px]' }, [
-          h(m.icon, { key: 'i', size: 14 }),
-          m.label,
-        ])
-      ))
-    ),
-
-    // ===== BODY =====
-    h('div', { key: 'body', className: 'flex flex-1 min-h-0 w-full' }, [
-
-      // ===== SIDEBAR =====
-      h('aside', { key: 'side', className: 'hidden lg:flex w-[220px] bg-[#0f172a] text-slate-300 flex-col shrink-0 sticky top-[70px] h-[calc(100vh-70px)] overflow-y-auto z-20' }, [
-        h('div', { key: 'l', className: 'p-3 flex flex-col gap-1' }, sideMenu.map((m, i) =>
-          h('button', { key: i, onClick: m.action, className: 'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium hover:bg-white/5 hover:text-white transition-colors text-right w-full min-h-[44px]' }, [
-            h(m.icon, { key: 'i', size: 18, className: 'text-slate-400' }),
-            h('span', { key: 's', className: 'flex-1 truncate' }, m.label),
-          ])
-        )),
-        h('div', { key: 'f', className: 'mt-auto p-3' },
-          h('button', { onClick: () => push('تم تسجيل الخروج'), className: 'w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-[#7f1d1d] hover:bg-[#991b1b] text-white min-h-[44px]' }, [
-            h(IconLogout, { key: 'i', size: 18 }),
-            'خروج من البرنامج',
-          ])
-        ),
-      ]),
-
-      // ===== DRAWER (mobile) =====
-      drawerOpen && h('div', { key: 'drawer', className: 'lg:hidden fixed inset-0 z-50 flex justify-end animate-fade' }, [
-        h('div', { key: 'bg', className: 'absolute inset-0 bg-black/50', onClick: () => setDrawerOpen(false) }),
-        h('div', { key: 'panel', className: 'relative w-[280px] max-w-[85vw] h-screen bg-[#0f172a] text-slate-300 flex flex-col shadow-2xl animate-slide-in overflow-y-auto' }, [
-          h('div', { key: 'top', className: 'flex items-center justify-between p-4 border-b border-white/10 sticky top-0 bg-[#0f172a] z-10' }, [
-            h('div', { key: 'a', className: 'flex items-center gap-2.5' }, [
-              h('div', { key: 'l', className: 'w-8 h-8 rounded-lg bg-[#2563eb] flex items-center justify-center' }, h(IconFlask, { size: 16 })),
-              h('span', { key: 's', className: 'font-extrabold text-[14px] text-white' }, 'القائمة الرئيسية'),
+      return h('div', {
+        dir: 'rtl',
+        className: 'min-h-screen bg-[#f1f5f9] text-[#0f172a] overflow-x-clip',
+        style: { paddingTop: 'var(--safe-area-inset-top)', boxSizing: 'border-box' }
+      }, [
+        h('header', { key: 'header', className: 'min-h-[70px] bg-[#1e293b] text-white flex flex-wrap lg:flex-nowrap items-center justify-between px-3 lg:px-6 py-2 lg:py-0 sticky z-30 shadow-md gap-2', style: { top: 'var(--safe-area-inset-top)' } }, [
+          h('div', { key: 'brand', className: 'flex items-center gap-2.5 order-1' }, [
+            h('button', { key: 'm', onClick: () => setDrawerOpen(true), className: 'lg:hidden w-11 h-11 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center', 'aria-label': 'القائمة' }, h(IconMenu, { size: 20 })),
+            h('div', { key: 'logo', className: 'w-9 h-9 rounded-lg bg-[#2563eb] flex items-center justify-center' }, h(IconFlask, { size: 20 })),
+            h('div', { key: 't', className: 'leading-tight' }, [
+              h('div', { key: 'a', className: 'font-extrabold text-[16px] lg:text-[19px]' }, 'مختبر النجف'),
+              h('div', { key: 'b', className: 'text-[11px] text-slate-300 hidden sm:block' }, 'نظام إدارة المختبرات الطبية'),
             ]),
-            h('button', { key: 'x', onClick: () => setDrawerOpen(false), className: 'w-11 h-11 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white' }, h(IconX, { size: 18 })),
           ]),
-          h('div', { key: 'l', className: 'p-3 flex flex-col gap-1 flex-1' }, sideMenu.map((m, i) =>
-            h('button', { key: i, onClick: () => { m.action(); setDrawerOpen(false); }, className: 'flex items-center gap-2.5 px-3 py-3 rounded-xl text-[14px] font-medium hover:bg-white/5 hover:text-white text-right w-full min-h-[48px]' }, [
-              h(m.icon, { key: 'i', size: 18, className: 'text-slate-400' }),
-              h('span', { key: 's', className: 'flex-1' }, m.label),
+          h('nav', { key: 'nav', className: 'hidden lg:flex items-center gap-1' }, headerMenu.map(m =>
+            h('button', { key: m.label, onClick: () => push('قريباً'), className: 'flex flex-col items-center gap-1 px-4 py-2 rounded-lg text-[11px] text-slate-300 hover:bg-white/10 hover:text-white transition-all min-h-[44px]' }, [
+              h(m.icon, { key: 'i', size: 18 }),
+              h('span', { key: 's', className: 'font-medium whitespace-nowrap' }, m.label),
             ])
           )),
-          h('div', { key: 'f', className: 'p-3 border-t border-white/10' },
-            h('button', { onClick: () => { push('تم تسجيل الخروج'); setDrawerOpen(false); }, className: 'w-full flex items-center gap-2.5 px-3 py-3 rounded-xl text-[13px] font-bold bg-[#7f1d1d] hover:bg-[#991b1b] text-white min-h-[48px]' }, [
-              h(IconLogout, { key: 'i', size: 18 }),
-              'خروج من البرنامج',
+          h('div', { key: 'user', className: 'flex items-center gap-2 lg:gap-4 shrink-0 ml-auto lg:ml-0' }, [
+            h('div', { key: 'n', className: 'hidden lg:flex flex-col items-end leading-tight' }, [
+              h('span', { key: 'a', className: 'text-[13px] font-bold' }, 'حسين فني مختبر'),
+              h('span', { key: 'b', className: 'text-[11px] text-slate-300' }, todayAr()),
+            ]),
+            h('div', { key: 'av', className: 'w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-[12px] font-bold' }, 'ح'),
+          ]),
+        ]),
+
+        h('div', { key: 'tabs', className: 'lg:hidden bg-[#1e293b] border-t border-white/10 flex overflow-x-auto scrollbar-none gap-1.5 px-3 py-2.5 sticky z-20', style: { top: 'calc(56px + var(--safe-area-inset-top))' } },
+          h('div', { className: 'flex gap-1.5 whitespace-nowrap' }, headerMenu.map(m =>
+            h('button', { key: m.label, onClick: () => push('قريباً'), className: 'shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-medium bg-white/10 text-slate-300 hover:bg-white/15 min-h-[36px]' }, [
+              h(m.icon, { key: 'i', size: 14 }),
+              m.label,
+            ])
+          ))
+        ),
+
+        h('div', { key: 'body', className: 'flex flex-1 min-h-0 w-full' }, [
+          h('aside', { key: 'side', className: 'hidden lg:flex w-[220px] bg-[#0f172a] text-slate-300 flex-col shrink-0 sticky top-[70px] h-[calc(100vh-70px)] overflow-y-auto z-20' }, [
+            h('div', { key: 'l', className: 'p-3 flex flex-col gap-1' }, sideMenu.map((m, i) =>
+              h('button', { key: i, onClick: m.action, className: 'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-medium hover:bg-white/5 hover:text-white transition-colors text-right w-full min-h-[44px]' }, [
+                h(m.icon, { key: 'i', size: 18, className: 'text-slate-400' }),
+                h('span', { key: 's', className: 'flex-1 truncate' }, m.label),
+              ])
+            )),
+            h('div', { key: 'f', className: 'mt-auto p-3' },
+              h('button', { onClick: () => push('تم تسجيل الخروج'), className: 'w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-[#7f1d1d] hover:bg-[#991b1b] text-white min-h-[44px]' }, [
+                h(IconLogout, { key: 'i', size: 18 }),
+                'خروج من البرنامج',
+              ])
+            ),
+          ]),
+
+          drawerOpen && h('div', { key: 'drawer', className: 'lg:hidden fixed inset-0 z-50 flex justify-end animate-fade' }, [
+            h('div', { key: 'bg', className: 'absolute inset-0 bg-black/50', onClick: () => setDrawerOpen(false) }),
+            h('div', { key: 'panel', className: 'relative w-[280px] max-w-[85vw] h-screen bg-[#0f172a] text-slate-300 flex flex-col shadow-2xl animate-slide-in overflow-y-auto' }, [
+              h('div', { key: 'top', className: 'flex items-center justify-between p-4 border-b border-white/10 sticky top-0 bg-[#0f172a] z-10' }, [
+                h('div', { key: 'a', className: 'flex items-center gap-2.5' }, [
+                  h('div', { key: 'l', className: 'w-8 h-8 rounded-lg bg-[#2563eb] flex items-center justify-center' }, h(IconFlask, { size: 16 })),
+                  h('span', { key: 's', className: 'font-extrabold text-[14px] text-white' }, 'القائمة الرئيسية'),
+                ]),
+                h('button', { key: 'x', onClick: () => setDrawerOpen(false), className: 'w-11 h-11 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white' }, h(IconX, { size: 18 })),
+              ]),
+              h('div', { key: 'l', className: 'p-3 flex flex-col gap-1 flex-1' }, sideMenu.map((m, i) =>
+                h('button', { key: i, onClick: () => { m.action(); setDrawerOpen(false); }, className: 'flex items-center gap-2.5 px-3 py-3 rounded-xl text-[14px] font-medium hover:bg-white/5 hover:text-white text-right w-full min-h-[48px]' }, [
+                  h(m.icon, { key: 'i', size: 18, className: 'text-slate-400' }),
+                  h('span', { key: 's', className: 'flex-1' }, m.label),
+                ])
+              )),
+              h('div', { key: 'f', className: 'p-3 border-t border-white/10' },
+                h('button', { onClick: () => { push('تم تسجيل الخروج'); setDrawerOpen(false); }, className: 'w-full flex items-center gap-2.5 px-3 py-3 rounded-xl text-[13px] font-bold bg-[#7f1d1d] hover:bg-[#991b1b] text-white min-h-[48px]' }, [
+                  h(IconLogout, { key: 'i', size: 18 }),
+                  'خروج من البرنامج',
+                ])
+              ),
+            ]),
+          ]),
+
+          h('main', { key: 'main', className: 'flex-1 bg-[#f8fafc] min-w-0' },
+            h('div', { className: 'max-w-[1600px] mx-auto p-3 lg:p-5 flex flex-col gap-4' }, [
+
+              h('div', { key: 'pcard', className: 'bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
+                h('div', { key: 'h', className: 'flex flex-col lg:flex-row lg:items-center justify-between gap-3' }, [
+                  h('div', { key: 't', className: 'flex items-center gap-2' }, [
+                    h('div', { key: 'i', className: 'w-8 h-8 rounded-lg bg-[#eff6ff] flex items-center justify-center text-[#2563eb]' }, h(IconUser, { size: 18 })),
+                    h('h2', { key: 'h', className: 'font-extrabold text-[15px]' }, 'بيانات المريض'),
+                  ]),
+                  h('div', { key: 'a', className: 'grid grid-cols-2 gap-2 sm:flex sm:flex-wrap w-full lg:w-auto' }, [
+                    h('button', { key: 's', onClick: savePatient, className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconSave, { key: 'i', size: 16 }), ' حفظ']),
+                    h('button', { key: 'n', onClick: newPatient, className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-slate-600 hover:bg-slate-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconUserPlus, { key: 'i', size: 16 }), ' جديد']),
+                    h('button', { key: 'p', onClick: () => setModal('print'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#16a34a] hover:bg-green-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconPrint, { key: 'i', size: 16 }), ' طباعة']),
+                    h('button', { key: 'v', onClick: () => setModal('view'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#3b82f6] hover:bg-blue-600 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconEye, { key: 'i', size: 16 }), ' عرض']),
+                    h('button', { key: 'pd', onClick: () => setModal('pdf'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#dc2626] hover:bg-red-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconPdf, { key: 'i', size: 16 }), ' PDF']),
+                  ]),
+                ]),
+                h('div', { key: 'g', className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4' }, [
+                  field('الرقم', h('input', { value: patient.number, onChange: e => updatePatient({ number: e.target.value }), className: inputCls, placeholder: 'تلقائي' })),
+                  field('الاسم الكامل *', h('input', { value: patient.name, onChange: e => updatePatient({ name: e.target.value }), className: inputCls, placeholder: 'اسم المريض' })),
+                  field('الجنس / العمر *', h('div', { className: 'flex gap-2' }, [
+                    h('select', { key: 'g', value: patient.gender, onChange: e => updatePatient({ gender: e.target.value }), className: inputCls + ' flex-1' }, [
+                      h('option', { key: 'm' }, 'الذكر'), h('option', { key: 'f' }, 'الأنثى'),
+                    ]),
+                    h('input', { key: 'a', value: patient.age, onChange: e => updatePatient({ age: e.target.value }), placeholder: 'سنة', className: inputCls + ' w-20 text-center' }),
+                  ])),
+                  field('رقم الهاتف *', h('input', { value: patient.phone, onChange: e => updatePatient({ phone: e.target.value }), className: inputCls, placeholder: '078xxxxxxxx' })),
+                  field('الطبيب المحول', h('input', { value: patient.doctor, onChange: e => updatePatient({ doctor: e.target.value }), className: inputCls })),
+                  field('ملاحظة', h('input', { value: patient.notes, onChange: e => updatePatient({ notes: e.target.value }), className: inputCls, placeholder: '...' })),
+                ]),
+              ]),
+
+              h('div', { key: 'grid', className: 'flex flex-col xl:flex-row gap-4' }, [
+                h('div', { key: 'tbl', className: 'flex-1 xl:w-[65%] bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
+                  h('div', { key: 'h', className: 'flex items-center justify-between mb-3' }, [
+                    h('div', { key: 'l', className: 'flex items-center gap-2' }, [
+                      h('div', { key: 'i', className: 'w-8 h-8 rounded-lg bg-[#eff6ff] flex items-center justify-center text-[#2563eb]' }, h(IconTest, { size: 16 })),
+                      h('h3', { key: 't', className: 'font-extrabold text-[14px]' }, 'التحاليل المطلوبة'),
+                      h('span', { key: 'c', className: 'bg-slate-100 text-slate-600 text-[11px] px-2 py-0.5 rounded-full font-bold' }, tests.length),
+                    ]),
+                    h('button', { key: 'a', onClick: () => setShowAdd(true), className: 'inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-[#2563eb] text-white text-[12px] font-bold hover:bg-blue-700 min-h-[40px]' }, [h(IconPlus, { key: 'i', size: 14 }), ' إضافة تحليل']),
+                  ]),
+                  h('div', { key: 't', className: 'overflow-x-auto rounded-xl border border-slate-200 -mx-3 lg:mx-0 scrollbar-none' },
+                    h('div', { className: 'min-w-[700px]' },
+                      h('table', { className: 'w-full text-[13px]' }, [
+                        h('thead', { key: 'h', className: 'bg-[#f8fafc] text-slate-600 text-[11px] font-bold' },
+                          h('tr', null, [
+                            h('th', { key: 'c', className: 'py-2.5 px-2 w-8' }, h(IconCheck, { size: 14 })),
+                            h('th', { key: 'n', className: 'py-2.5 px-2 text-right' }, 'ت'),
+                            h('th', { key: 't', className: 'py-2.5 px-2 text-right' }, 'اسم التحليل'),
+                            h('th', { key: 'r', className: 'py-2.5 px-2 text-right' }, 'النتيجة'),
+                            h('th', { key: 'u', className: 'py-2.5 px-2 text-right' }, 'الوحدة'),
+                            h('th', { key: 'g', className: 'py-2.5 px-2 text-right' }, 'الطبيعي'),
+                            h('th', { key: 's', className: 'py-2.5 px-2 text-right' }, 'الحالة'),
+                            h('th', { key: 'd', className: 'py-2.5 px-2 w-10' }, ''),
+                          ])
+                        ),
+                        h('tbody', { key: 'b' }, tests.map((t, i) => {
+                          const st = calcStatus(t.result, t.range);
+                          return h('tr', { key: t.id, className: `${i % 2 === 0 ? 'bg-white' : 'bg-[#f8fafc]'} border-t border-slate-100 hover:bg-blue-50/50` }, [
+                            h('td', { key: 'c', className: 'py-2 px-2' },
+                              h('button', { onClick: () => toggleTest(t.id), className: `w-6 h-6 rounded border flex items-center justify-center ${t.checked ? 'bg-[#2563eb] border-[#2563eb] text-white' : 'bg-white border-slate-300'}` }, t.checked && h(IconCheck, { size: 12 }))
+                            ),
+                            h('td', { key: 'n', className: 'py-2 px-2 text-slate-500' }, i + 1),
+                            h('td', { key: 't', className: 'py-2 px-2 font-bold' }, t.name),
+                            h('td', { key: 'r', className: 'py-2 px-2' },
+                              h('input', { value: t.result, onChange: e => setResult(t.id, e.target.value), className: 'w-20 h-8 px-2 rounded border border-slate-200 bg-white text-center' })
+                            ),
+                            h('td', { key: 'u', className: 'py-2 px-2 text-slate-600 text-[12px]' }, t.unit),
+                            h('td', { key: 'g', className: 'py-2 px-2 text-slate-600 text-[12px]' }, t.range),
+                            h('td', { key: 's', className: 'py-2 px-2' },
+                              h('span', { className: `inline-flex px-2 py-0.5 rounded-full text-[11px] font-bold ${statusColor(st)}` }, st)
+                            ),
+                            h('td', { key: 'd', className: 'py-2 px-2' },
+                              h('button', { onClick: () => removeTest(t.id), className: 'w-7 h-7 rounded hover:bg-red-50 text-red-500 flex items-center justify-center', title: 'حذف' }, h(IconTrash, { size: 14 }))
+                            ),
+                          ]);
+                        }))
+                      ])
+                    )
+                  ),
+                ]),
+
+                h('div', { key: 'side', className: 'w-full xl:w-[35%] shrink-0 flex flex-col gap-4' }, [
+                  h('div', { key: 'prev', className: 'bg-[#f8fafc] border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col items-center text-center min-h-[300px] justify-center' }, [
+                    h('div', { key: 'ic', className: 'w-20 h-20 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center mb-4 text-[#2563eb]' }, h(IconFile, { size: 32 })),
+                    h('h4', { key: 'h', className: 'font-extrabold text-[14px] mb-1' }, 'معاينة النتيجة'),
+                    h('p', { key: 'p', className: 'text-[12px] text-slate-500 leading-5 max-w-[280px] mb-4' }, 'اضغط عرض النتيجة لمعاينة النموذج، أو طباعة/PDF مباشرة'),
+                    h('button', { key: 'b', onClick: () => setModal('view'), className: 'w-full max-w-[200px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563eb] hover:bg-blue-700 text-white text-[13px] font-bold' }, [h(IconEye, { key: 'i', size: 16 }), ' عرض النتيجة']),
+                  ]),
+                  h('div', { key: 'note', className: 'bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
+                    h('div', { key: 'h', className: 'flex items-center gap-2 mb-2' }, [
+                      h('div', { key: 'i', className: 'w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600' }, h(IconFile, { size: 14 })),
+                      h('h4', { key: 't', className: 'font-bold text-[13px]' }, 'ملاحظات النتيجة'),
+                    ]),
+                    h('textarea', { key: 't', value: note, onChange: e => setNote(e.target.value), placeholder: 'يرجى متابعة الطبيب المختص', className: 'w-full h-20 rounded-lg border border-slate-200 bg-[#f8fafc] p-2.5 text-[13px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-100' }),
+                  ]),
+                ]),
+              ]),
             ])
           ),
         ]),
-      ]),
 
-      // ===== MAIN =====
-      h('main', { key: 'main', className: 'flex-1 bg-[#f8fafc] min-w-0' },
-        h('div', { className: 'max-w-[1600px] mx-auto p-3 lg:p-5 flex flex-col gap-4' }, [
-
-          // ===== PATIENT CARD =====
-          h('div', { key: 'pcard', className: 'bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
-            h('div', { key: 'h', className: 'flex flex-col lg:flex-row lg:items-center justify-between gap-3' }, [
-              h('div', { key: 't', className: 'flex items-center gap-2' }, [
-                h('div', { key: 'i', className: 'w-8 h-8 rounded-lg bg-[#eff6ff] flex items-center justify-center text-[#2563eb]' }, h(IconUser, { size: 18 })),
-                h('h2', { key: 'h', className: 'font-extrabold text-[15px]' }, 'بيانات المريض'),
-              ]),
-              h('div', { key: 'a', className: 'grid grid-cols-2 gap-2 sm:flex sm:flex-wrap w-full lg:w-auto' }, [
-                h('button', { key: 's', onClick: savePatient, className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconSave, { key: 'i', size: 16 }), ' حفظ']),
-                h('button', { key: 'n', onClick: newPatient, className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-slate-600 hover:bg-slate-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconUserPlus, { key: 'i', size: 16 }), ' جديد']),
-                h('button', { key: 'p', onClick: () => setModal('print'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#16a34a] hover:bg-green-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconPrint, { key: 'i', size: 16 }), ' طباعة']),
-                h('button', { key: 'v', onClick: () => setModal('view'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#3b82f6] hover:bg-blue-600 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconEye, { key: 'i', size: 16 }), ' عرض']),
-                h('button', { key: 'pd', onClick: () => setModal('pdf'), className: 'inline-flex items-center justify-center gap-1.5 px-3 lg:px-4 py-2.5 rounded-xl bg-[#dc2626] hover:bg-red-700 text-white text-[13px] font-bold min-h-[44px]' }, [h(IconPdf, { key: 'i', size: 16 }), ' PDF']),
-              ]),
-            ]),
-            h('div', { key: 'g', className: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4' }, [
-              field('الرقم', h('input', { value: patient.number, onChange: e => updatePatient({ number: e.target.value }), className: inputCls, placeholder: 'تلقائي' })),
-              field('الاسم الكامل *', h('input', { value: patient.name, onChange: e => updatePatient({ name: e.target.value }), className: inputCls, placeholder: 'اسم المريض' })),
-              field('الجنس / العمر *', h('div', { className: 'flex gap-2' }, [
-                h('select', { key: 'g', value: patient.gender, onChange: e => updatePatient({ gender: e.target.value }), className: inputCls + ' flex-1' }, [
-                  h('option', { key: 'm' }, 'الذكر'), h('option', { key: 'f' }, 'الأنثى'),
-                ]),
-                h('input', { key: 'a', value: patient.age, onChange: e => updatePatient({ age: e.target.value }), placeholder: 'سنة', className: inputCls + ' w-20 text-center' }),
-              ])),
-              field('رقم الهاتف *', h('input', { value: patient.phone, onChange: e => updatePatient({ phone: e.target.value }), className: inputCls, placeholder: '078xxxxxxxx' })),
-              field('الطبيب المحول', h('input', { value: patient.doctor, onChange: e => updatePatient({ doctor: e.target.value }), className: inputCls })),
-              field('ملاحظة', h('input', { value: patient.notes, onChange: e => updatePatient({ notes: e.target.value }), className: inputCls, placeholder: '...' })),
-            ]),
-          ]),
-
-          // ===== TESTS + SIDE =====
-          h('div', { key: 'grid', className: 'flex flex-col xl:flex-row gap-4' }, [
-            // TESTS TABLE
-            h('div', { key: 'tbl', className: 'flex-1 xl:w-[65%] bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
-              h('div', { key: 'h', className: 'flex items-center justify-between mb-3' }, [
-                h('div', { key: 'l', className: 'flex items-center gap-2' }, [
-                  h('div', { key: 'i', className: 'w-8 h-8 rounded-lg bg-[#eff6ff] flex items-center justify-center text-[#2563eb]' }, h(IconTest, { size: 16 })),
-                  h('h3', { key: 't', className: 'font-extrabold text-[14px]' }, 'التحاليل المطلوبة'),
-                  h('span', { key: 'c', className: 'bg-slate-100 text-slate-600 text-[11px] px-2 py-0.5 rounded-full font-bold' }, tests.length),
-                ]),
-                h('button', { key: 'a', onClick: () => setShowAdd(true), className: 'inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-[#2563eb] text-white text-[12px] font-bold hover:bg-blue-700 min-h-[40px]' }, [h(IconPlus, { key: 'i', size: 14 }), ' إضافة تحليل']),
-              ]),
-              h('div', { key: 't', className: 'overflow-x-auto rounded-xl border border-slate-200 -mx-3 lg:mx-0 scrollbar-none' },
-                h('div', { className: 'min-w-[700px]' },
-                  h('table', { className: 'w-full text-[13px]' }, [
-                    h('thead', { key: 'h', className: 'bg-[#f8fafc] text-slate-600 text-[11px] font-bold' },
-                      h('tr', null, [
-                        h('th', { key: 'c', className: 'py-2.5 px-2 w-8' }, h(IconCheck, { size: 14 })),
-                        h('th', { key: 'n', className: 'py-2.5 px-2 text-right' }, 'ت'),
-                        h('th', { key: 't', className: 'py-2.5 px-2 text-right' }, 'اسم التحليل'),
-                        h('th', { key: 'r', className: 'py-2.5 px-2 text-right' }, 'النتيجة'),
-                        h('th', { key: 'u', className: 'py-2.5 px-2 text-right' }, 'الوحدة'),
-                        h('th', { key: 'g', className: 'py-2.5 px-2 text-right' }, 'الطبيعي'),
-                        h('th', { key: 's', className: 'py-2.5 px-2 text-right' }, 'الحالة'),
-                        h('th', { key: 'd', className: 'py-2.5 px-2 w-10' }, ''),
-                      ])
-                    ),
-                    h('tbody', { key: 'b' }, tests.map((t, i) => {
-                      const st = calcStatus(t.result, t.range);
-                      return h('tr', { key: t.id, className: `${i % 2 === 0 ? 'bg-white' : 'bg-[#f8fafc]'} border-t border-slate-100 hover:bg-blue-50/50` }, [
-                        h('td', { key: 'c', className: 'py-2 px-2' },
-                          h('button', { onClick: () => toggleTest(t.id), className: `w-6 h-6 rounded border flex items-center justify-center ${t.checked ? 'bg-[#2563eb] border-[#2563eb] text-white' : 'bg-white border-slate-300'}` }, t.checked && h(IconCheck, { size: 12 }))
-                        ),
-                        h('td', { key: 'n', className: 'py-2 px-2 text-slate-500' }, i + 1),
-                        h('td', { key: 't', className: 'py-2 px-2 font-bold' }, t.name),
-                        h('td', { key: 'r', className: 'py-2 px-2' },
-                          h('input', { value: t.result, onChange: e => setResult(t.id, e.target.value), className: 'w-20 h-8 px-2 rounded border border-slate-200 bg-white text-center' })
-                        ),
-                        h('td', { key: 'u', className: 'py-2 px-2 text-slate-600 text-[12px]' }, t.unit),
-                        h('td', { key: 'g', className: 'py-2 px-2 text-slate-600 text-[12px]' }, t.range),
-                        h('td', { key: 's', className: 'py-2 px-2' },
-                          h('span', { className: `inline-flex px-2 py-0.5 rounded-full text-[11px] font-bold ${statusColor(st)}` }, st)
-                        ),
-                        h('td', { key: 'd', className: 'py-2 px-2' },
-                          h('button', { onClick: () => removeTest(t.id), className: 'w-7 h-7 rounded hover:bg-red-50 text-red-500 flex items-center justify-center', title: 'حذف' }, h(IconTrash, { size: 14 }))
-                        ),
-                      ]);
-                    }))
-                  ])
-                )
-              ),
-            ]),
-
-            // SIDE PANEL
-            h('div', { key: 'side', className: 'w-full xl:w-[35%] shrink-0 flex flex-col gap-4' }, [
-              h('div', { key: 'prev', className: 'bg-[#f8fafc] border border-slate-200 rounded-xl shadow-sm p-6 flex flex-col items-center text-center min-h-[300px] justify-center' }, [
-                h('div', { key: 'ic', className: 'w-20 h-20 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center mb-4 text-[#2563eb]' }, h(IconFile, { size: 32 })),
-                h('h4', { key: 'h', className: 'font-extrabold text-[14px] mb-1' }, 'معاينة النتيجة'),
-                h('p', { key: 'p', className: 'text-[12px] text-slate-500 leading-5 max-w-[280px] mb-4' }, 'اضغط عرض النتيجة لمعاينة النموذج، أو طباعة/PDF مباشرة'),
-                h('button', { key: 'b', onClick: () => setModal('view'), className: 'w-full max-w-[200px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#2563eb] hover:bg-blue-700 text-white text-[13px] font-bold' }, [h(IconEye, { key: 'i', size: 16 }), ' عرض النتيجة']),
-              ]),
-              h('div', { key: 'note', className: 'bg-white rounded-xl shadow-sm border border-slate-200 p-3 lg:p-4' }, [
-                h('div', { key: 'h', className: 'flex items-center gap-2 mb-2' }, [
-                  h('div', { key: 'i', className: 'w-7 h-7 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600' }, h(IconFile, { size: 14 })),
-                  h('h4', { key: 't', className: 'font-bold text-[13px]' }, 'ملاحظات النتيجة'),
-                ]),
-                h('textarea', { key: 't', value: note, onChange: e => setNote(e.target.value), placeholder: 'يرجى متابعة الطبيب المختص', className: 'w-full h-20 rounded-lg border border-slate-200 bg-[#f8fafc] p-2.5 text-[13px] resize-none focus:outline-none focus:ring-2 focus:ring-blue-100' }),
-              ]),
-            ]),
-          ]),
-        ])
-      ),
-    ]),
- 
-        // ===== ADD TEST MODAL =====
         showAdd && h('div', { key: 'add', className: 'fixed inset-0 z-50 flex items-center justify-center p-3' }, [
           h('div', { key: 'bg', className: 'absolute inset-0 bg-black/50', onClick: () => setShowAdd(false) }),
           h('div', { key: 'p', className: 'relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col' }, [
@@ -729,7 +727,6 @@ function App() {
           ]),
         ]),
 
-        // ===== VIEW / PRINT / PDF MODAL =====
         modal && h('div', { key: 'modal', className: 'fixed inset-0 z-50 flex items-center justify-center p-2 lg:p-6' }, [
           h('div', { key: 'bg', className: 'no-print absolute inset-0 bg-black/60', onClick: () => setModal(null) }),
           h('div', { key: 'p', className: 'relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col' }, [
@@ -746,7 +743,6 @@ function App() {
             ]),
             h('div', { key: 'b', className: 'overflow-y-auto flex-1 bg-[#f1f5f9] p-3 lg:p-6' },
               h('div', { key: 'doc', id: 'print-area', ref: printRef, className: 'bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-3xl mx-auto' }, [
-                // HEAD
                 h('div', { key: 'h', className: 'flex justify-between items-start border-b-2 border-[#2563eb] pb-4 mb-4' }, [
                   h('div', { key: 'l', className: 'flex gap-3' }, [
                     h('div', { key: 'i', className: 'w-12 h-12 rounded-xl bg-[#2563eb] flex items-center justify-center text-white' }, h(IconFlask, { size: 24 })),
@@ -762,14 +758,12 @@ function App() {
                     h('div', { key: 'c', className: 'mt-1 inline-flex px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px] font-bold' }, 'تم التحقق'),
                   ]),
                 ]),
-                // PATIENT INFO
                 h('div', { key: 'p', className: 'grid grid-cols-2 lg:grid-cols-4 gap-3 text-[12px] mb-5 bg-[#f8fafc] p-3 rounded-xl border' }, [
                   h('div', { key: 'n' }, [h('span', { key: 'l', className: 'text-slate-500' }, 'الاسم: '), h('span', { key: 'v', className: 'font-bold' }, patient.name || '—')]),
                   h('div', { key: 'g' }, [h('span', { key: 'l', className: 'text-slate-500' }, 'الجنس/العمر: '), h('span', { key: 'v', className: 'font-bold' }, `${patient.gender} - ${patient.age || '—'} سنة`)]),
                   h('div', { key: 'ph' }, [h('span', { key: 'l', className: 'text-slate-500' }, 'الهاتف: '), h('span', { key: 'v', className: 'font-bold' }, patient.phone || '—')]),
                   h('div', { key: 'd' }, [h('span', { key: 'l', className: 'text-slate-500' }, 'الطبيب: '), h('span', { key: 'v', className: 'font-bold' }, patient.doctor || '—')]),
                 ]),
-                // TABLE
                 h('table', { key: 't', className: 'w-full text-[12px] border border-slate-200 rounded-lg overflow-hidden' }, [
                   h('thead', { key: 'h', className: 'bg-[#1e293b] text-white text-[11px]' },
                     h('tr', null, [
@@ -793,18 +787,15 @@ function App() {
                     ]);
                   }))
                 ]),
-                // NOTES
                 note && h('div', { key: 'n', className: 'mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-[12px]' }, [
                   h('strong', { key: 's' }, 'ملاحظات: '), note,
                 ]),
-                // FOOTER
                 h('div', { key: 'f', className: 'mt-6 flex justify-between items-end text-[10px] text-slate-500 border-t pt-3' }, [
                   h('div', { key: 'l' }, ['المسؤول: حسين فني مختبر', h('br', { key: 'b' }), 'التوقيع: ___________']),
                   h('div', { key: 'r', className: 'text-left' }, ['نتمنى لكم الشفاء العاجل', h('br', { key: 'b' }), 'هذا التقرير صالح لمدة شهر']),
                 ]),
               ])
             ),
-            // WHATSAPP BAR
             h('div', { key: 'w', className: 'no-print p-3 border-t bg-white flex flex-col sm:flex-row gap-2 items-stretch sm:items-center' }, [
               h('div', { key: 'f', className: 'flex-1 relative' }, [
                 h(IconPhone, { key: 'i', size: 14, className: 'absolute right-3 top-1/2 -translate-y-1/2 text-slate-400' }),
@@ -815,7 +806,6 @@ function App() {
           ]),
         ]),
 
-        // ===== PATIENTS LIST MODAL =====
         showPatients && h('div', { key: 'pl', className: 'fixed inset-0 z-50 flex items-center justify-center p-3' }, [
           h('div', { key: 'bg', className: 'absolute inset-0 bg-black/50', onClick: () => setShowPatients(false) }),
           h('div', { key: 'p', className: 'relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col' }, [
@@ -848,7 +838,6 @@ function App() {
           ]),
         ]),
 
-        // ===== TOASTS =====
         h('div', { key: 'toasts', className: 'fixed bottom-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none' },
           toasts.map(t =>
             h('div', { key: t.id, className: `px-4 py-2.5 rounded-xl shadow-2xl text-[13px] font-bold flex items-center gap-2 animate-fade ${t.type === 'error' ? 'bg-[#7f1d1d] text-white' : 'bg-[#0f172a] text-white'}` }, [
@@ -875,4 +864,4 @@ function App() {
     root.render(h(App));
   </script>
 </body>
-</html>  
+</html>
