@@ -34,12 +34,16 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 .test-item { padding: 10px 15px; border-bottom: 1px solid #e0e8f1; cursor: pointer; text-align: right; transition: 0.2s; }
 .test-item:hover { background-color: #e9f1fa; }
 .test-item:last-child { border-bottom: none; }
+.page-view { display: none; width: 100%; animation: fadeIn 0.3s ease-in-out; }
+.page-view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.readonly-field { background-color: #f4f8fd; color: #58708e; cursor: not-allowed; text-align: center; font-weight: bold; }
 
 @media print{
   @page{size:A4;margin:12mm}
   body{background:#fff}
   .topbar,.sidebar,.topnav,.actionbar,.leftcol,.userbox,
-  .toast,.modal-backdrop,.labphoto,#backBtn{display:none!important}
+  .toast,.modal-backdrop,.labphoto,#backBtn,.back-to-home{display:none!important}
   .app{box-shadow:none;border:0;margin:0;max-width:none;border-radius:0;min-height:0}
   .workspace,.main,.rightcol{display:block;padding:0}
   .card.result-panel{border:0;box-shadow:none;min-height:0;padding:0}
@@ -85,15 +89,35 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <div class="labphoto" title="صورة مختبر طبي"></div>
 </aside>
 <main class="main">
-  <section class="leftcol">
+  <!-- صفحة لوحة التحكم الرئيسية -->
+  <div id="dashboardView" class="page-view active" style="grid-column: 1 / -1; display: flex; gap: 13px;">
+    <div class="leftcol" style="flex: 1;">
+      <div class="card" style="text-align: center; padding: 50px;">
+        <h2 style="color: #0a2d65; font-size: 28px;">مرحباً بك في نظام إدارة المختبرات</h2>
+        <p style="color: #5d7290; font-size: 18px; margin-bottom: 30px;">يرجى اختيار "تسجيل مريض جديد" من القائمة الجانبية للبدء.</p>
+        <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto;">تسجيل مريض جديد الآن</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة تسجيل مريض جديد -->
+  <div id="registrationView" class="page-view" style="grid-column: 1 / -1; flex-direction: column; gap: 10px;">
     <div class="card">
-      <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
+      <div class="section-title"><span>بيانات المريض والتسجيل</span><span class="titleico">♟</span></div>
       <div class="patient-grid">
-        <input id="patientId" class="field" value="2026-00125" aria-label="رقم المريض">
-        <label class="field-label" for="patientId">الرقم:</label>
+        <div class="inline-fields">
+          <input id="regDate" class="field readonly-field" readonly aria-label="التاريخ">
+          <input id="regTime" class="field readonly-field" readonly aria-label="الوقت">
+        </div>
+        <label class="field-label">التاريخ / الوقت:</label>
+        <input id="patientId" class="field readonly-field" value="2026-00125" aria-label="رقم المريض">
+        <label class="field-label" for="patientId">رقم الملف:</label>
         <input id="patientName" class="field" value="علي حسن محمد" aria-label="الاسم الكامل">
         <label class="field-label" for="patientName">الاسم الكامل:</label>
-        <div class="inline-fields"><input id="age" class="field age" type="number" value="32" min="0" aria-label="العمر"><select id="gender" class="field"><option>الذكر</option><option>الأنثى</option></select></div>
+        <div class="inline-fields">
+            <input id="age" class="field age" type="number" value="32" min="0" aria-label="العمر">
+            <select id="gender" class="field"><option>الذكر</option><option>الأنثى</option></select>
+        </div>
         <label class="field-label">الجنس / العمر:</label>
         <input id="phone" class="field" value="07812345678" aria-label="رقم الهاتف">
         <label class="field-label" for="phone">رقم الهاتف:</label>
@@ -103,53 +127,53 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
         <label class="field-label" for="patientNote">ملاحظة:</label>
       </div>
     </div>
+
     <div class="card tests-card">
       <div class="section-title"><span>التحاليل المطلوبة <span class="titleico">⚗</span></span><button class="btn blue small" id="addTest">＋ إضافة تحليل</button></div>
       <div class="table-wrap"><table id="testsTable">
         <thead><tr><th><input type="checkbox" id="selectAll" checked aria-label="تحديد الكل"></th><th>الحالة</th><th>المدى الطبيعي</th><th>الوحدة</th><th>النتيجة</th><th>اسم التحليل</th><th>تسلسل</th></tr></thead>
         <tbody>
-          <!-- سيتم إضافة التحاليل هنا تلقائياً عبر زر إضافة تحليل -->
+          <!-- الجدول فارغ ليتم ملؤه عبر زر الإضافة -->
         </tbody>
       </table></div>
     </div>
+
     <div class="card">
       <div class="section-title"><span>ملاحظات النتيجة</span><span class="titleico">▤</span></div>
       <textarea id="resultNote" placeholder="اكتب ملاحظات الطبيب أو المختبر...">يرجى متابعة الطبيب المختص.</textarea>
     </div>
-  </section>
-  <section class="rightcol">
+
     <div class="actionbar">
       <button class="btn blue" id="saveBtn"><span class="ico">▣</span>حفظ</button>
       <button class="btn green" id="printBtn"><span class="ico">▣</span>طباعة النتيجة</button>
       <button class="btn blue" id="showBtn"><span class="ico">◉</span>عرض النتيجة</button>
-      <button class="btn red" id="pdfBtn"><span class="ico">▧</span>حفظ PDF</button>
+      <button class="btn gray back-to-home"><span class="ico">↩</span>عودة للرئيسية</button>
     </div>
-    <div class="card result-panel">
-      <div class="empty-state" id="emptyState">
-        <div class="empty-illustration"><div class="doc-icon"><div class="flask">⚗</div><div class="line"></div><div class="line"></div><div class="line"></div><div style="display:flex;gap:9px;width:100%;align-items:end"><div style="flex:1"><div class="line" style="width:85%"></div><div class="line" style="width:65%;margin-top:9px"></div></div><div class="chart-bars"><span></span><span></span><span></span></div></div></div></div>
-        <h2>لم يتم عرض نتيجة التحاليل بعد</h2>
-        <p>اضغط على "عرض النتيجة" لعرض نموذج نتيجة التحاليل، أو يمكنك طباعتها مباشرة من زر "طباعة النتيجة"</p>
-        <button class="btn blue show-btn" id="showBtn2"><span class="ico">◉</span>عرض النتيجة</button>
-      </div>
-      <div class="result-view" id="resultView">
+  </div>
+
+  <!-- صفحة عرض النتيجة للطباعة -->
+  <div id="resultViewPage" class="page-view" style="grid-column: 1 / -1;">
+    <div class="card result-panel" style="min-height: 600px; align-items: flex-start; padding: 20px;">
+      <div class="result-view" id="resultView" style="display:block;">
         <div class="result-header"><div><h2>مختبر النجف</h2><div>نظام إدارة المختبرات الطبية</div></div><div><b>تقرير نتائج التحاليل</b><br><span id="reportDate"></span></div></div>
         <h2>بيانات المريض</h2>
         <p><b>الاسم:</b> <span id="outName"></span>　 <b>الرقم:</b> <span id="outId"></span></p>
         <p><b>العمر:</b> <span id="outAge"></span>　 <b>الجنس:</b> <span id="outGender"></span></p>
         <p><b>الطبيب المحول:</b> <span id="outDoctor"></span></p>
+        <p><b>تاريخ الفحص:</b> <span id="outRegDate"></span></p>
         <div class="table-wrap"><table class="result-table"><thead><tr><th>التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى الطبيعي</th><th>الحالة</th></tr></thead><tbody id="resultRows"></tbody></table></div>
         <div class="result-note"><b>ملاحظات:</b><div id="outNote"></div></div>
         <p style="text-align:left;margin-top:30px">توقيع المختبر: __________________</p>
-        <button class="btn blue" id="backBtn">العودة للتحرير</button>
+        <button class="btn blue back-to-home" style="margin-top: 20px;">العودة للتحرير</button>
       </div>
     </div>
-  </section>
+  </div>
 </main>
 </div>
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- نافذة إضافة التحليل (جديدة) -->
+<!-- نافذة إضافة التحليل -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal" style="width:min(550px,100%)">
     <h3 id="modalTitle">إضافة تحليل جديد</h3>
@@ -168,123 +192,68 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
     </div>
 
     <div class="modal-actions" style="margin-top: 15px;">
-      <button class="btn gray" id="cancelAdd">إغلاق</button>
+      <button class="btn gray" id="cancelAdd">إغلاق النافذة</button>
     </div>
   </div>
 </div>
-
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-// 1. قاعدة بيانات التحاليل الشاملة (100 تحليل)
+// 1. قاعدة بيانات التحاليل
 const labCatalog = [
-  { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" },
-  { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
-  { name: "WBC", unit: "10³/µL", range: "4 - 11" },
-  { name: "RBC", unit: "10^6/µL", range: "4.2 - 5.9" },
-  { name: "Platelets", unit: "10³/µL", range: "150 - 450" },
-  { name: "MCV", unit: "fL", range: "80 - 100" },
-  { name: "MCH", unit: "pg", range: "27 - 32" },
-  { name: "MCHC", unit: "g/dL", range: "32 - 36" },
-  { name: "Neutrophils", unit: "%", range: "40 - 60" },
-  { name: "Lymphocytes", unit: "%", range: "20 - 40" },
-  { name: "Monocytes", unit: "%", range: "2 - 8" },
-  { name: "Eosinophils", unit: "%", range: "1 - 4" },
-  { name: "Basophils", unit: "%", range: "0.5 - 1" },
-  { name: "ESR", unit: "mm/hr", range: "0 - 20" },
-  { name: "Reticulocyte Count", unit: "%", range: "0.5 - 2.5" },
-  { name: "Urea", unit: "mg/dL", range: "15 - 40" },
-  { name: "BUN", unit: "mg/dL", range: "7 - 20" },
-  { name: "Creatinine", unit: "mg/dL", range: "0.6 - 1.3" },
-  { name: "Uric Acid", unit: "mg/dL", range: "3.4 - 7.0" },
-  { name: "eGFR", unit: "mL/min", range: "> 90" },
-  { name: "Sodium (Na)", unit: "mEq/L", range: "135 - 145" },
-  { name: "Potassium (K)", unit: "mEq/L", range: "3.5 - 5.1" },
-  { name: "Chloride (Cl)", unit: "mEq/L", range: "98 - 107" },
-  { name: "Calcium", unit: "mg/dL", range: "8.5 - 10.5" },
-  { name: "Phosphorus", unit: "mg/dL", range: "2.5 - 4.5" },
-  { name: "SGPT (ALT)", unit: "U/L", range: "0 - 40" },
-  { name: "SGOT (AST)", unit: "U/L", range: "0 - 40" },
-  { name: "Alkaline Phosphatase (ALP)", unit: "U/L", range: "40 - 130" },
-  { name: "GGT", unit: "U/L", range: "9 - 48" },
-  { name: "Total Bilirubin", unit: "mg/dL", range: "0.1 - 1.2" },
-  { name: "Direct Bilirubin", unit: "mg/dL", range: "0 - 0.3" },
-  { name: "Albumin", unit: "g/dL", range: "3.5 - 5.0" },
-  { name: "Total Protein", unit: "g/dL", range: "6.0 - 8.3" },
-  { name: "Glucose (FBS)", unit: "mg/dL", range: "70 - 110" },
-  { name: "Glucose (RBS)", unit: "mg/dL", range: "70 - 140" },
-  { name: "HbA1c", unit: "%", range: "4 - 5.6" },
-  { name: "Insulin", unit: "µU/mL", range: "2 - 25" },
-  { name: "Total Cholesterol", unit: "mg/dL", range: "< 200" },
-  { name: "Triglycerides", unit: "mg/dL", range: "< 150" },
-  { name: "HDL", unit: "mg/dL", range: "40 - 60" },
-  { name: "LDL", unit: "mg/dL", range: "< 130" },
-  { name: "VLDL", unit: "mg/dL", range: "5 - 40" },
-  { name: "TSH", unit: "µIU/mL", range: "0.4 - 4.0" },
-  { name: "T3", unit: "ng/dL", range: "80 - 200" },
-  { name: "T4", unit: "µg/dL", range: "5 - 12" },
-  { name: "Free T3", unit: "pg/mL", range: "2.3 - 4.2" },
-  { name: "Free T4", unit: "ng/dL", range: "0.8 - 1.8" },
-  { name: "Testosterone", unit: "ng/dL", range: "300 - 1000" },
-  { name: "Estradiol", unit: "pg/mL", range: "15 - 350" },
-  { name: "Progesterone", unit: "ng/mL", range: "0.1 - 25" },
-  { name: "Prolactin", unit: "ng/mL", range: "4 - 15" },
-  { name: "FSH", unit: "mIU/mL", range: "1.5 - 12.4" },
-  { name: "LH", unit: "mIU/mL", range: "1.7 - 8.6" },
-  { name: "Cortisol", unit: "µg/dL", range: "6 - 23" },
-  { name: "Vitamin D (25-OH)", unit: "ng/mL", range: "30 - 100" },
-  { name: "Vitamin B12", unit: "pg/mL", range: "200 - 900" },
-  { name: "Folic Acid", unit: "ng/mL", range: "3 - 17" },
-  { name: "Ferritin", unit: "ng/mL", range: "12 - 300" },
-  { name: "Iron", unit: "µg/dL", range: "60 - 170" },
-  { name: "Magnesium", unit: "mg/dL", range: "1.7 - 2.2" },
-  { name: "Troponin I", unit: "ng/mL", range: "< 0.04" },
-  { name: "CK-MB", unit: "ng/mL", range: "0 - 6.3" },
-  { name: "CK (Total)", unit: "U/L", range: "30 - 200" },
-  { name: "BNP", unit: "pg/mL", range: "< 100" },
-  { name: "PT", unit: "sec", range: "11 - 13.5" },
-  { name: "INR", unit: "Ratio", range: "0.8 - 1.1" },
-  { name: "PTT", unit: "sec", range: "25 - 35" },
-  { name: "D-Dimer", unit: "ng/mL", range: "< 500" },
-  { name: "CRP", unit: "mg/L", range: "< 5" },
-  { name: "Procalcitonin", unit: "ng/mL", range: "< 0.5" },
-  { name: "ANA", unit: "Titer", range: "Negative" },
-  { name: "RF (Rheumatoid Factor)", unit: "IU/mL", range: "< 14" },
-  { name: "ASO", unit: "IU/mL", range: "< 200" },
-  { name: "Immunoglobulin E (IgE)", unit: "IU/mL", range: "< 100" },
-  { name: "Urine Protein", unit: "mg/dL", range: "Negative" },
-  { name: "Urine Glucose", unit: "mg/dL", range: "Negative" },
-  { name: "Urine WBC", unit: "/HPF", range: "0 - 5" },
-  { name: "Urine RBC", unit: "/HPF", range: "0 - 2" },
-  { name: "Urine Pus Cells", unit: "/HPF", range: "0 - 5" },
-  { name: "Urine pH", unit: "", range: "4.5 - 8.0" },
-  { name: "Amylase", unit: "U/L", range: "30 - 110" },
-  { name: "Lipase", unit: "U/L", range: "0 - 160" },
-  { name: "Lactate", unit: "mmol/L", range: "0.5 - 2.2" },
-  { name: "Ammonia", unit: "µmol/L", range: "15 - 45" },
-  { name: "PSA (Total)", unit: "ng/mL", range: "< 4.0" },
-  { name: "CA-125", unit: "U/mL", range: "< 35" },
-  { name: "CEA", unit: "ng/mL", range: "< 3.0" },
-  { name: "AFP", unit: "ng/mL", range: "< 10" },
-  { name: "H. pylori Antigen", unit: "Stool", range: "Negative" },
-  { name: "HBsAg", unit: "Blood", range: "Negative" },
-  { name: "Anti-HCV", unit: "Blood", range: "Negative" },
-  { name: "HIV Ab", unit: "Blood", range: "Negative" },
-  { name: "VDRL", unit: "Blood", range: "Negative" },
-  { name: "Blood Group", unit: "-", range: "A/B/AB/O" },
-  { name: "Rh Factor", unit: "-", range: "Positive/Negative" },
-  { name: "Prothrombin Time", unit: "sec", range: "11 - 13.5" },
-  { name: "Hct", unit: "%", range: "36 - 50" },
-  { name: "MCV", unit: "fL", range: "80 - 100" },
-  { name: "MCH", unit: "pg", range: "27 - 32" },
-  { name: "Cortisol AM", unit: "µg/dL", range: "6 - 23" },
-  { name: "Cortisol PM", unit: "µg/dL", range: "3 - 15" },
-  { name: "Blood Urea Nitrogen", unit: "mg/dL", range: "7 - 20" }
+  { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" }, { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
+  { name: "WBC", unit: "10³/µL", range: "4 - 11" }, { name: "RBC", unit: "10^6/µL", range: "4.2 - 5.9" },
+  { name: "Platelets", unit: "10³/µL", range: "150 - 450" }, { name: "MCV", unit: "fL", range: "80 - 100" },
+  { name: "MCH", unit: "pg", range: "27 - 32" }, { name: "MCHC", unit: "g/dL", range: "32 - 36" },
+  { name: "Neutrophils", unit: "%", range: "40 - 60" }, { name: "Lymphocytes", unit: "%", range: "20 - 40" },
+  { name: "Monocytes", unit: "%", range: "2 - 8" }, { name: "Eosinophils", unit: "%", range: "1 - 4" },
+  { name: "Basophils", unit: "%", range: "0.5 - 1" }, { name: "ESR", unit: "mm/hr", range: "0 - 20" },
+  { name: "Reticulocyte Count", unit: "%", range: "0.5 - 2.5" }, { name: "Urea", unit: "mg/dL", range: "15 - 40" },
+  { name: "BUN", unit: "mg/dL", range: "7 - 20" }, { name: "Creatinine", unit: "mg/dL", range: "0.6 - 1.3" },
+  { name: "Uric Acid", unit: "mg/dL", range: "3.4 - 7.0" }, { name: "eGFR", unit: "mL/min", range: "> 90" },
+  { name: "Sodium (Na)", unit: "mEq/L", range: "135 - 145" }, { name: "Potassium (K)", unit: "mEq/L", range: "3.5 - 5.1" },
+  { name: "Chloride (Cl)", unit: "mEq/L", range: "98 - 107" }, { name: "Calcium", unit: "mg/dL", range: "8.5 - 10.5" },
+  { name: "Phosphorus", unit: "mg/dL", range: "2.5 - 4.5" }, { name: "SGPT (ALT)", unit: "U/L", range: "0 - 40" },
+  { name: "SGOT (AST)", unit: "U/L", range: "0 - 40" }, { name: "Alkaline Phosphatase (ALP)", unit: "U/L", range: "40 - 130" },
+  { name: "GGT", unit: "U/L", range: "9 - 48" }, { name: "Total Bilirubin", unit: "mg/dL", range: "0.1 - 1.2" },
+  { name: "Direct Bilirubin", unit: "mg/dL", range: "0 - 0.3" }, { name: "Albumin", unit: "g/dL", range: "3.5 - 5.0" },
+  { name: "Total Protein", unit: "g/dL", range: "6.0 - 8.3" }, { name: "Glucose (FBS)", unit: "mg/dL", range: "70 - 110" },
+  { name: "Glucose (RBS)", unit: "mg/dL", range: "70 - 140" }, { name: "HbA1c", unit: "%", range: "4 - 5.6" },
+  { name: "Insulin", unit: "µU/mL", range: "2 - 25" }, { name: "Total Cholesterol", unit: "mg/dL", range: "< 200" },
+  { name: "Triglycerides", unit: "mg/dL", range: "< 150" }, { name: "HDL", unit: "mg/dL", range: "40 - 60" },
+  { name: "LDL", unit: "mg/dL", range: "< 130" }, { name: "VLDL", unit: "mg/dL", range: "5 - 40" },
+  { name: "TSH", unit: "µIU/mL", range: "0.4 - 4.0" }, { name: "T3", unit: "ng/dL", range: "80 - 200" },
+  { name: "T4", unit: "µg/dL", range: "5 - 12" }, { name: "Free T3", unit: "pg/mL", range: "2.3 - 4.2" },
+  { name: "Free T4", unit: "ng/dL", range: "0.8 - 1.8" }, { name: "Testosterone", unit: "ng/dL", range: "300 - 1000" },
+  { name: "Estradiol", unit: "pg/mL", range: "15 - 350" }, { name: "Progesterone", unit: "ng/mL", range: "0.1 - 25" },
+  { name: "Prolactin", unit: "ng/mL", range: "4 - 15" }, { name: "FSH", unit: "mIU/mL", range: "1.5 - 12.4" },
+  { name: "LH", unit: "mIU/mL", range: "1.7 - 8.6" }, { name: "Cortisol", unit: "µg/dL", range: "6 - 23" },
+  { name: "Vitamin D (25-OH)", unit: "ng/mL", range: "30 - 100" }, { name: "Vitamin B12", unit: "pg/mL", range: "200 - 900" },
+  { name: "Folic Acid", unit: "ng/mL", range: "3 - 17" }, { name: "Ferritin", unit: "ng/mL", range: "12 - 300" },
+  { name: "Iron", unit: "µg/dL", range: "60 - 170" }, { name: "Magnesium", unit: "mg/dL", range: "1.7 - 2.2" },
+  { name: "Troponin I", unit: "ng/mL", range: "< 0.04" }, { name: "CK-MB", unit: "ng/mL", range: "0 - 6.3" },
+  { name: "CK (Total)", unit: "U/L", range: "30 - 200" }, { name: "BNP", unit: "pg/mL", range: "< 100" },
+  { name: "PT", unit: "sec", range: "11 - 13.5" }, { name: "INR", unit: "Ratio", range: "0.8 - 1.1" },
+  { name: "PTT", unit: "sec", range: "25 - 35" }, { name: "D-Dimer", unit: "ng/mL", range: "< 500" },
+  { name: "CRP", unit: "mg/L", range: "< 5" }, { name: "Procalcitonin", unit: "ng/mL", range: "< 0.5" },
+  { name: "ANA", unit: "Titer", range: "Negative" }, { name: "RF (Rheumatoid Factor)", unit: "IU/mL", range: "< 14" },
+  { name: "ASO", unit: "IU/mL", range: "< 200" }, { name: "Immunoglobulin E (IgE)", unit: "IU/mL", range: "< 100" },
+  { name: "Urine Protein", unit: "mg/dL", range: "Negative" }, { name: "Urine Glucose", unit: "mg/dL", range: "Negative" },
+  { name: "Urine WBC", unit: "/HPF", range: "0 - 5" }, { name: "Urine RBC", unit: "/HPF", range: "0 - 2" },
+  { name: "Urine Pus Cells", unit: "/HPF", range: "0 - 5" }, { name: "Urine pH", unit: "", range: "4.5 - 8.0" },
+  { name: "Amylase", unit: "U/L", range: "30 - 110" }, { name: "Lipase", unit: "U/L", range: "0 - 160" },
+  { name: "Lactate", unit: "mmol/L", range: "0.5 - 2.2" }, { name: "Ammonia", unit: "µmol/L", range: "15 - 45" },
+  { name: "PSA (Total)", unit: "ng/mL", range: "< 4.0" }, { name: "CA-125", unit: "U/mL", range: "< 35" },
+  { name: "CEA", unit: "ng/mL", range: "< 3.0" }, { name: "AFP", unit: "ng/mL", range: "< 10" },
+  { name: "H. pylori Antigen", unit: "Stool", range: "Negative" }, { name: "HBsAg", unit: "Blood", range: "Negative" },
+  { name: "Anti-HCV", unit: "Blood", range: "Negative" }, { name: "HIV Ab", unit: "Blood", range: "Negative" },
+  { name: "VDRL", unit: "Blood", range: "Negative" }, { name: "Blood Group", unit: "-", range: "A/B/AB/O" },
+  { name: "Rh Factor", unit: "-", range: "Positive/Negative" }, { name: "Prothrombin Time", unit: "sec", range: "11 - 13.5" }
 ];
 
-// 2. دالة حساب الحالة (طبيعي / مرتفع / منخفض)
+// 2. دالة حساب الحالة
 function flagOf(value, rangeStr){
   const v=parseFloat(value); 
   if(isNaN(v) || value === '') return {key:'pending', label:'بانتظار'};
@@ -339,17 +308,33 @@ function getTests(){
     .map(r=>{
       const inp = r.querySelector('.result-input');
       return {
-        name: r.dataset.name,
-        unit: r.dataset.unit,
-        range: r.dataset.range,
-        value: inp ? inp.value : '',
-        status: r.cells[1].textContent.trim()
+        name: r.dataset.name, unit: r.dataset.unit, range: r.dataset.range,
+        value: inp ? inp.value : '', status: r.cells[1].textContent.trim()
       };
     });
 }
 
-// 4. عرض النتيجة
-function displayResult(){
+// 4. التنقل بين الصفحات
+function showPage(pageId) {
+  $$('.page-view').forEach(p => p.style.display = 'none');
+  const target = $(`#${pageId}`);
+  if (target) {
+    target.style.display = (pageId === 'registrationView' || pageId === 'dashboardView') ? 'flex' : 'block';
+    if(pageId === 'registrationView') {
+        const now = new Date();
+        $('#regDate').value = now.toLocaleDateString('ar-IQ');
+        $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
+    }
+  }
+}
+
+$$('.back-to-home').forEach(btn => btn.onclick = () => showPage('dashboardView'));
+$('#startNewPatientBtn').onclick = () => {
+    document.querySelector('[data-action="new"]').click();
+};
+
+// 5. عرض النتيجة والطباعة
+$('#showBtn').onclick = () => {
   const name=$('#patientName').value.trim();
   if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return}
   const tests=getTests();
@@ -358,20 +343,16 @@ function displayResult(){
   $('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;
   $('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;
   $('#outDoctor').textContent=$('#doctor').value;$('#outNote').textContent=$('#resultNote').value||'لا توجد ملاحظات';
+  $('#outRegDate').textContent = $('#regDate').value + ' - ' + $('#regTime').value;
   $('#reportDate').textContent=new Date().toLocaleDateString('ar-IQ');
   
   $('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value || '-')}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
-  $('#emptyState').style.display='none';$('#resultView').style.display='block';
-  toast('تم تجهيز نموذج النتيجة للعرض');
-}
+  showPage('resultViewPage');
+};
 
-$('#showBtn').onclick=$('#showBtn2').onclick=displayResult;
-$('#backBtn').onclick=()=>{$('#resultView').style.display='none';$('#emptyState').style.display='block'};
-$('#printBtn').onclick=()=>{displayResult();setTimeout(()=>window.print(),200)};
-$('#pdfBtn').onclick=()=>{displayResult();setTimeout(()=>{toast('اختر "حفظ كملف PDF"');window.print()},200)};
-$('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
+$('#printBtn').onclick=()=>{ $('#showBtn').click(); setTimeout(()=>window.print(),300) };
 
-// 5. نافذة البحث والإضافة اليدوية
+// 6. نافذة التحاليل (لا تختفي عند الإضافة)
 $('#addTest').onclick=()=>{
   $('#modalBackdrop').style.display='flex';
   $('#searchTestInput').value='';
@@ -383,18 +364,11 @@ $('#addTest').onclick=()=>{
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
 function renderTestList(query) {
-  let filtered = labCatalog;
-  if (query) {
-    filtered = labCatalog.filter(t => t.name.toLowerCase().includes(query.toLowerCase()));
-  } else {
-    filtered = labCatalog.slice(0, 5); // عرض أول 5 مقترحات فقط
-  }
-
+  let filtered = query ? labCatalog.filter(t => t.name.toLowerCase().includes(query.toLowerCase())) : labCatalog.slice(0, 5);
   if (filtered.length === 0) {
-    $('#testList').innerHTML = '<div style="padding: 15px; text-align: center; color: #666; font-size: 14px;">لا توجد نتائج مطابقة في القائمة. يمكنك إضافته يدوياً من الأسفل.</div>';
+    $('#testList').innerHTML = '<div style="padding: 15px; text-align: center; color: #666; font-size: 14px;">لا توجد نتائج. أضفه يدوياً من الأسفل.</div>';
     return;
   }
-
   $('#testList').innerHTML = filtered.map(t => `
     <div class="test-item" data-name="${esc(t.name)}" data-unit="${esc(t.unit)}" data-range="${esc(t.range)}">
       <strong>${esc(t.name)}</strong> <span style="font-size:12px; color:#666;">(${esc(t.unit)} | ${esc(t.range)})</span>
@@ -408,44 +382,63 @@ $('#testList').addEventListener('click', e => {
   const item = e.target.closest('.test-item');
   if(!item) return;
   addTestToTable(item.dataset.name, item.dataset.unit, item.dataset.range);
-  $('#modalBackdrop').style.display='none';
+  $('#searchTestInput').value = ''; 
+  renderTestList(''); 
+  $('#searchTestInput').focus();
 });
 
-// زر الإضافة اليدوية
 $('#confirmManualAdd').onclick = () => {
   const name = $('#manualName').value.trim();
   const unit = $('#manualUnit').value.trim() || '—';
   const range = $('#manualRange').value.trim() || 'غير محدد';
-  if(!name) {
-    toast('يرجى إدخال اسم التحليل على الأقل');
-    return;
-  }
+  if(!name) { toast('أدخل اسم التحليل'); return; }
   addTestToTable(name, unit, range);
-  $('#modalBackdrop').style.display='none';
+  $('#manualName').value = ''; $('#manualUnit').value = ''; $('#manualRange').value = '';
+  $('#manualName').focus();
 };
 
-// 6. حفظ ونسخ احتياطي
+$('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
+
+// 7. الحفظ
 $('#saveBtn').onclick=()=>{
-  const record={id:$('#patientId').value,name:$('#patientName').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+  const record={id:$('#patientId').value,name:$('#patientName').value,date:$('#regDate').value,time:$('#regTime').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
   try{const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const i=records.findIndex(x=>x.id===record.id);if(i>=0)records[i]=record;else records.push(record);localStorage.setItem('najafLabRecords',JSON.stringify(records));toast('تم حفظ بيانات المريض')}catch(e){toast('تعذر الحفظ')}
 };
 
+// 8. القائمة الجانبية
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
-  const action=b.dataset.action;$$('.sidebtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  const action=b.dataset.action;
+  $$('.sidebtn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  
   if(action==='new'){
     ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
     $('#patientId').value='2026-'+String(Date.now()).slice(-5);
-    $('#resultView').style.display='none'; $('#emptyState').style.display='block';
-    $('#testsTable tbody').innerHTML = ''; // تفريغ الجدول عند مريض جديد
-    toast('تم تجهيز نموذج مريض جديد');
+    $('#testsTable tbody').innerHTML = ''; 
+    showPage('registrationView');
+    toast('تم تجهيز صفحة مريض جديد');
   }else if(action==='search'){
     const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');
-    if(q!==null){const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
-    if(r){$('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;$('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;$('#resultNote').value=r.resultNote;toast('تم تحميل البيانات')}else toast('لم يتم العثور على سجل')}
-  }else if(action==='print'){displayResult();setTimeout(()=>window.print(),200)}
-  else if(action==='backup'){const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();toast('تم إنشاء النسخة الاحتياطية')}
-  else if(action==='exit'){if(confirm('هل تريد إخفاء واجهة البرنامج؟'))toast('يمكنك إغلاق المتصفح')}
-  else toast('قسم '+b.textContent.trim()+' — نموذج تجريبي');
+    if(q!==null){
+      const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
+      const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
+      if(r){
+        showPage('registrationView');
+        $('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;
+        $('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;
+        $('#resultNote').value=r.resultNote;
+        $('#regDate').value=r.date||''; $('#regTime').value=r.time||'';
+        toast('تم تحميل البيانات')
+      }else toast('لم يتم العثور على سجل')
+    }
+  }else if(action==='print'){ $('#printBtn').click(); }
+  else if(action==='backup'){
+    const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();
+    toast('تم إنشاء النسخة الاحتياطية')
+  }
+  else if(action==='exit'){if(confirm('هل تريد الخروج؟'))toast('يمكنك إغلاق المتصفح')}
+  else toast('قسم '+b.textContent.trim());
 });
 
 $$('.topnav .navitem').forEach(b=>b.onclick=()=>{ $$('.topnav .navitem').forEach(x=>x.classList.remove('active'));b.classList.add('active');toast('تم اختيار قسم '+b.textContent.trim())});
