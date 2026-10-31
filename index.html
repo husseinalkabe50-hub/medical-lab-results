@@ -100,6 +100,14 @@ button { cursor: pointer; border: none; background: transparent; }
 .btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; }
 .btn.loading::after { content: ""; position: absolute; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* أزرار الحذف في الجدول */
+.btn-delete { background: transparent; color: var(--danger); padding: 5px; border-radius: var(--radius-md); transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+.btn-delete:hover { background: var(--danger-bg); }
+
+/* تلميح الاختصارات (Keyboard Hint) */
+.keyboard-hint { font-size: 11px; color: var(--text-muted); text-align: left; margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+.kbd { background: var(--surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 11px; color: var(--navy-800); }
   /* ========================================= */
 /* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
@@ -124,7 +132,7 @@ textarea { width: 100%; height: 100px; resize: vertical; padding: var(--sp-3); b
 textarea:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(10,100,237,0.15); outline: none; }
 
 /* ========================================= */
-/* 7. الجداول (Test Results Table) */
+/* 7. الجداول */
 /* ========================================= */
 .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--surface); max-height: 400px; position: relative; }
 table { width: 100%; border-collapse: collapse; min-width: 650px; font-size: 13px; text-align: right; }
@@ -135,7 +143,6 @@ tbody tr:nth-child(even) { background: #fcfcfc; }
 tbody tr:hover { background: #f0f7ff; }
 tbody tr:last-child td { border-bottom: none; }
 
-/* إدخال النتيجة داخل الجدول */
 .result-input { width: 85px; height: 34px; text-align: center; padding: 0 5px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 14px; transition: all var(--transition-fast); background: var(--surface); }
 .result-input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(10,100,237,0.15); outline: none; }
 .result-input.abnormal { color: var(--danger); border-color: var(--danger); background-color: var(--danger-bg); }
@@ -144,7 +151,6 @@ tbody tr:last-child td { border-bottom: none; }
 .test-unit { color: var(--text-muted); font-size: 12px; direction: ltr; text-align: right;}
 .test-range { color: var(--text-muted); font-size: 12px; direction: ltr; text-align: right;}
 
-/* حالة التحليل */
 .status { display: inline-flex; align-items: center; justify-content: center; gap: 4px; border-radius: var(--radius-full); padding: 4px 12px; color: white; font-weight: 700; font-size: 12px; min-width: 80px; }
 .status.pending { background: var(--text-muted); }
 .status.normal { background: var(--success); }
@@ -153,7 +159,26 @@ tbody tr:last-child td { border-bottom: none; }
 input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px; cursor: pointer; }
 
 /* ========================================= */
-/* 8. لوحة التحكم (Dashboard) */
+/* 8. شاشة البحث والسجل */
+/* ========================================= */
+.search-bar { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+.search-bar input { flex: 1; height: 48px; font-size: 16px; padding: 0 var(--sp-4); border-radius: var(--radius-md); border: 2px solid var(--border-color); transition: all var(--transition-fast); }
+.search-bar input:focus { border-color: var(--blue-500); outline: none; box-shadow: 0 0 0 4px rgba(10,100,237,0.15); }
+.search-bar button { height: 48px; padding: 0 30px; font-size: 16px; }
+
+.search-loading { text-align: center; padding: 40px; color: var(--blue-500); font-weight: 600; font-size: 16px; display: none; }
+.search-empty { text-align: center; padding: 40px; color: var(--text-muted); font-size: 15px; background: var(--surface-tint); border-radius: var(--radius-md); border: 1px dashed var(--border-color); display: none; }
+
+.history-timeline { position: relative; padding-right: 20px; margin-top: 20px; }
+.history-timeline::before { content: ''; position: absolute; right: 6px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
+.history-item { position: relative; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; box-shadow: var(--shadow-sm); }
+.history-item::before { content: ''; position: absolute; right: -19px; top: 20px; width: 12px; height: 12px; border-radius: 50%; background: var(--blue-500); border: 3px solid var(--surface); }
+.history-date { font-weight: 700; color: var(--navy-800); font-size: 15px; margin-bottom: 5px; display: flex; justify-content: space-between; }
+.history-details { color: var(--text-muted); font-size: 13px; margin-bottom: 10px; }
+.history-actions { display: flex; gap: 8px; }
+
+/* ========================================= */
+/* 9. لوحة التحكم */
 /* ========================================= */
 .dash-welcome { text-align: center; padding: var(--sp-4) 0; }
 .dash-welcome h2 { color: var(--navy-800); font-size: 22px; margin-bottom: var(--sp-2); }
@@ -182,50 +207,54 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
 .empty-state { text-align: center; color: var(--text-muted); padding: var(--sp-5); font-size: 14px; background: var(--surface-tint); border-radius: var(--radius-md); border: 1px dashed var(--border-color); }
 
 /* ========================================= */
-/* 9. النوافذ المنبثقة والرسائل */
+/* 10. النوافذ المنبثقة والرسائل */
 /* ========================================= */
 .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-800); color: white; padding: var(--sp-3) var(--sp-5); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: none; z-index: 9999; font-weight: 600; font-size: 14px; opacity: 0; transition: all var(--transition-fast); border-right: 4px solid var(--blue-500); }
 .toast.show { display: block; transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast.error { border-right-color: var(--danger); background: var(--danger); }
 .toast.success { border-right-color: var(--success); background: var(--navy-800); }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(4,19,37,0.6); display: none; align-items: center; justify-content: center; padding: var(--sp-4); z-index: 1000; backdrop-filter: blur(3px); }
-.modal { background: var(--surface); border-radius: var(--radius-lg); width: min(550px, 100%); padding: var(--sp-6); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
+.modal { background: var(--surface); border-radius: var(--radius-lg); width: min(800px, 100%); padding: var(--sp-6); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
 .modal h3 { color: var(--navy-800); text-align: center; margin-bottom: var(--sp-4); font-size: 18px; }
 
 /* ========================================= */
-/* 10. صفحة النتائج (Result Panel) */
+/* 11. صفحة النتائج */
 /* ========================================= */
 .actionbar { display: flex; flex-wrap: wrap; gap: var(--sp-3); width: 100%; }
 .actionbar .btn { flex: 1 1 150px; }
-.result-panel { background: var(--surface); padding: var(--sp-6); display: flex; flex-direction: column; align-items: center; width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--border-color); }
-.report-container { width: 100%; max-width: 800px; background: white; padding: var(--sp-6); margin: 0 auto; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); }
-.report-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--blue-500); padding-bottom: var(--sp-4); margin-bottom: var(--sp-5); }
-.report-header .lab-info h1 { color: var(--navy-800); font-size: 22px; margin-bottom: 4px; }
-.report-header .lab-info p { color: var(--text-muted); font-size: 13px; }
-.report-header .lab-logo { font-size: 40px; color: var(--blue-500); }
-.report-title { text-align: center; font-size: 18px; font-weight: 700; color: var(--navy-800); margin-bottom: var(--sp-5); }
+.result-panel { background: var(--surface-tint); padding: var(--sp-6) 0; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 100vh; }
+.report-container { width: 210mm; min-height: 297mm; background: white; padding: 15mm; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--border-color); position: relative; display: flex; flex-direction: column; }
+.report-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--navy-800); padding-bottom: var(--sp-4); margin-bottom: var(--sp-5); }
+.report-header .lab-info h1 { color: var(--navy-800); font-size: 24px; margin-bottom: 4px; font-weight: 800; }
+.report-header .lab-info p { color: var(--text-muted); font-size: 13px; margin-bottom: 2px; }
+.report-header .lab-logo { font-size: 45px; color: var(--blue-500); }
+.report-title { text-align: center; font-size: 18px; font-weight: 700; color: var(--navy-800); margin-bottom: var(--sp-5); letter-spacing: 1px; }
 .patient-info-box { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); background: var(--surface-tint); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--sp-4); margin-bottom: var(--sp-5); }
-.patient-info-box p { font-size: 13px; line-height: 1.6; }
-.patient-info-box strong { color: var(--navy-700); }
-.report-table { width: 100%; border-collapse: collapse; margin-bottom: var(--sp-5); }
-.report-table th { background: var(--navy-800); color: white; padding: var(--sp-3); }
-.report-table td { padding: var(--sp-3); border-bottom: 1px solid var(--border-color); }
-.report-table tr:nth-child(even) { background: var(--surface-tint); }
+.patient-info-box p { font-size: 13px; line-height: 1.8; color: var(--text-main); }
+.patient-info-box strong { color: var(--navy-800); display: inline-block; min-width: 100px; }
+.report-table { width: 100%; border-collapse: collapse; margin-bottom: var(--sp-6); font-size: 13px; }
+.report-table thead { display: table-header-group; }
+.report-table th { background: var(--navy-800); color: white; padding: 10px; text-align: right; font-weight: 600; border: 1px solid var(--navy-800); }
+.report-table td { padding: 10px; border: 1px solid var(--border-color); vertical-align: middle; }
+.report-table tr:nth-child(even) { background: #fcfcfc; }
+.report-table .res-val { font-weight: bold; font-size: 14px; }
+.report-table .abnormal-val { color: var(--danger); font-weight: 800; }
+.report-table .status-text { font-weight: 700; }
+.report-table .status-text.high { color: var(--danger); }
+.report-table .status-text.low { color: var(--warning); }
+.report-table .status-text.normal { color: var(--success); }
 .report-note-box { background: #fffbeb; border: 1px solid #fde68a; padding: var(--sp-4); border-radius: var(--radius-md); color: #92400e; font-size: 13px; margin-bottom: var(--sp-6); }
-.report-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: var(--sp-6); }
+.report-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; padding-top: var(--sp-6); page-break-inside: avoid; }
 .signature-box { text-align: center; width: 150px; }
-.signature-box p { font-weight: 700; color: var(--text-muted); margin-bottom: var(--sp-6); font-size: 13px; }
+.signature-box p { font-weight: 700; color: var(--text-muted); margin-bottom: 40px; font-size: 13px; }
 .signature-box .line { border-top: 2px dashed #cbd5e1; }
 
 /* ========================================= */
-/* 11. إخفاء وإظهار الصفحات */
+/* 12. إخفاء وإظهار الصفحات والتجاوب */
 /* ========================================= */
 .page-view { display: none !important; width: 100%; }
 .page-view.active { display: flex !important; flex-direction: column; gap: var(--sp-4); }
 
-/* ========================================= */
-/* 12. التجاوب */
-/* ========================================= */
 @media (max-width: 1024px) {
   .mobile-menu-btn { display: flex; }
   .desktop-toggle-btn { display: none; }
@@ -240,6 +269,7 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
   .actionbar .btn { flex: 1 1 100%; }
   .report-footer { flex-direction: column; align-items: center; gap: var(--sp-4); }
   .patient-info-box { grid-template-columns: 1fr; }
+  .report-container { width: 100%; min-height: auto; padding: 15px; border: none; box-shadow: none; }
 }
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
@@ -252,13 +282,18 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
 /* ========================================= */
 @media print {
   @page { size: A4; margin: 10mm; }
-  body { background: white; overflow: visible; }
-  .topbar, .sidebar, .actionbar, .userbox, .toast, .modal-backdrop, .back-to-home, .page-view:not(#resultViewPage) { display: none !important; }
+  body { background: white; overflow: visible; height: auto; }
+  .topbar, .sidebar, .sidebar-overlay, .actionbar, .userbox, .toast, .modal-backdrop, .back-to-home, 
+  .page-view:not(#resultViewPage), .dash-welcome, .stats-grid, .shortcuts-grid, .activity-list, .keyboard-hint { display: none !important; }
   .app { display: block; height: auto; overflow: visible; }
-  .workspace, .main { display: block; padding: 0; overflow: visible; }
-  .card.result-panel { border: none; box-shadow: none; padding: 0; }
-  #resultViewPage { display: block !important; }
-  .report-container { max-width: 100%; padding: 0; border: none; box-shadow: none; }
+  .workspace { display: block; overflow: visible; }
+  .main { padding: 0; overflow: visible; display: block; background: white; }
+  .result-panel { padding: 0; background: white; display: block; }
+  .report-container { width: 100%; min-height: auto; box-shadow: none; border: none; padding: 0; margin: 0; }
+  .report-table { page-break-inside: auto; }
+  .report-table tr { page-break-inside: avoid; page-break-after: auto; }
+  .report-table th, .report-table td { border-color: #333 !important; }
+  .report-table th, .report-table tr:nth-child(even), .report-header, .patient-info-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 </style>
 </head>
@@ -290,16 +325,16 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
   <aside class="sidebar" id="sidebar">
     <div class="nav-group">
       <div class="nav-group-title">العمل اليومي</div>
-      <button class="sidebtn" data-action="dashboard" title="الرئيسية"><span class="ico">🏠</span> <span>الرئيسية</span></button>
-      <button class="sidebtn active" data-action="new" title="تسجيل مريض"><span class="ico">➕</span> <span>تسجيل مريض</span></button>
-      <button class="sidebtn" data-action="search" title="بحث مريض"><span class="ico">🔍</span> <span>بحث مريض</span></button>
+      <button class="sidebtn" data-action="dashboard" title="الرئيسية (Alt+H)"><span class="ico">🏠</span> <span>الرئيسية</span></button>
+      <button class="sidebtn" data-action="new" title="تسجيل مريض (Alt+N)"><span class="ico">➕</span> <span>تسجيل مريض</span></button>
+      <button class="sidebtn" data-action="search" title="بحث مريض (Alt+F)"><span class="ico">🔍</span> <span>بحث مريض</span></button>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">عمليات المختبر</div>
       <button class="sidebtn" data-action="sample" title="سحب العينات"><span class="ico">🧪</span> <span>سحب العينات</span></button>
       <button class="sidebtn" data-action="entry" title="إدخال النتائج"><span class="ico">📝</span> <span>إدخال النتائج</span></button>
       <button class="sidebtn" data-action="show" title="عرض النتائج"><span class="ico">📄</span> <span>عرض النتائج</span></button>
-      <button class="sidebtn" data-action="print" title="الطباعة"><span class="ico">🖨</span> <span>الطباعة</span></button>
+      <button class="sidebtn" data-action="print" title="الطباعة (Alt+P)"><span class="ico">🖨</span> <span>الطباعة</span></button>
     </div>
     <div class="nav-group">
       <div class="nav-group-title">الإدارة والتقارير</div>
@@ -347,6 +382,13 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
         <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'entry\']').click()"><span class="ico">📝</span> إدخال نتائج</button>
         <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">🖨</span> الطباعة</button>
       </div>
+      <div class="keyboard-hint">
+        <span><span class="kbd">Alt + N</span> مريض جديد</span>
+        <span><span class="kbd">Alt + S</span> حفظ</span>
+        <span><span class="kbd">Alt + P</span> طباعة</span>
+        <span><span class="kbd">Alt + F</span> بحث</span>
+        <span><span class="kbd">Esc</span> إغلاق النافذة</span>
+      </div>
     </div>
     <div class="card">
       <div class="section-title">أحدث النشاطات (محمي الخصوصية)</div>
@@ -354,7 +396,48 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
     </div>
   </div>
 
-  <!-- تسجيل مريض -->
+  <!-- صفحة البحث -->
+  <div id="searchView" class="page-view">
+    <div class="card">
+      <div class="section-title">البحث عن مريض</div>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="ابحث بالاسم، رقم الملف، أو رقم الهاتف..." autocomplete="off">
+        <button class="btn blue" id="searchBtn"><span class="ico">🔍</span> بحث</button>
+      </div>
+      
+      <div id="searchLoading" class="search-loading">جاري البحث...</div>
+      <div id="searchEmpty" class="search-empty">لم يتم العثور على نتائج مطابقة. يرجى التأكد من البيانات.</div>
+
+      <div class="table-wrap" id="searchResultsWrap" style="display: none;">
+        <table>
+          <thead>
+            <tr>
+              <th>رقم الملف</th>
+              <th>اسم المريض</th>
+              <th>رقم الهاتف</th>
+              <th>تاريخ الزيارة</th>
+              <th>عدد التحاليل</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="searchResultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحة سجل المريض -->
+  <div id="historyView" class="page-view">
+    <div class="card">
+      <div class="section-title">
+        <span>سجل الزيارات: <span id="historyPatientName" style="color: var(--blue-500);"></span></span>
+        <button class="btn gray small" onclick="showPage('searchView')"><span class="ico">↩</span> عودة للبحث</button>
+      </div>
+      <div class="history-timeline" id="historyTimeline"></div>
+    </div>
+  </div>
+
+  <!-- صفحة تسجيل مريض -->
   <div id="registrationView" class="page-view">
     <div class="card">
       <div class="form-section">
@@ -405,7 +488,6 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
       </div>
     </div>
 
-    <!-- جدول التحاليل -->
     <div class="card">
       <div class="section-title">
         <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
@@ -422,6 +504,7 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
               <th style="width: 100px;">النتيجة</th>
               <th>اسم التحليل</th>
               <th style="width: 40px; text-align: center;">ت</th>
+              <th style="width: 50px; text-align: center;">حذف</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -435,8 +518,8 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
     </div>
 
     <div class="actionbar">
-      <button class="btn blue" id="saveBtn"><span class="ico">💾</span> حفظ السجل</button>
-      <button class="btn green" id="printBtn"><span class="ico">🖨</span> طباعة</button>
+      <button class="btn blue" id="saveBtn" title="حفظ (Alt+S)"><span class="ico">💾</span> حفظ السجل</button>
+      <button class="btn green" id="printBtn" title="طباعة (Alt+P)"><span class="ico">🖨</span> طباعة</button>
       <button class="btn red" id="pdfBtn"><span class="ico">📄</span> حفظ PDF</button>
       <button class="btn blue" id="showBtn"><span class="ico">👁</span> عرض النتيجة</button>
       <button class="btn gray back-to-home" id="clearBtn"><span class="ico">🗑</span> مسح / جديد</button>
@@ -465,7 +548,7 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
           <p><strong>تاريخ الطباعة:</strong> <span id="reportDate"></span></p>
         </div>
         <table class="report-table">
-          <thead><tr><th>اسم التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى الطبيعي</th><th>الحالة</th></tr></thead>
+          <thead><tr><th style="width: 35%;">اسم التحليل</th><th style="width: 15%;">النتيجة</th><th style="width: 15%;">الوحدة</th><th style="width: 20%;">المدى الطبيعي</th><th style="width: 15%;">الحالة</th></tr></thead>
           <tbody id="resultRows"></tbody>
         </table>
         <div class="report-note-box">
@@ -510,6 +593,38 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 18px; height: 18px;
     </div>
   </div>
 </div>
+
+<!-- نافذة المقارنة -->
+<div class="modal-backdrop" id="compareModal">
+  <div class="modal" style="width: min(900px, 100%);">
+    <h3>مقارنة النتائج بين زيارتين</h3>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <div style="flex: 1; background: var(--surface-tint); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+        <strong style="color: var(--navy-800);" id="compareDate1"></strong>
+      </div>
+      <div style="flex: 1; background: var(--surface-tint); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+        <strong style="color: var(--navy-800);" id="compareDate2"></strong>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="compareTable">
+        <thead>
+          <tr>
+            <th>اسم التحليل</th>
+            <th>الوحدة</th>
+            <th>النتيجة (الزيارة 1)</th>
+            <th>النتيجة (الزيارة 2)</th>
+            <th>الفرق / الحالة</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div style="margin-top: 20px; display: flex; justify-content: center;">
+      <button class="btn gray" onclick="document.getElementById('compareModal').style.display='none'" style="width: 100%; max-width: 200px;">إغلاق</button>
+    </div>
+  </div>
+</div>
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg, type='success'){
@@ -546,6 +661,46 @@ $$('#registrationView input, #registrationView select, #registrationView textare
 });
 window.addEventListener('beforeunload', (e) => {
   if (isDirty) { e.preventDefault(); e.returnValue = 'لديك تغييرات غير محفوظة. هل أنت متأكد من مغادرة الصفحة؟'; }
+});
+
+// ==========================================
+// اختصارات لوحة المفاتيح (Keyboard Shortcuts)
+// ==========================================
+window.addEventListener('keydown', (e) => {
+  // تجاهل الاختصارات إذا كان المستخدم يكتب داخل حقل إدخال (إلا في حالة Escape)
+  const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
+  
+  if (e.key === 'Escape') {
+    $('#modalBackdrop').style.display = 'none';
+    $('#compareModal').style.display = 'none';
+    return;
+  }
+
+  if (e.altKey && !isInput) {
+    switch(e.key.toLowerCase()) {
+      case 'n': // Alt + N
+        e.preventDefault();
+        document.querySelector('[data-action="new"]').click();
+        break;
+      case 's': // Alt + S
+        e.preventDefault();
+        $('#saveBtn').click();
+        break;
+      case 'p': // Alt + P
+        e.preventDefault();
+        $('#printBtn').click();
+        break;
+      case 'f': // Alt + F
+        e.preventDefault();
+        document.querySelector('[data-action="search"]').click();
+        setTimeout(() => $('#searchInput').focus(), 100);
+        break;
+      case 'h': // Alt + H
+        e.preventDefault();
+        document.querySelector('[data-action="dashboard"]').click();
+        break;
+    }
+  }
 });
 
 // ==========================================
@@ -604,21 +759,166 @@ const labCatalog = [
 
 function flagOf(value, rangeStr){
   const v=parseFloat(value); 
-  if(isNaN(v) || value === '') return {key:'pending', label:'… بانتظار', class:'pending'};
+  if(isNaN(v) || value === '') return {key:'pending', label:'بانتظار', class:'pending'};
   const nums = String(rangeStr).match(/-?\d+(\.\d+)?/g);
-  if(!nums) return {key:'normal', label:'✓ طبيعي', class:'normal'};
-  if(rangeStr.includes('<') && v >= parseFloat(nums[0])) return {key:'high', label:'↑ مرتفع', class:'high'};
-  if(rangeStr.includes('>') && v <= parseFloat(nums[0])) return {key:'low', label:'↓ منخفض', class:'low'};
+  if(!nums) return {key:'normal', label:'طبيعي', class:'normal'};
+  if(rangeStr.includes('<') && v >= parseFloat(nums[0])) return {key:'high', label:'مرتفع', class:'high'};
+  if(rangeStr.includes('>') && v <= parseFloat(nums[0])) return {key:'low', label:'منخفض', class:'low'};
   if(nums.length >= 2) {
     const min = parseFloat(nums[0]), max = parseFloat(nums[1]);
-    if(v < min) return {key:'low', label:'↓ منخفض', class:'low'};
-    if(v > max) return {key:'high', label:'↑ مرتفع', class:'high'};
+    if(v < min) return {key:'low', label:'منخفض', class:'low'};
+    if(v > max) return {key:'high', label:'مرتفع', class:'high'};
   }
-  return {key:'normal', label:'✓ طبيعي', class:'normal'};
+  return {key:'normal', label:'طبيعي', class:'normal'};
 }
 
+// ==========================================
+// منطق البحث والسجل
+// ==========================================
+let searchDebounce = null;
+$('#searchBtn').onclick = performSearch;
+$('#searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
+$('#searchInput').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(performSearch, 500);
+});
+
+function performSearch() {
+  const query = $('#searchInput').value.trim().toLowerCase();
+  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+  
+  $('#searchLoading').style.display = 'block';
+  $('#searchEmpty').style.display = 'none';
+  $('#searchResultsWrap').style.display = 'none';
+
+  setTimeout(() => {
+    $('#searchLoading').style.display = 'none';
+    if (!query) { $('#searchEmpty').textContent = 'أدخل كلمة للبحث...'; $('#searchEmpty').style.display = 'block'; return; }
+
+    const filtered = records.filter(r => 
+      (r.name && r.name.toLowerCase().includes(query)) || 
+      (r.id && r.id.toLowerCase().includes(query)) || 
+      (r.phone && r.phone.includes(query))
+    );
+
+    if (filtered.length === 0) { $('#searchEmpty').textContent = 'لم يتم العثور على نتائج مطابقة.'; $('#searchEmpty').style.display = 'block'; return; }
+
+    filtered.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+
+    $('#searchResultsBody').innerHTML = filtered.map(r => `
+      <tr>
+        <td style="font-weight: 700; color: var(--navy-800);">${esc(r.id)}</td>
+        <td>${esc(r.name)}</td>
+        <td dir="ltr" style="text-align: right;">${esc(r.phone || '—')}</td>
+        <td>${esc(r.date)}</td>
+        <td>${(r.tests || []).length}</td>
+        <td style="display: flex; gap: 5px;">
+          <button class="btn blue small" onclick="openRecord('${r.id}')" title="فتح للتعديل">فتح</button>
+          <button class="btn gray small" onclick="viewHistory('${r.phone || r.name}')" title="سجل الزيارات">السجل</button>
+          <button class="btn green small" onclick="createNewVisit('${r.id}')" title="زيارة جديدة">زيارة جديدة</button>
+        </td>
+      </tr>
+    `).join('');
+    $('#searchResultsWrap').style.display = 'block';
+  }, 300);
+}
+
+function openRecord(id) {
+  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+  const r = records.find(x => x.id === id);
+  if (!r) { toast('السجل غير موجود', 'error'); return; }
+
+  isDirty = false;
+  showPage('registrationView');
+  $('#patientId').value = r.id; $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
+  $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = r.note;
+  $('#resultNote').value = r.resultNote; $('#regDate').value = r.date || ''; $('#regTime').value = r.time || '';
+  $('#testsTable tbody').innerHTML = '';
+  (r.tests || []).forEach(t => addTestToTable(t.name, t.unit, t.range, t.value));
+  toast('تم فتح السجل بنجاح');
+}
+
+function createNewVisit(id) {
+  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+  const r = records.find(x => x.id === id);
+  if (!r) return;
+
+  isDirty = false;
+  showPage('registrationView');
+  $('#patientId').value = '2026-' + String(Date.now()).slice(-5);
+  $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
+  $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = '';
+  $('#resultNote').value = 'يرجى متابعة الطبيب المختص.';
+  $('#regDate').value = ''; $('#testsTable tbody').innerHTML = ''; 
+  const now = new Date();
+  $('#regDate').value = now.toLocaleDateString('ar-IQ');
+  $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
+  toast('تم تجهيز زيارة جديدة لنفس المريض');
+}
+
+function viewHistory(key) {
+  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+  const history = records.filter(r => r.phone === key || r.name === key);
+  if (history.length === 0) { toast('لا يوجد سجل سابق', 'error'); return; }
+
+  history.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+  $('#historyPatientName').textContent = history[0].name;
+  
+  $('#historyTimeline').innerHTML = history.map((r, idx) => {
+    const compareBtn = idx < history.length - 1 ? 
+      `<button class="btn blue small" onclick="compareVisits('${history[idx+1].id}', '${r.id}')" style="margin-right: auto;">مقارنة مع السابق</button>` : '';
+    return `
+      <div class="history-item">
+        <div class="history-date"><span>${esc(r.date)} - ${esc(r.time)}</span><span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">ملف: ${esc(r.id)}</span></div>
+        <div class="history-details"><div>عدد التحاليل: ${(r.tests || []).length} | الطبيب المحول: ${esc(r.doctor || '—')}</div></div>
+        <div class="history-actions">
+          <button class="btn gray small" onclick="openRecord('${r.id}')">عرض السجل</button>
+          ${compareBtn}
+        </div>
+      </div>
+    `;
+  }).join('');
+  showPage('historyView');
+}
+
+function compareVisits(id1, id2) {
+  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+  const r1 = records.find(x => x.id === id1);
+  const r2 = records.find(x => x.id === id2);
+  if (!r1 || !r2) { toast('تعذر إيجاد السجلات', 'error'); return; }
+
+  $('#compareDate1').textContent = `الزيارة 1: ${r1.date}`;
+  $('#compareDate2').textContent = `الزيارة 2: ${r2.date}`;
+
+  const tests1 = r1.tests || [];
+  const tests2 = r2.tests || [];
+  const allTestNames = [...new Set([...tests1.map(t => t.name), ...tests2.map(t => t.name)])];
+
+  const rows = allTestNames.map(name => {
+    const t1 = tests1.find(t => t.name === name);
+    const t2 = tests2.find(t => t.name === name);
+    let warning = '';
+    if (t1 && t2) { if (t1.unit !== t2.unit || t1.range !== t2.range) warning = '<span style="color: var(--warning); font-size: 11px; display: block;">⚠️ اختلاف في الوحدة أو المدى</span>'; }
+    const val1 = t1 ? `${t1.value} ${t1.unit}` : '—';
+    const val2 = t2 ? `${t2.value} ${t2.unit}` : '—';
+    const f1 = t1 ? flagOf(t1.value, t1.range) : null;
+    const f2 = t2 ? flagOf(t2.value, t2.range) : null;
+    let statusText = '';
+    if (f1 && f2) {
+      if (f1.key !== f2.key) statusText = `<span style="color: var(--danger); font-weight: bold;">تغير الحالة (${f2.label})</span>`;
+      else statusText = `<span style="color: var(--success);">مستقر (${f2.label})</span>`;
+    }
+    return `<tr><td style="font-weight: 600;" dir="ltr">${esc(name)}</td><td dir="ltr">${esc((t1 || t2).unit)}</td><td style="color:${f1 && (f1.key==='high'||f1.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val1)}</td><td style="color:${f2 && (f2.key==='high'||f2.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val2)}</td><td>${statusText}${warning}</td></tr>`;
+  });
+
+  $('#compareTable tbody').innerHTML = rows.join('');
+  $('#compareModal').style.display = 'flex';
+}
+
+// ==========================================
+// وظائف النموذج والتقرير
+// ==========================================
 function addTestToTable(name, unit, range, savedValue = '') {
-  // منع التكرار
   const existing = Array.from(document.querySelectorAll('#testsTable tbody tr')).find(tr => tr.dataset.name === name);
   if (existing && !savedValue) {
     toast('هذا التحليل موجود بالفعل في القائمة', 'error');
@@ -629,17 +929,18 @@ function addTestToTable(name, unit, range, savedValue = '') {
 
   const tr = document.createElement('tr');
   tr.dataset.name = name; tr.dataset.unit = unit; tr.dataset.range = range;
-  
   const flag = flagOf(savedValue, range);
+  const symbol = flag.key === 'high' ? '↑ ' : (flag.key === 'low' ? '↓ ' : (flag.key === 'normal' ? '✓ ' : '… '));
   
   tr.innerHTML = `
     <td style="text-align: center;"><input type="checkbox" checked aria-label="تحديد التحليل"></td>
-    <td><span class="status ${flag.class}">${flag.label}</span></td>
+    <td><span class="status ${flag.class}">${symbol}${flag.label}</span></td>
     <td class="test-range">${esc(range)}</td>
     <td class="test-unit">${esc(unit)}</td>
     <td><input class="result-input ${flag.key === 'high' || flag.key === 'low' ? 'abnormal' : ''}" type="number" step="any" placeholder="القيمة" value="${esc(savedValue)}" aria-label="نتيجة ${esc(name)}"></td>
     <td class="test-name">${esc(name)}</td>
     <td class="seq-cell" style="text-align: center; color: var(--text-muted);">0</td>
+    <td style="text-align: center;"><button class="btn-delete" onclick="deleteRow(this)" title="حذف التحليل">❌</button></td>
   `;
   
   const inp = tr.querySelector('.result-input');
@@ -647,27 +948,19 @@ function addTestToTable(name, unit, range, savedValue = '') {
   const updateFlag = () => {
     const f = flagOf(inp.value, range);
     const badge = tr.cells[1].querySelector('.status');
+    const sym = f.key === 'high' ? '↑ ' : (f.key === 'low' ? '↓ ' : (f.key === 'normal' ? '✓ ' : '… '));
     badge.className = 'status ' + f.class; 
-    badge.textContent = f.label;
-    
-    if (f.key === 'high' || f.key === 'low') {
-      inp.classList.add('abnormal');
-    } else {
-      inp.classList.remove('abnormal');
-    }
+    badge.textContent = sym + f.label;
+    if (f.key === 'high' || f.key === 'low') inp.classList.add('abnormal');
+    else inp.classList.remove('abnormal');
   };
   
-  // التنقل بلوحة المفاتيح (Enter للانتقال للتحليل التالي)
   inp.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       const nextTr = tr.nextElementSibling;
-      if (nextTr) {
-        const nextInp = nextTr.querySelector('.result-input');
-        if (nextInp) nextInp.focus();
-      } else {
-        $('#resultNote').focus(); // إذا كان آخر حقل، انتقل للملاحظات
-      }
+      if (nextTr) { const nextInp = nextTr.querySelector('.result-input'); if (nextInp) nextInp.focus(); }
+      else $('#resultNote').focus();
     }
   });
 
@@ -678,8 +971,17 @@ function addTestToTable(name, unit, range, savedValue = '') {
   
   if(!savedValue) {
     toast('تم إضافة: ' + name);
-    setTimeout(() => inp.focus(), 100); // تركيز تلقائي على الحقل الجديد
+    setTimeout(() => inp.focus(), 100);
   }
+}
+
+function deleteRow(btn) {
+  if (!confirm('هل أنت متأكد من حذف هذا التحليل من القائمة؟')) return;
+  const tr = btn.closest('tr');
+  tr.remove();
+  renumberTable();
+  isDirty = true;
+  toast('تم حذف التحليل');
 }
 
 function renumberTable() {
@@ -768,28 +1070,29 @@ function buildResultView() {
   
   $('#resultRows').innerHTML=tests.map(t=>{
     const f = flagOf(t.value, t.range);
-    const symbol = f.key === 'high' ? '↑ ' : (f.key === 'low' ? '↓ ' : (f.key === 'normal' ? '✓ ' : '… '));
+    const symbol = f.key === 'high' ? '↑' : (f.key === 'low' ? '↓' : '');
+    const abnormalMark = (f.key === 'high' || f.key === 'low') ? ' *' : '';
+    const statusText = f.key === 'pending' ? 'بانتظار' : (f.key === 'normal' ? 'طبيعي' : (f.key === 'high' ? 'مرتفع' : 'منخفض'));
+    const displayValue = t.value ? `${t.value} ${symbol}${abnormalMark}` : '-';
+
     return `<tr>
-      <td dir="ltr">${esc(t.name)}</td>
-      <td class="res-val" style="color:${f.color}; font-weight:bold;">${esc(t.value || '-')}</td>
-      <td>${esc(t.unit)}</td>
+      <td dir="ltr" style="font-weight: 600;">${esc(t.name)}</td>
+      <td class="res-val ${f.key === 'high' || f.key === 'low' ? 'abnormal-val' : ''}">${esc(displayValue)}</td>
+      <td dir="ltr">${esc(t.unit)}</td>
       <td dir="ltr">${esc(t.range)}</td>
-      <td><span class="status ${f.class}" style="padding: 2px 8px; font-size: 11px;">${symbol}${esc(t.status)}</span></td>
+      <td><span class="status-text ${f.class}">${statusText}</span></td>
     </tr>`;
   }).join('');
   return true;
 }
 
-// ==========================================
-// أزرار التحكم والحفظ
-// ==========================================
 $('#showBtn').onclick = () => { if(buildResultView()) showPage('resultViewPage'); };
 $('#printBtn').onclick = () => { if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(), 300); } };
 $('#pdfBtn').onclick = () => { 
   if(buildResultView()) { 
     showPage('resultViewPage'); 
     const element = document.getElementById('reportToConvert');
-    const opt = { margin: 10, filename: `Result_${$('#patientName').value}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+    const opt = { margin: 10, filename: `Result_${$('#patientName').value}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, letterRendering: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
     toast('جاري تجهيز ملف PDF...');
     html2pdf().set(opt).from(element).save().then(() => { toast('تم تحميل ملف PDF بنجاح'); });
   } 
@@ -803,15 +1106,11 @@ $('#saveBtn').onclick = function() {
   let valid = true;
 
   if (!nameInput.value.trim()) {
-    nameInput.classList.add('invalid');
-    toast('يرجى إدخال اسم المريض', 'error');
-    nameInput.focus(); valid = false;
+    nameInput.classList.add('invalid'); toast('يرجى إدخال اسم المريض', 'error'); nameInput.focus(); valid = false;
   } else { nameInput.classList.remove('invalid'); }
 
   if (!ageInput.value.trim() || isNaN(ageInput.value)) {
-    ageInput.classList.add('invalid');
-    toast('يرجى إدخال العمر بشكل صحيح', 'error');
-    if (valid) ageInput.focus(); valid = false;
+    ageInput.classList.add('invalid'); toast('يرجى إدخال العمر بشكل صحيح', 'error'); if (valid) ageInput.focus(); valid = false;
   } else { ageInput.classList.remove('invalid'); }
 
   if (!valid) return;
@@ -848,7 +1147,6 @@ $('#clearBtn').onclick = () => {
   document.querySelector('[data-action="new"]').click();
 };
 
-// نافذة إضافة التحليل
 $('#addTest').onclick=()=>{ $('#modalBackdrop').style.display='flex'; $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value=''; renderTestList(''); $('#searchTestInput').focus(); };
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
@@ -872,12 +1170,23 @@ $('#testList').addEventListener('click', e => {
   addTestToTable(item.dataset.name, item.dataset.unit, item.dataset.range);
   $('#searchTestInput').value = ''; renderTestList(''); $('#searchTestInput').focus();
 });
-// التنقل بلوحة المفاتيح في قائمة البحث
 $('#testList').addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const item = e.target.closest('.test-item');
     if (item) {
       addTestToTable(item.dataset.name, item.dataset.unit, item.dataset.range);
+      $('#searchTestInput').value = ''; renderTestList(''); $('#searchTestInput').focus();
+    }
+  }
+});
+
+// إضافة أول نتيجة بحث عند الضغط على Enter في حقل البحث
+$('#searchTestInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const firstItem = $('#testList').querySelector('.test-item');
+    if (firstItem) {
+      addTestToTable(firstItem.dataset.name, firstItem.dataset.unit, firstItem.dataset.range);
       $('#searchTestInput').value = ''; renderTestList(''); $('#searchTestInput').focus();
     }
   }
@@ -895,7 +1204,6 @@ $('#confirmManualAdd').onclick = () => {
 
 $('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked); isDirty=true;};
 
-// القائمة الجانبية
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
   const action=b.dataset.action;
   if (action !== 'new' && action !== 'entry' && action !== 'show' && isDirty) {
@@ -916,21 +1224,10 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
       setTimeout(()=>$('#patientName').focus(), 100);
       toast('تم تجهيز صفحة مريض جديد');
       break;
-    case 'search':
-      const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');
-      if(q!==null){
-        const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
-        const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
-        if(r){
-          isDirty = false;
-          showPage('registrationView');
-          $('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;
-          $('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;
-          $('#resultNote').value=r.resultNote;$('#regDate').value=r.date||''; $('#regTime').value=r.time||'';
-          $('#testsTable tbody').innerHTML = ''; (r.tests||[]).forEach(t => addTestToTable(t.name, t.unit, t.range, t.value));
-          toast('تم تحميل البيانات بنجاح');
-        }else toast('لم يتم العثور على سجل', 'error');
-      }
+    case 'search': 
+      isDirty = false; 
+      showPage('searchView'); 
+      $('#searchInput').focus();
       break;
     case 'sample': toast('تم تسجيل سحب العينة بنجاح'); break;
     case 'entry': showPage('registrationView'); toast('يمكنك إدخال النتائج الآن'); break;
@@ -949,8 +1246,6 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
     default: toast('قسم ( '+b.textContent.trim()+' ) قيد التطوير'); break;
   }
 });
-
-window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').style.display='none'});
 
 document.addEventListener('DOMContentLoaded', () => {
   updateDashboard();
