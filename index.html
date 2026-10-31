@@ -35,14 +35,17 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
 .sidebtn.logout{margin-top:auto;background:#a30d2b35;border:1px solid #db284b50}
 
-/* المحتوى الرئيسي (Desktop Split View) */
-.main{flex:1;min-width:0;padding:15px;display:grid;grid-template-columns:minmax(450px, 1fr) minmax(450px, 1.2fr);gap:15px; width: 100%; max-width: 100%;}
-.leftcol,.rightcol{min-width:0;display:flex;flex-direction:column;gap:15px; width: 100%;}
+/* المحتوى الرئيسي */
+.main{flex:1;min-width:0;padding:15px;display:flex;flex-direction:column;gap:15px; width: 100%; max-width: 100%; overflow-y: auto;}
 .card{background:#fff;border:1px solid #e4ebf3;border-radius:10px;box-shadow:0 2px 8px #244b7410;padding:15px; width: 100%; box-sizing: border-box;}
 .section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:18px;font-weight:750;margin-bottom:15px; flex-wrap: wrap; gap: 10px;}
 
+/* إخفاء وإظهار الصفحات */
+.page-view { display: none !important; width: 100%; }
+.page-view.active { display: flex !important; flex-direction: column; gap: 15px; }
+
 /* حقول المريض (Desktop Grid) */
-.patient-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px; width: 100%;}
+.patient-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:15px; width: 100%;}
 .field-group { display: flex; flex-direction: row; align-items: center; gap: 10px; width: 100%; }
 .field-group .field-label { width: 110px; flex-shrink: 0; text-align: left; font-size: 14px; font-weight: 650; color: #3e587a;}
 .field-group .field, .field-group .inline-fields { flex: 1; width: 100%; }
@@ -59,8 +62,8 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .btn.red{background:linear-gradient(135deg,#e01725,#bd0712);box-shadow:0 4px 0 #70040a, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0;box-shadow:0 4px 0 #c4d4e8, 0 4px 6px rgba(0,0,0,0.1);}
 .btn.small{padding:6px 12px; font-size:13px;}
-.actionbar{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:10px; width: 100%; box-sizing: border-box;}
-.actionbar .btn{white-space:nowrap;padding:12px 5px;font-size:14px; width: 100%;}
+.actionbar{display:flex; flex-wrap:wrap; gap:10px; width: 100%; box-sizing: border-box;}
+.actionbar .btn{flex: 1 1 150px; white-space:nowrap;padding:12px 10px;font-size:14px;}
 
 /* الجداول */
 .tests-card{padding:15px; width: 100%; box-sizing: border-box;}
@@ -85,17 +88,14 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
 .report-header .lab-info p{margin:0; color: #58708e; font-size: 14px;}
 .report-header .lab-logo{font-size: 50px; color: #0864ed; margin-left: 15px;}
 .report-title {text-align: center; margin-bottom: 25px; font-size: 20px; font-weight: bold; color: #0a2d65; border-bottom: 1px solid #d7e1ed; padding-bottom: 10px;}
-
 .patient-info-box{display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fbff; border: 1px solid #e4ebf3; border-radius: 8px; padding: 15px; margin-bottom: 25px;}
 .patient-info-box p{margin: 0; font-size: 14px; color: #152d50; line-height: 1.6;}
 .patient-info-box strong{color: #0864ed;}
-
 .report-table{width: 100%; border-collapse: collapse; margin-bottom: 25px; min-width: 0;}
 .report-table th{background: #0a2d65; color: white; padding: 12px; text-align: right; font-size: 14px;}
 .report-table td{padding: 12px; border-bottom: 1px solid #e0e8f1; font-size: 14px; text-align: right;}
 .report-table tr:nth-child(even) { background: #f9fbfd; }
 .report-table .res-val {font-weight: bold; font-size: 15px;}
-
 .report-footer {margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end;}
 .signature-box {text-align: center; width: 200px;}
 .signature-box p{margin: 0 0 40px 0; font-weight: bold; color: #58708e;}
@@ -112,12 +112,9 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
 /* التوافق مع الشاشات الأصغر (Tablets/Mobile) */
 /* ========================================= */
 @media(max-width:1100px){
-  .main{grid-template-columns:1fr; padding:10px;}
-  .rightcol{order:2;}.leftcol{order:1;}
   .patient-grid{grid-template-columns:1fr;}
-  .actionbar{grid-template-columns:1fr 1fr 1fr; gap:8px;}
+  .actionbar .btn{flex: 1 1 45%;}
 }
-
 @media(max-width:768px){
   .topbar{height:auto;flex-wrap:wrap;padding:10px;gap:10px;}
   .brand{min-width:100%;justify-content:center;}
@@ -126,8 +123,7 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
   .sidebar{position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; flex-direction: row; overflow-x: auto; padding: 0 5px; background: #092e58; z-index: 1000; align-items: center; justify-content: flex-start;}
   .sidebtn{min-width: 70px; height: 55px; flex-direction: column; justify-content: center; gap: 2px; font-size: 11px; padding: 5px;}
   .sidebtn .ico-img { width: 28px; height: 28px; margin: 0 0 2px 0; }
-  .actionbar{grid-template-columns:1fr 1fr;}
-  .patient-grid{grid-template-columns:1fr;}
+  .actionbar .btn{flex: 1 1 100%;}
   .modal-backdrop{ padding: 0; align-items: flex-end;}
   .modal{ border-radius: 20px 20px 0 0; max-height: 85vh;}
   .report-container { padding: 15px; }
@@ -141,10 +137,10 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
 @media print{
   @page{size:A4;margin:10mm}
   body{background:#fff;}
-  .topbar,.sidebar,.topnav,.actionbar,.leftcol,.userbox,
+  .topbar,.sidebar,.topnav,.actionbar,.userbox,
   .toast,.modal-backdrop,.labphoto,.back-to-home,.page-view:not(#resultViewPage){display:none!important;}
   .app{box-shadow:none;border:0;margin:0;max-width:none;border-radius:0;min-height:0; width:100%;}
-  .workspace,.main,.rightcol{display:block;padding:0;}
+  .workspace,.main{display:block;padding:0;}
   .card.result-panel{border:0;box-shadow:none;padding:0;}
   #resultViewPage { display: block !important; }
   .report-container{max-width:100%; padding:0;}
@@ -186,19 +182,16 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
   
 <main class="main">
   <!-- لوحة التحكم -->
-  <div id="dashboardView" class="page-view active" style="grid-column: 1 / -1; display: flex; gap: 15px;">
-    <div class="leftcol" style="flex: 1;">
-      <div class="card" style="text-align: center; padding: 60px 20px;">
-        <h2 style="color: #0a2d65; font-size: 26px;">مرحباً بك في نظام إدارة المختبرات</h2>
-        <p style="color: #5d7290; font-size: 16px; margin-bottom: 30px;">اضغط على زر تسجيل مريض جديد للبدء.</p>
-        <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto; width: 100%; max-width: 300px; padding: 15px;">تسجيل مريض جديد</button>
-      </div>
+  <div id="dashboardView" class="page-view active">
+    <div class="card" style="text-align: center; padding: 60px 20px; width: 100%;">
+      <h2 style="color: #0a2d65; font-size: 26px;">مرحباً بك في نظام إدارة المختبرات</h2>
+      <p style="color: #5d7290; font-size: 16px; margin-bottom: 30px;">اضغط على زر تسجيل مريض جديد للبدء.</p>
+      <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto; width: 100%; max-width: 300px; padding: 15px;">تسجيل مريض جديد</button>
     </div>
   </div>
 
   <!-- تسجيل مريض -->
-  <div id="registrationView" class="page-view" style="grid-column: 1 / -1; flex-direction: column; gap: 15px;">
-    
+  <div id="registrationView" class="page-view">
     <!-- القسم الأول: البيانات -->
     <div class="card">
       <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
@@ -233,7 +226,7 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
           <label class="field-label" for="doctor">الطبيب المحول:</label>
           <input id="doctor" class="field" value="د. أحمد الساعدي">
         </div>
-        <div class="field-group" style="grid-column: span 2;">
+        <div class="field-group" style="grid-column: 1 / -1;">
           <label class="field-label" for="patientNote">ملاحظة:</label>
           <input id="patientNote" class="field">
         </div>
@@ -269,9 +262,8 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
       <button class="btn gray back-to-home"><span class="ico">↩</span> عودة</button>
     </div>
   </div>
-
-  <!-- صفحة عرض النتيجة -->
-  <div id="resultViewPage" class="page-view" style="grid-column: 1 / -1;">
+    <!-- صفحة عرض النتيجة -->
+  <div id="resultViewPage" class="page-view">
     <div class="card result-panel" style="justify-content: flex-start;">
       
       <div class="report-container" id="reportToConvert">
@@ -314,18 +306,9 @@ textarea{width:100%;height:90px;resize:vertical;border:1px solid #d4deea;border-
         </div>
 
         <div class="report-footer">
-          <div class="signature-box">
-            <p>توقيع فني المختبر</p>
-            <div class="line"></div>
-          </div>
-          <div class="signature-box">
-            <p>ختم المختبر</p>
-            <div class="line"></div>
-          </div>
-          <div class="signature-box">
-            <p>توقيع الطبيب المحول</p>
-            <div class="line"></div>
-          </div>
+          <div class="signature-box"><p>توقيع فني المختبر</p><div class="line"></div></div>
+          <div class="signature-box"><p>ختم المختبر</p><div class="line"></div></div>
+          <div class="signature-box"><p>توقيع الطبيب المحول</p><div class="line"></div></div>
         </div>
       </div>
 
@@ -478,11 +461,12 @@ function getTests(){
     });
 }
 
+// تم إصلاح هذه الدالة لتعمل بالاعتماد على الكلاس active
 function showPage(pageId) {
-  $$('.page-view').forEach(p => p.style.display = 'none');
+  $$('.page-view').forEach(p => p.classList.remove('active'));
   const target = $(`#${pageId}`);
   if (target) {
-    target.style.display = (pageId === 'registrationView' || pageId === 'dashboardView') ? 'flex' : 'block';
+    target.classList.add('active');
     if(pageId === 'registrationView') {
         const now = new Date();
         if(!$('#regDate').value) {
@@ -522,19 +506,11 @@ function buildResultView() {
 
 // أزرار العرض والطباعة والـ PDF
 $('#showBtn').onclick = () => { if(buildResultView()) showPage('resultViewPage'); };
-
-$('#printBtn').onclick = () => { 
-  if(buildResultView()) { 
-    showPage('resultViewPage'); 
-    setTimeout(()=>window.print(), 300); 
-  } 
-};
-
+$('#printBtn').onclick = () => { if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(), 300); } };
 $('#pdfBtn').onclick = () => { 
   if(buildResultView()) { 
     showPage('resultViewPage'); 
     const element = document.getElementById('reportToConvert');
-    
     const opt = {
       margin:       10,
       filename:     `Result_${$('#patientName').value}.pdf`,
@@ -542,11 +518,8 @@ $('#pdfBtn').onclick = () => {
       html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    
     toast('جاري تجهيز ملف PDF...');
-    html2pdf().set(opt).from(element).save().then(() => {
-      toast('تم تحميل ملف PDF بنجاح');
-    });
+    html2pdf().set(opt).from(element).save().then(() => { toast('تم تحميل ملف PDF بنجاح'); });
   } 
 };
 
@@ -577,7 +550,7 @@ function renderTestList(query) {
     return;
   }
   $('#testList').innerHTML = filtered.map(t => `
-    <div class="test-item" data-name="${esc(t.name)}" data-unit="${esc(t.unit)}" data-range="${esc(t.range)}">
+    <div class="test-item" data-name="${esc(t.name)}" data-unit="${esc(t.unit)}" data-range="${esc(t.range)}" style="padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;">
       <strong>${esc(t.name)}</strong> <span style="font-size:12px; color:#666;">(${esc(t.unit)} | ${esc(t.range)})</span>
     </div>
   `).join('');
