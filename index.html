@@ -20,27 +20,38 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:19px;font-weight:750;margin-bottom:10px}.section-title .titleico{color:#1470e8;font-size:22px;margin-right:8px}
 .patient-grid{display:grid;grid-template-columns:1fr 105px;gap:7px 12px;align-items:center}.field-label{font-size:15px;color:#3e587a;font-weight:650}.field{width:100%;height:36px;border:1px solid #d3deeb;border-radius:6px;padding:6px 10px;color:#263d5b;background:#fff;box-shadow:inset 0 1px 2px #183d5a08;outline:none}.field:focus,textarea:focus{border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c}.inline-fields{display:flex;gap:7px;align-items:center}.inline-fields .field{min-width:0}.age{width:80px;flex-shrink:0}
 .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border-radius:7px;padding:11px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:white;font-weight:700;box-shadow:0 2px 4px #173d6b12;transition:.15s}.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}.btn.blue{background:linear-gradient(135deg,#0870f7,#0753d4)}.btn.green{background:linear-gradient(135deg,#0c9a35,#087c27)}.btn.red{background:linear-gradient(135deg,#e01725,#bd0712)}.btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0}.btn.small{padding:8px 12px}.btn .ico{font-size:19px}.actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px}.actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px}
-.tests-card{padding:10px}.table-wrap{overflow:auto;border:1px solid #dce5ef;border-radius:6px}table{width:100%;border-collapse:collapse;min-width:470px;font-size:12.5px}th{background:#eef4fb;color:#314d70;font-weight:750}td,th{padding:7px 5px;border-bottom:1px solid #e0e8f1;text-align:center;white-space:nowrap}tbody tr:hover{background:#f4f8fe}tbody tr:last-child td{border-bottom:0}.test-name{text-align:left;direction:ltr}.status{display:inline-block;border-radius:5px;padding:4px 9px;color:#fff;font-weight:700;min-width:54px}.normal{background:#078d2d}.high{background:#d20b1b}.low{background:#e18b00}.result-high{color:#d20b1b;font-weight:800}.result-normal{color:#172b45;font-weight:700}input[type=checkbox]{accent-color:#0967e8;width:17px;height:17px;vertical-align:middle}
+.tests-card{padding:10px}.table-wrap{overflow:auto;border:1px solid #dce5ef;border-radius:6px}table{width:100%;border-collapse:collapse;min-width:470px;font-size:12.5px}th{background:#eef4fb;color:#314d70;font-weight:750}td,th{padding:7px 5px;border-bottom:1px solid #e0e8f1;text-align:center;white-space:nowrap}tbody tr:hover{background:#f4f8fe}tbody tr:last-child td{border-bottom:0}.test-name{text-align:left;direction:ltr}.status{display:inline-block;border-radius:5px;padding:4px 9px;color:#fff;font-weight:700;min-width:54px}.normal{background:#078d2d}.high{background:#d20b1b}.low{background:#e18b00}.pending{background:#8a94a6}.result-high{color:#d20b1b;font-weight:800}.result-normal{color:#172b45;font-weight:700}input[type=checkbox]{accent-color:#0967e8;width:17px;height:17px;vertical-align:middle}
 textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-radius:6px;padding:10px;outline:none}
 .rightcol{gap:10px}.result-panel{flex:1;min-height:530px;display:flex;align-items:center;justify-content:center;text-align:center;padding:35px 25px}.empty-state{max-width:520px}.empty-illustration{width:270px;height:270px;margin:0 auto 18px;position:relative;display:grid;place-items:center}.empty-illustration:before{content:"";position:absolute;width:245px;height:220px;background:#e4efff;border-radius:48% 52% 54% 46%;transform:rotate(-14deg)}.doc-icon{position:relative;width:150px;height:205px;background:#fff;border:4px solid #104c9d;border-radius:13px 13px 13px 13px;box-shadow:0 4px 10px #0b458019;display:flex;flex-direction:column;align-items:center;padding:18px 17px;gap:11px}.doc-icon:after{content:"";position:absolute;top:-4px;right:-4px;width:30px;height:30px;background:#e4efff;border-left:4px solid #104c9d;border-bottom:4px solid #104c9d;clip-path:polygon(0 0,100% 100%,0 100%)}.flask{font-size:42px;color:#104c9d;line-height:1.2}.line{height:7px;background:#a9bed8;border-radius:5px;width:100%}.chart-bars{display:flex;align-items:end;gap:6px;height:35px;margin-right:8px}.chart-bars span{width:12px;background:#4486d8;border-radius:2px 2px 0 0}.chart-bars span:nth-child(1){height:13px}.chart-bars span:nth-child(2){height:23px}.chart-bars span:nth-child(3){height:34px}.empty-state h2{font-size:25px;color:#0a2d65;margin:10px 0 16px}.empty-state p{font-size:19px;line-height:1.8;color:#5d7290;margin:0 auto 26px}.show-btn{min-width:260px;font-size:18px;padding:15px 25px}
 .result-view{width:100%;max-width:760px;text-align:right;display:none}.result-view h2{text-align:center;color:#0a2d65}.result-header{display:flex;justify-content:space-between;gap:10px;border-bottom:2px solid #1254a0;padding-bottom:12px;margin-bottom:15px}.result-header h2{margin:0;text-align:right}.result-table{width:100%;font-size:14px}.result-table td,.result-table th{padding:10px 7px}.result-note{margin-top:15px;background:#f4f8fd;padding:12px;border-radius:7px;line-height:1.7}.toast{position:fixed;bottom:22px;left:22px;background:#092e58;color:white;padding:12px 18px;border-radius:9px;box-shadow:0 5px 20px #0003;display:none;z-index:10}.modal-backdrop{position:fixed;inset:0;background:#031b36a8;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal{background:white;border-radius:12px;width:min(460px,100%);padding:22px;box-shadow:0 20px 60px #0004}.modal h3{margin:0 0 16px;color:#0a3268}.modal .field{margin-bottom:12px}.modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:12px}
 @media(max-width:1250px){.topbar{gap:10px;padding:10px}.brand{min-width:230px}.brand h1{font-size:24px}.brand p{font-size:13px}.navitem{min-width:60px;padding:6px}.navitem span:last-child{font-size:12px}.userbox{display:none}.sidebar{width:205px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}.actionbar{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){.app{margin:0;border-radius:0;min-height:100vh}.topbar{height:auto;flex-wrap:wrap}.brand{min-width:0;flex:1}.brand-mark{font-size:38px;width:42px}.brand h1{font-size:22px}.topnav{order:3;width:100%;flex-basis:100%;height:65px;overflow-x:auto;justify-content:flex-start}.navitem{min-width:68px}.workspace{flex-direction:column}.sidebar{width:100%;display:flex;flex-direction:row;overflow-x:auto;padding:6px}.sidebtn{min-width:max-content;min-height:44px;font-size:12px}.sidebtn .ico{font-size:20px}.labphoto{display:none}.main{grid-template-columns:1fr;padding:8px}.rightcol{order:2}.leftcol{order:1}.result-panel{min-height:430px}.patient-grid{grid-template-columns:1fr 95px}}
 @media(max-width:480px){.brand h1{font-size:19px}.brand p{font-size:11px}.brand-mark{width:35px}.navitem{min-width:59px}.navitem .ico{font-size:21px}.navitem span:last-child{font-size:10px}.main{padding:6px}.card{padding:9px}.patient-grid{grid-template-columns:1fr 85px;gap:6px}.field-label{font-size:13px}.field{font-size:13px}.actionbar{gap:6px}.actionbar .btn{font-size:12px;padding:10px 5px}.empty-illustration{transform:scale(.82);margin-top:-15px;margin-bottom:-10px}.empty-state h2{font-size:21px}.empty-state p{font-size:16px}.show-btn{min-width:0;width:100%}}
-/* تنسيق قائمة البحث عن التحاليل */
-.test-item {
-  padding: 10px 15px;
-  border-bottom: 1px solid #e0e8f1;
-  cursor: pointer;
-  text-align: right;
-  transition: 0.2s;
+
+/* تنسيقات إضافية */
+.result-input{width:70px;height:28px;text-align:center;border:1px solid #d3deeb;border-radius:5px;font-weight:700;font-size:13px;color:#172b45;}
+.result-input:focus{outline:none;border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c;}
+.test-item { padding: 10px 15px; border-bottom: 1px solid #e0e8f1; cursor: pointer; text-align: right; transition: 0.2s; }
+.test-item:hover { background-color: #e9f1fa; }
+.test-item:last-child { border-bottom: none; }
+
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  .topbar,.sidebar,.topnav,.actionbar,.leftcol,.userbox,
+  .toast,.modal-backdrop,.labphoto,#backBtn{display:none!important}
+  .app{box-shadow:none;border:0;margin:0;max-width:none;border-radius:0;min-height:0}
+  .workspace,.main,.rightcol{display:block;padding:0}
+  .card.result-panel{border:0;box-shadow:none;min-height:0;padding:0}
+  .empty-state{display:none!important}
+  .result-view{display:block!important;max-width:none}
+  .table-wrap{overflow:visible;border:0}
+  table{min-width:0;font-size:12px}
+  th,.status,.result-note{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tbody tr{break-inside:avoid}
+  .result-header{border-bottom:2px solid #1254a0}
 }
-.test-item:hover {
-  background-color: #e9f1fa;
-}
-.test-item:last-child {
-  border-bottom: none;
-}</style>
+</style>
 </head>
 <body>
 <div class="app">
@@ -79,6 +90,25 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
       <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
       <div class="patient-grid">
         <input id="patientId" class="field" value="2026-00125" aria-label="رقم المريض">
+        <label class="field-label" for="patientId">الرقم:</label>
+        <input id="patientName" class="field" value="علي حسن محمد" aria-label="الاسم الكامل">
+        <label class="field-label" for="patientName">الاسم الكامل:</label>
+        <div class="inline-fields"><input id="age" class="field age" type="number" value="32" min="0" aria-label="العمر"><select id="gender" class="field"><option>الذكر</option><option>الأنثى</option></select></div>
+        <label class="field-label">الجنس / العمر:</label>
+        <input id="phone" class="field" value="07812345678" aria-label="رقم الهاتف">
+        <label class="field-label" for="phone">رقم الهاتف:</label>
+        <input id="doctor" class="field" value="د. أحمد الساعدي" aria-label="الطبيب المحول">
+        <label class="field-label" for="doctor">الطبيب المحول:</label>
+        <input id="patientNote" class="field" aria-label="ملاحظة">
+        <label class="field-label" for="patientNote">ملاحظة:</label>
+      </div>
+    </div>
+    <div class="card tests-card">
+      <div class="section-title"><span>التحاليل المطلوبة <span class="titleico">⚗</span></span><button class="btn blue small" id="addTest">＋ إضافة تحليل</button></div>
+      <div class="table-wrap"><table id="testsTable">
+        <thead><tr><th><input type="checkbox" id="selectAll" checked aria-label="تحديد الكل"></th><th>الحالة</th><th>المدى الطبيعي</th><th>الوحدة</th><th>النتيجة</th><th>اسم التحليل</th><th>تسلسل</th></tr></thead>
+        <tbody>
+          <!-- سيتم إضافة التحاليل هنا تلقائياً عبر زر إضافة تحليل -->
         </tbody>
       </table></div>
     </div>
@@ -118,27 +148,146 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- نافذة إضافة التحليل (جديدة) -->
 <div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" style="width:min(500px,100%)">
+  <div class="modal" style="width:min(550px,100%)">
     <h3 id="modalTitle">إضافة تحليل جديد</h3>
-    <input class="field" id="searchTestInput" placeholder="ابحث عن اسم التحليل (مثال: Hemoglobin)..." style="margin-bottom: 12px;">
-    <div id="testList" style="max-height: 250px; overflow-y: auto; border: 1px solid #d3deeb; border-radius: 6px; background: #f9fbff;"></div>
+    
+    <input class="field" id="searchTestInput" placeholder="ابحث في القائمة (مثال: Hemoglobin)..." style="margin-bottom: 10px;">
+    <div id="testList" style="max-height: 200px; overflow-y: auto; border: 1px solid #d3deeb; border-radius: 6px; background: #f9fbff; margin-bottom: 15px;"></div>
+    
+    <div style="background: #eef4fb; padding: 10px; border-radius: 6px; border: 1px solid #d7e1ed;">
+      <h4 style="margin: 0 0 8px 0; color: #0a3268; font-size: 14px;">أو أضف تحليلاً يدوياً (إذا لم يكن موجوداً):</h4>
+      <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+        <input class="field" id="manualName" placeholder="اسم التحليل *" style="flex: 2; min-width: 120px;">
+        <input class="field" id="manualUnit" placeholder="الوحدة" style="flex: 1; min-width: 80px;">
+        <input class="field" id="manualRange" placeholder="المدى (مثال: 1-5)" style="flex: 1; min-width: 100px;">
+        <button class="btn green small" id="confirmManualAdd" style="flex: 1; padding: 0 10px;">إضافة</button>
+      </div>
+    </div>
+
     <div class="modal-actions" style="margin-top: 15px;">
       <button class="btn gray" id="cancelAdd">إغلاق</button>
     </div>
   </div>
 </div>
-<script>
-const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
-function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
+
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-// دالة لحساب الحالة (طبيعي / مرتفع / منخفض) تلقائياً
+// 1. قاعدة بيانات التحاليل الشاملة (100 تحليل)
+const labCatalog = [
+  { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" },
+  { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
+  { name: "WBC", unit: "10³/µL", range: "4 - 11" },
+  { name: "RBC", unit: "10^6/µL", range: "4.2 - 5.9" },
+  { name: "Platelets", unit: "10³/µL", range: "150 - 450" },
+  { name: "MCV", unit: "fL", range: "80 - 100" },
+  { name: "MCH", unit: "pg", range: "27 - 32" },
+  { name: "MCHC", unit: "g/dL", range: "32 - 36" },
+  { name: "Neutrophils", unit: "%", range: "40 - 60" },
+  { name: "Lymphocytes", unit: "%", range: "20 - 40" },
+  { name: "Monocytes", unit: "%", range: "2 - 8" },
+  { name: "Eosinophils", unit: "%", range: "1 - 4" },
+  { name: "Basophils", unit: "%", range: "0.5 - 1" },
+  { name: "ESR", unit: "mm/hr", range: "0 - 20" },
+  { name: "Reticulocyte Count", unit: "%", range: "0.5 - 2.5" },
+  { name: "Urea", unit: "mg/dL", range: "15 - 40" },
+  { name: "BUN", unit: "mg/dL", range: "7 - 20" },
+  { name: "Creatinine", unit: "mg/dL", range: "0.6 - 1.3" },
+  { name: "Uric Acid", unit: "mg/dL", range: "3.4 - 7.0" },
+  { name: "eGFR", unit: "mL/min", range: "> 90" },
+  { name: "Sodium (Na)", unit: "mEq/L", range: "135 - 145" },
+  { name: "Potassium (K)", unit: "mEq/L", range: "3.5 - 5.1" },
+  { name: "Chloride (Cl)", unit: "mEq/L", range: "98 - 107" },
+  { name: "Calcium", unit: "mg/dL", range: "8.5 - 10.5" },
+  { name: "Phosphorus", unit: "mg/dL", range: "2.5 - 4.5" },
+  { name: "SGPT (ALT)", unit: "U/L", range: "0 - 40" },
+  { name: "SGOT (AST)", unit: "U/L", range: "0 - 40" },
+  { name: "Alkaline Phosphatase (ALP)", unit: "U/L", range: "40 - 130" },
+  { name: "GGT", unit: "U/L", range: "9 - 48" },
+  { name: "Total Bilirubin", unit: "mg/dL", range: "0.1 - 1.2" },
+  { name: "Direct Bilirubin", unit: "mg/dL", range: "0 - 0.3" },
+  { name: "Albumin", unit: "g/dL", range: "3.5 - 5.0" },
+  { name: "Total Protein", unit: "g/dL", range: "6.0 - 8.3" },
+  { name: "Glucose (FBS)", unit: "mg/dL", range: "70 - 110" },
+  { name: "Glucose (RBS)", unit: "mg/dL", range: "70 - 140" },
+  { name: "HbA1c", unit: "%", range: "4 - 5.6" },
+  { name: "Insulin", unit: "µU/mL", range: "2 - 25" },
+  { name: "Total Cholesterol", unit: "mg/dL", range: "< 200" },
+  { name: "Triglycerides", unit: "mg/dL", range: "< 150" },
+  { name: "HDL", unit: "mg/dL", range: "40 - 60" },
+  { name: "LDL", unit: "mg/dL", range: "< 130" },
+  { name: "VLDL", unit: "mg/dL", range: "5 - 40" },
+  { name: "TSH", unit: "µIU/mL", range: "0.4 - 4.0" },
+  { name: "T3", unit: "ng/dL", range: "80 - 200" },
+  { name: "T4", unit: "µg/dL", range: "5 - 12" },
+  { name: "Free T3", unit: "pg/mL", range: "2.3 - 4.2" },
+  { name: "Free T4", unit: "ng/dL", range: "0.8 - 1.8" },
+  { name: "Testosterone", unit: "ng/dL", range: "300 - 1000" },
+  { name: "Estradiol", unit: "pg/mL", range: "15 - 350" },
+  { name: "Progesterone", unit: "ng/mL", range: "0.1 - 25" },
+  { name: "Prolactin", unit: "ng/mL", range: "4 - 15" },
+  { name: "FSH", unit: "mIU/mL", range: "1.5 - 12.4" },
+  { name: "LH", unit: "mIU/mL", range: "1.7 - 8.6" },
+  { name: "Cortisol", unit: "µg/dL", range: "6 - 23" },
+  { name: "Vitamin D (25-OH)", unit: "ng/mL", range: "30 - 100" },
+  { name: "Vitamin B12", unit: "pg/mL", range: "200 - 900" },
+  { name: "Folic Acid", unit: "ng/mL", range: "3 - 17" },
+  { name: "Ferritin", unit: "ng/mL", range: "12 - 300" },
+  { name: "Iron", unit: "µg/dL", range: "60 - 170" },
+  { name: "Magnesium", unit: "mg/dL", range: "1.7 - 2.2" },
+  { name: "Troponin I", unit: "ng/mL", range: "< 0.04" },
+  { name: "CK-MB", unit: "ng/mL", range: "0 - 6.3" },
+  { name: "CK (Total)", unit: "U/L", range: "30 - 200" },
+  { name: "BNP", unit: "pg/mL", range: "< 100" },
+  { name: "PT", unit: "sec", range: "11 - 13.5" },
+  { name: "INR", unit: "Ratio", range: "0.8 - 1.1" },
+  { name: "PTT", unit: "sec", range: "25 - 35" },
+  { name: "D-Dimer", unit: "ng/mL", range: "< 500" },
+  { name: "CRP", unit: "mg/L", range: "< 5" },
+  { name: "Procalcitonin", unit: "ng/mL", range: "< 0.5" },
+  { name: "ANA", unit: "Titer", range: "Negative" },
+  { name: "RF (Rheumatoid Factor)", unit: "IU/mL", range: "< 14" },
+  { name: "ASO", unit: "IU/mL", range: "< 200" },
+  { name: "Immunoglobulin E (IgE)", unit: "IU/mL", range: "< 100" },
+  { name: "Urine Protein", unit: "mg/dL", range: "Negative" },
+  { name: "Urine Glucose", unit: "mg/dL", range: "Negative" },
+  { name: "Urine WBC", unit: "/HPF", range: "0 - 5" },
+  { name: "Urine RBC", unit: "/HPF", range: "0 - 2" },
+  { name: "Urine Pus Cells", unit: "/HPF", range: "0 - 5" },
+  { name: "Urine pH", unit: "", range: "4.5 - 8.0" },
+  { name: "Amylase", unit: "U/L", range: "30 - 110" },
+  { name: "Lipase", unit: "U/L", range: "0 - 160" },
+  { name: "Lactate", unit: "mmol/L", range: "0.5 - 2.2" },
+  { name: "Ammonia", unit: "µmol/L", range: "15 - 45" },
+  { name: "PSA (Total)", unit: "ng/mL", range: "< 4.0" },
+  { name: "CA-125", unit: "U/mL", range: "< 35" },
+  { name: "CEA", unit: "ng/mL", range: "< 3.0" },
+  { name: "AFP", unit: "ng/mL", range: "< 10" },
+  { name: "H. pylori Antigen", unit: "Stool", range: "Negative" },
+  { name: "HBsAg", unit: "Blood", range: "Negative" },
+  { name: "Anti-HCV", unit: "Blood", range: "Negative" },
+  { name: "HIV Ab", unit: "Blood", range: "Negative" },
+  { name: "VDRL", unit: "Blood", range: "Negative" },
+  { name: "Blood Group", unit: "-", range: "A/B/AB/O" },
+  { name: "Rh Factor", unit: "-", range: "Positive/Negative" },
+  { name: "Prothrombin Time", unit: "sec", range: "11 - 13.5" },
+  { name: "Hct", unit: "%", range: "36 - 50" },
+  { name: "MCV", unit: "fL", range: "80 - 100" },
+  { name: "MCH", unit: "pg", range: "27 - 32" },
+  { name: "Cortisol AM", unit: "µg/dL", range: "6 - 23" },
+  { name: "Cortisol PM", unit: "µg/dL", range: "3 - 15" },
+  { name: "Blood Urea Nitrogen", unit: "mg/dL", range: "7 - 20" }
+];
+
+// 2. دالة حساب الحالة (طبيعي / مرتفع / منخفض)
 function flagOf(value, rangeStr){
-  const v=parseFloat(value); if(isNaN(v)) return {key:'normal', label:'مدخل'};
+  const v=parseFloat(value); 
+  if(isNaN(v) || value === '') return {key:'pending', label:'بانتظار'};
   const nums = String(rangeStr).match(/-?\d+(\.\d+)?/g);
   if(!nums) return {key:'normal', label:'طبيعي'};
   if(rangeStr.includes('<') && v >= parseFloat(nums[0])) return {key:'high', label:'مرتفع'};
@@ -151,17 +300,38 @@ function flagOf(value, rangeStr){
   return {key:'normal', label:'طبيعي'};
 }
 
-// جعل خانات النتائج قابلة للتعديل
-$$('#testsTable tbody tr').forEach(tr => {
-  const cell = tr.cells[4]; const val = cell.textContent.trim();
-  cell.innerHTML = `<input class="result-input" type="number" step="any" value="${val}">`;
-  cell.querySelector('input').addEventListener('input', function() {
-    const f = flagOf(this.value, tr.dataset.range || tr.cells[2].textContent);
+// 3. إضافة تحليل للجدول
+function addTestToTable(name, unit, range) {
+  const tr = document.createElement('tr');
+  tr.dataset.name = name; tr.dataset.unit = unit; tr.dataset.range = range;
+  tr.innerHTML = `
+    <td><input type="checkbox" checked></td>
+    <td><span class="status pending">بانتظار</span></td>
+    <td>${esc(range)}</td>
+    <td>${esc(unit)}</td>
+    <td><input class="result-input" type="number" step="any" placeholder="النتيجة"></td>
+    <td class="test-name">${esc(name)}</td>
+    <td class="seq-cell"></td>
+  `;
+  
+  tr.querySelector('.result-input').addEventListener('input', function() {
+    const f = flagOf(this.value, range);
     const badge = tr.cells[1].querySelector('.status');
     badge.className = 'status ' + f.key; badge.textContent = f.label;
-    this.style.color = (f.key==='high'||f.key==='low') ? '#d20b1b' : '#172b45';
+    this.style.color = (f.key === 'high' || f.key === 'low') ? '#d20b1b' : '#172b45';
+    this.style.backgroundColor = (f.key === 'high' || f.key === 'low') ? '#fdeef0' : '#fff';
   });
-});
+
+  $('#testsTable tbody').appendChild(tr);
+  renumberTable();
+  toast('تم إضافة: ' + name);
+}
+
+function renumberTable() {
+  $$('#testsTable tbody tr').forEach((tr, i) => {
+    tr.querySelector('.seq-cell').textContent = i + 1;
+  });
+}
 
 function getTests(){
   return [...$('#testsTable tbody').rows]
@@ -169,26 +339,28 @@ function getTests(){
     .map(r=>{
       const inp = r.querySelector('.result-input');
       return {
-        name: r.dataset.name || r.cells[5].textContent,
-        unit: r.dataset.unit || r.cells[3].textContent,
-        range: r.dataset.range || r.cells[2].textContent,
-        value: inp ? inp.value : r.cells[4].textContent,
+        name: r.dataset.name,
+        unit: r.dataset.unit,
+        range: r.dataset.range,
+        value: inp ? inp.value : '',
         status: r.cells[1].textContent.trim()
       };
     });
 }
 
+// 4. عرض النتيجة
 function displayResult(){
   const name=$('#patientName').value.trim();
   if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return}
-  const tests=getTests();if(!tests.length){toast('حدد تحليلاً واحداً على الأقل');return}
+  const tests=getTests();
+  if(!tests.length){toast('لم تقم بإضافة أي تحليل!');return}
   
   $('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;
   $('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;
   $('#outDoctor').textContent=$('#doctor').value;$('#outNote').textContent=$('#resultNote').value||'لا توجد ملاحظات';
   $('#reportDate').textContent=new Date().toLocaleDateString('ar-IQ');
   
-  $('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value)}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
+  $('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value || '-')}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
   $('#emptyState').style.display='none';$('#resultView').style.display='block';
   toast('تم تجهيز نموذج النتيجة للعرض');
 }
@@ -197,34 +369,65 @@ $('#showBtn').onclick=$('#showBtn2').onclick=displayResult;
 $('#backBtn').onclick=()=>{$('#resultView').style.display='none';$('#emptyState').style.display='block'};
 $('#printBtn').onclick=()=>{displayResult();setTimeout(()=>window.print(),200)};
 $('#pdfBtn').onclick=()=>{displayResult();setTimeout(()=>{toast('اختر "حفظ كملف PDF"');window.print()},200)};
+$('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
 
+// 5. نافذة البحث والإضافة اليدوية
+$('#addTest').onclick=()=>{
+  $('#modalBackdrop').style.display='flex';
+  $('#searchTestInput').value='';
+  $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value='';
+  renderTestList('');
+  $('#searchTestInput').focus();
+};
+
+$('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
+
+function renderTestList(query) {
+  let filtered = labCatalog;
+  if (query) {
+    filtered = labCatalog.filter(t => t.name.toLowerCase().includes(query.toLowerCase()));
+  } else {
+    filtered = labCatalog.slice(0, 5); // عرض أول 5 مقترحات فقط
+  }
+
+  if (filtered.length === 0) {
+    $('#testList').innerHTML = '<div style="padding: 15px; text-align: center; color: #666; font-size: 14px;">لا توجد نتائج مطابقة في القائمة. يمكنك إضافته يدوياً من الأسفل.</div>';
+    return;
+  }
+
+  $('#testList').innerHTML = filtered.map(t => `
+    <div class="test-item" data-name="${esc(t.name)}" data-unit="${esc(t.unit)}" data-range="${esc(t.range)}">
+      <strong>${esc(t.name)}</strong> <span style="font-size:12px; color:#666;">(${esc(t.unit)} | ${esc(t.range)})</span>
+    </div>
+  `).join('');
+}
+
+$('#searchTestInput').addEventListener('input', e => renderTestList(e.target.value));
+
+$('#testList').addEventListener('click', e => {
+  const item = e.target.closest('.test-item');
+  if(!item) return;
+  addTestToTable(item.dataset.name, item.dataset.unit, item.dataset.range);
+  $('#modalBackdrop').style.display='none';
+});
+
+// زر الإضافة اليدوية
+$('#confirmManualAdd').onclick = () => {
+  const name = $('#manualName').value.trim();
+  const unit = $('#manualUnit').value.trim() || '—';
+  const range = $('#manualRange').value.trim() || 'غير محدد';
+  if(!name) {
+    toast('يرجى إدخال اسم التحليل على الأقل');
+    return;
+  }
+  addTestToTable(name, unit, range);
+  $('#modalBackdrop').style.display='none';
+};
+
+// 6. حفظ ونسخ احتياطي
 $('#saveBtn').onclick=()=>{
   const record={id:$('#patientId').value,name:$('#patientName').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
   try{const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const i=records.findIndex(x=>x.id===record.id);if(i>=0)records[i]=record;else records.push(record);localStorage.setItem('najafLabRecords',JSON.stringify(records));toast('تم حفظ بيانات المريض')}catch(e){toast('تعذر الحفظ')}
-};
-
-$('#selectAll').onchange=e=>{
-  $$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked);
-};
-
-$('#addTest').onclick=()=>{$('#modalBackdrop').style.display='flex';$('#newTestName').focus()};
-$('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
-
-$('#confirmAdd').onclick=()=>{
-  const name=$('#newTestName').value.trim(),value=$('#newTestValue').value,unit=$('#newTestUnit').value.trim()||'—',range=$('#newTestRange').value.trim()||'غير محدد';
-  if(!name||value===''){toast('أدخل اسم التحليل والنتيجة');return}
-  const f = flagOf(value, range);
-  const tr=document.createElement('tr');tr.dataset.name=name;tr.dataset.unit=unit;tr.dataset.range=range;
-  tr.innerHTML=`<td><input type="checkbox" checked></td><td><span class="status ${f.key}">${f.label}</span></td><td>${esc(range)}</td><td>${esc(unit)}</td><td><input class="result-input" type="number" step="any" value="${esc(value)}"></td><td class="test-name">${esc(name)}</td><td>${$('#testsTable tbody').rows.length+1}</td>`;
-  $('#testsTable tbody').appendChild(tr);
-  
-  tr.querySelector('.result-input').addEventListener('input', function() {
-    const f2 = flagOf(this.value, range);
-    const badge = tr.cells[1].querySelector('.status');
-    badge.className = 'status ' + f2.key; badge.textContent = f2.label;
-  });
-
-  $('#modalBackdrop').style.display='none';['#newTestName','#newTestValue','#newTestUnit','#newTestRange'].forEach(s=>$(s).value='');toast('تمت إضافة التحليل');
 };
 
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
@@ -233,6 +436,7 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
     ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
     $('#patientId').value='2026-'+String(Date.now()).slice(-5);
     $('#resultView').style.display='none'; $('#emptyState').style.display='block';
+    $('#testsTable tbody').innerHTML = ''; // تفريغ الجدول عند مريض جديد
     toast('تم تجهيز نموذج مريض جديد');
   }else if(action==='search'){
     const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');
