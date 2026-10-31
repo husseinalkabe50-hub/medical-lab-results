@@ -11,7 +11,7 @@
 /* 1. Design Tokens (الثيم التركوازي الجديد) */
 /* ========================================= */
 :root {
-  /* ألوان القائمة والشريط الجديد */
+  /* ألوان القائمة والشريط الجديد (الأخضر المزرق) */
   --teal-bg-main: #064E52;
   --teal-bg-dark: #032F3B;
   --teal-active-bg: #087F83;
@@ -21,7 +21,7 @@
   --teal-text-sub: #B5D9D8;
 
   /* تحديث ألوان النظام الأساسية لتتناسق مع الثيم */
-  --navy-900: #032F3B; /* لاستخدامها في التدرجات */
+  --navy-900: #032F3B; 
   --navy-800: #064E52;
   --navy-700: #087F83;
   
@@ -63,7 +63,7 @@ button { cursor: pointer; border: none; background: transparent; }
 .workspace { display: flex; flex: 1; width: 100%; min-width: 0; overflow: hidden; }
 
 /* ========================================= */
-/* 3. شريط التنقل العلوي (Topbar) */
+/* 3. شريط التنقل العلوي (Topbar) - تم تغييره للأخضر المزرق */
 /* ========================================= */
 .topbar { height: 70px; flex-shrink: 0; background: linear-gradient(135deg, var(--teal-bg-dark), var(--teal-bg-main)); color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--sp-5); box-shadow: 0 4px 12px rgba(3,47,59,0.25); z-index: 20; position: relative; }
 .topbar-right { display: flex; align-items: center; gap: var(--sp-4); }
@@ -83,7 +83,7 @@ button { cursor: pointer; border: none; background: transparent; }
 .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal-active-bg); color: var(--teal-text-main); border: 1px solid var(--teal-glow); display: grid; place-items: center; font-size: 16px; }
 
 /* ========================================= */
-/* 4. القائمة الجانبية (Sidebar) - التصميم الجديد */
+/* 4. القائمة الجانبية (Sidebar) - تم تغييرها للأخضر المزرق */
 /* ========================================= */
 .sidebar { 
   width: var(--sidebar-width); 
@@ -151,7 +151,7 @@ button { cursor: pointer; border: none; background: transparent; }
 .main { flex: 1; min-width: 0; padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-5); overflow-y: auto; background: var(--surface-tint); }
 
 /* ========================================= */
-/* 5. الأزرار (Buttons) - تحديث لتتناسق مع الثيم */
+/* 5. الأزرار (Buttons) */
 /* ========================================= */
 .btn { border-radius: var(--radius-md); padding: 10px 20px; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); color: white; font-weight: 600; font-size: 14px; transition: all var(--transition-fast); border: 1px solid transparent; position: relative; }
 .btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none !important; }
@@ -172,7 +172,7 @@ button { cursor: pointer; border: none; background: transparent; }
 /* أزرار الحذف في الجدول */
 .btn-delete { background: transparent; color: var(--danger); padding: 5px; border-radius: var(--radius-md); transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
 .btn-delete:hover { background: var(--danger-bg); }
- /* ========================================= */
+  /* ========================================= */
 /* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
 .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--sp-5); width: 100%; }
@@ -204,7 +204,7 @@ th { background: var(--surface-tint); color: var(--navy-800); font-weight: 700; 
 td { padding: 10px; border-bottom: 1px solid var(--border-color); color: var(--text-main); vertical-align: middle; }
 tbody tr { transition: background var(--transition-fast); }
 tbody tr:nth-child(even) { background: #fcfcfc; }
-tbody tr:hover { background: #f0fdfa; } /* تلوين الصف عند التمرير */
+tbody tr:hover { background: #f0fdfa; }
 tbody tr:last-child td { border-bottom: none; }
 
 .result-input { width: 85px; height: 34px; text-align: center; padding: 0 5px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 14px; transition: all var(--transition-fast); background: var(--surface); }
@@ -1300,4 +1300,3 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
-
