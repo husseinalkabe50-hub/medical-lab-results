@@ -8,24 +8,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ========================================= */
-/* 1. Design Tokens (نظام التصميم الكحلي الفاخر) */
+/* 1. Design Tokens (نظام التصميم) */
 /* ========================================= */
 :root {
-  --navy-900: #041325;
-  --navy-800: #071c36;
-  --navy-700: #0a274d;
-  --blue-500: #0a64ed;
-  --blue-600: #0852c4;
-  --blue-400: #3b82f6;
-  --success: #10b981;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --bg-body: #f1f5f9;
-  --surface: #ffffff;
-  --surface-tint: #f8fafc;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
+  --navy-900: #041325; --navy-800: #071c36; --navy-700: #0a274d;
+  --blue-500: #0a64ed; --blue-600: #0852c4; --blue-400: #3b82f6;
+  --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+  --bg-body: #f1f5f9; --surface: #ffffff; --surface-tint: #f8fafc;
+  --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
   --font-family: "Segoe UI", Tahoma, Arial, sans-serif;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
   --radius-md: 10px; --radius-lg: 14px; --radius-full: 9999px;
@@ -33,8 +23,7 @@
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
   --transition-fast: 0.2s ease-in-out;
-  --sidebar-width: 260px;
-  --sidebar-collapsed: 80px;
+  --sidebar-width: 260px; --sidebar-collapsed: 80px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,7 +34,7 @@ button { cursor: pointer; border: none; background: transparent; }
 :focus-visible { outline: 2px solid var(--blue-500); outline-offset: 2px; }
 
 /* ========================================= */
-/* 2. الهيكل العام (تم إصلاحه ليعمل كعمودي) */
+/* 2. الهيكل العام */
 /* ========================================= */
 .app { display: flex; flex-direction: column; height: 100vh; width: 100%; overflow: hidden; background: var(--surface-tint); }
 .workspace { display: flex; flex: 1; width: 100%; min-width: 0; overflow: hidden; }
@@ -56,20 +45,14 @@ button { cursor: pointer; border: none; background: transparent; }
 .topbar { height: 70px; flex-shrink: 0; background: linear-gradient(135deg, var(--navy-900), var(--navy-700)); color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--sp-5); box-shadow: 0 4px 12px rgba(4,19,37,0.15); z-index: 20; position: relative; }
 .topbar-right { display: flex; align-items: center; gap: var(--sp-4); }
 .topbar-left { display: flex; align-items: center; gap: var(--sp-4); }
-
-/* زر القائمة (للموبايل والتابليت) */
 .mobile-menu-btn { display: none; color: white; font-size: 24px; padding: var(--sp-2); border-radius: var(--radius-md); transition: background var(--transition-fast); }
 .mobile-menu-btn:hover { background: rgba(255,255,255,0.1); }
-
-/* زر طي القائمة (للكمبيوتر) */
 .desktop-toggle-btn { color: #94a3b8; font-size: 20px; padding: var(--sp-2); border-radius: var(--radius-md); transition: all var(--transition-fast); cursor: pointer; display: flex; align-items: center; }
 .desktop-toggle-btn:hover { color: white; background: rgba(255,255,255,0.1); }
-
 .brand { display: flex; align-items: center; gap: var(--sp-3); }
 .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; font-size: 28px; background: rgba(255,255,255,0.1); border-radius: var(--radius-md); }
 .brand-text h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
 .brand-text p { font-size: 12px; color: #94a3b8; }
-
 .userbox { display: flex; align-items: center; gap: var(--sp-3); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); }
 .userbox-text { text-align: left; }
 .userbox strong { display: block; font-size: 14px; }
@@ -81,15 +64,12 @@ button { cursor: pointer; border: none; background: transparent; }
 /* ========================================= */
 .sidebar { width: var(--sidebar-width); flex-shrink: 0; background: var(--navy-800); color: #cbd5e1; display: flex; flex-direction: column; padding: var(--sp-4) 0; z-index: 100; transition: width var(--transition-fast); overflow-y: auto; overflow-x: hidden; border-left: 1px solid var(--navy-900); }
 .sidebar.collapsed { width: var(--sidebar-collapsed); }
-
 .nav-group { display: flex; flex-direction: column; padding: 0 var(--sp-3); margin-bottom: var(--sp-4); width: 100%; }
 .nav-group-title { font-size: 11px; font-weight: 700; color: #64748b; margin: var(--sp-2) var(--sp-3); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; opacity: 1; transition: opacity var(--transition-fast); }
 .sidebar.collapsed .nav-group-title { opacity: 0; pointer-events: none; }
-
 .sidebtn { display: flex; align-items: center; gap: var(--sp-3); width: 100%; padding: 10px var(--sp-3); border-radius: var(--radius-md); font-size: 14px; font-weight: 600; color: #cbd5e1; transition: all var(--transition-fast); white-space: nowrap; text-align: right; position: relative; }
 .sidebtn:hover { background: rgba(255,255,255,0.05); color: white; }
 .sidebtn.active { background: var(--blue-500); color: white; box-shadow: 0 2px 8px rgba(10,100,237,0.4); }
-
 .sidebtn .ico { width: 24px; height: 24px; display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
 .sidebtn span:not(.ico) { transition: opacity var(--transition-fast); overflow: hidden; }
 .sidebar.collapsed .sidebtn span:not(.ico) { opacity: 0; width: 0; display: none; }
@@ -103,7 +83,7 @@ button { cursor: pointer; border: none; background: transparent; }
 /* ========================================= */
 /* 5. الأزرار (Buttons) */
 /* ========================================= */
-.btn { border-radius: var(--radius-md); padding: 10px 20px; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); color: white; font-weight: 600; font-size: 14px; transition: all var(--transition-fast); border: 1px solid transparent; }
+.btn { border-radius: var(--radius-md); padding: 10px 20px; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); color: white; font-weight: 600; font-size: 14px; transition: all var(--transition-fast); border: 1px solid transparent; position: relative; }
 .btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none !important; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn.blue { background: linear-gradient(to bottom, var(--blue-400), var(--blue-500)); border-color: var(--blue-600); box-shadow: 0 3px 0 var(--navy-700), var(--shadow-sm); }
@@ -115,21 +95,36 @@ button { cursor: pointer; border: none; background: transparent; }
 .btn.gray { background: var(--surface); color: var(--text-main); border-color: var(--border-color); box-shadow: 0 2px 0 #cbd5e1, var(--shadow-sm); }
 .btn.gray:hover:not(:disabled) { background: var(--surface-tint); }
 .btn.small { padding: 6px 12px; font-size: 13px; }
- /* ========================================= */
-/* 6. الكروت والنماذج */
+
+/* حالة التحميل للزر */
+.btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; }
+.btn.loading::after { content: ""; position: absolute; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+  /* ========================================= */
+/* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
 .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--sp-5); width: 100%; }
 .section-title { display: flex; align-items: center; justify-content: space-between; color: var(--navy-800); font-size: 16px; font-weight: 700; margin-bottom: var(--sp-4); padding-bottom: var(--sp-2); border-bottom: 1px solid var(--border-color); }
 
-.patient-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--sp-4); }
+/* أقسام النموذج */
+.form-section { margin-bottom: var(--sp-5); border-bottom: 1px dashed var(--border-color); padding-bottom: var(--sp-4); }
+.form-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.form-section-title { font-size: 15px; font-weight: 700; color: var(--navy-800); margin-bottom: var(--sp-4); display: flex; align-items: center; gap: var(--sp-2); }
+.form-section-title span { color: var(--blue-500); }
+
+.patient-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--sp-4); }
 .field-group { display: flex; flex-direction: column; gap: var(--sp-1); }
-.field-group .field-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.field-group .field-label { font-size: 13px; font-weight: 600; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;}
+.req { color: var(--danger); margin-right: 4px; font-weight: bold; }
+.opt { color: var(--text-muted); font-size: 11px; font-weight: normal; }
+
 .inline-fields { display: flex; gap: var(--sp-2); }
 .inline-fields .field { flex: 1; }
 
-.field { width: 100%; height: 40px; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0 var(--sp-3); color: var(--text-main); background: var(--surface); transition: all var(--transition-fast); }
+.field { width: 100%; height: 42px; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0 var(--sp-3); color: var(--text-main); background: var(--surface); transition: all var(--transition-fast); }
 .field:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(10,100,237,0.15); outline: none; }
-.field:disabled, .readonly-field { background: var(--surface-tint); color: var(--text-muted); cursor: not-allowed; }
+.field:disabled, .readonly-field { background: var(--surface-tint); color: var(--text-muted); cursor: not-allowed; border-color: #cbd5e1; }
+.field.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
 textarea { width: 100%; height: 100px; resize: vertical; padding: var(--sp-3); border: 1px solid var(--border-color); border-radius: var(--radius-md); transition: all var(--transition-fast); }
 textarea:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(10,100,237,0.15); outline: none; }
 
@@ -144,10 +139,7 @@ tbody tr:hover { background: var(--surface-tint); }
 tbody tr:last-child td { border-bottom: none; }
 .test-name { direction: ltr; text-align: left; font-weight: 500; }
 .status { display: inline-block; border-radius: var(--radius-full); padding: 2px 10px; color: white; font-weight: 700; font-size: 12px; text-align: center; }
-.normal { background: var(--success); }
-.high { background: var(--danger); }
-.low { background: var(--warning); }
-.pending { background: var(--text-muted); }
+.normal { background: var(--success); } .high { background: var(--danger); } .low { background: var(--warning); } .pending { background: var(--text-muted); }
 input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px; cursor: pointer; }
 
 /* ========================================= */
@@ -182,8 +174,10 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
 /* ========================================= */
 /* 9. النوافذ المنبثقة والرسائل */
 /* ========================================= */
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-800); color: white; padding: var(--sp-3) var(--sp-5); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: none; z-index: 999; font-weight: 600; font-size: 14px; opacity: 0; transition: all var(--transition-fast); border-right: 4px solid var(--blue-500); }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-800); color: white; padding: var(--sp-3) var(--sp-5); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: none; z-index: 9999; font-weight: 600; font-size: 14px; opacity: 0; transition: all var(--transition-fast); border-right: 4px solid var(--blue-500); }
 .toast.show { display: block; transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.error { border-right-color: var(--danger); background: var(--danger); }
+.toast.success { border-right-color: var(--success); background: var(--navy-800); }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(4,19,37,0.6); display: none; align-items: center; justify-content: center; padding: var(--sp-4); z-index: 1000; backdrop-filter: blur(3px); }
 .modal { background: var(--surface); border-radius: var(--radius-lg); width: min(550px, 100%); padding: var(--sp-6); box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
 .modal h3 { color: var(--navy-800); text-align: center; margin-bottom: var(--sp-4); font-size: 18px; }
@@ -220,44 +214,16 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
 .page-view.active { display: flex !important; flex-direction: column; gap: var(--sp-4); }
 
 /* ========================================= */
-/* 12. التجاوب (تم تكبير المقاس إلى 1024 لحل مشكلة الشاشات المتوسطة) */
+/* 12. التجاوب */
 /* ========================================= */
 @media (max-width: 1024px) {
   .mobile-menu-btn { display: flex; }
   .desktop-toggle-btn { display: none; }
   .brand-text p { display: none; }
-  
-  /* سايدبار الموبايل/التابليت */
-  .sidebar { 
-    position: fixed; 
-    top: 70px; /* تحت الشريط العلوي */
-    right: 0; 
-    height: calc(100vh - 70px); 
-    width: 280px; 
-    transform: translateX(100%); 
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5); 
-    z-index: 100;
-  }
-  .sidebar.mobile-open { 
-    transform: translateX(0); 
-  }
-  
-  /* طبقة تعتيم خلف السايدبار */
-  .sidebar-overlay { 
-    position: fixed; 
-    inset: 70px 0 0 0; 
-    background: rgba(4,19,37,0.6); 
-    z-index: 99; 
-    display: none; 
-    opacity: 0; 
-    transition: opacity 0.3s; 
-  }
-  .sidebar-overlay.active { 
-    display: block; 
-    opacity: 1; 
-  }
-  
+  .sidebar { position: fixed; top: 70px; right: 0; height: calc(100vh - 70px); width: 280px; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -5px 0 15px rgba(0,0,0,0.5); z-index: 100; }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .sidebar-overlay { position: fixed; inset: 70px 0 0 0; background: rgba(4,19,37,0.6); z-index: 99; display: none; opacity: 0; transition: opacity 0.3s; }
+  .sidebar-overlay.active { display: block; opacity: 1; }
   .main { padding: var(--sp-3); }
   .patient-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -265,7 +231,6 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
   .report-footer { flex-direction: column; align-items: center; gap: var(--sp-4); }
   .patient-info-box { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
   .brand-text h1 { font-size: 16px; }
@@ -287,18 +252,14 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
 }
 </style>
 </head>
- <body>
-<!-- طبقة التعتيم للموبايل -->
+<body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="app">
 <header class="topbar">
   <div class="topbar-right">
-    <!-- زر الموبايل -->
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="فتح القائمة">☰</button>
-    <!-- زر طي القائمة للكمبيوتر -->
     <button class="desktop-toggle-btn" id="desktopToggle" aria-label="طي القائمة">☰</button>
-    
     <div class="brand">
       <div class="brand-mark">⚗</div>
       <div class="brand-text">
@@ -307,7 +268,6 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
       </div>
     </div>
   </div>
-  
   <div class="topbar-left">
     <div class="userbox">
       <div class="userbox-text"><strong>حسين</strong><small>فني مختبر</small></div>
@@ -317,7 +277,6 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
 </header>
 
 <div class="workspace">
-  <!-- القائمة الجانبية الجديدة المنظمة -->
   <aside class="sidebar" id="sidebar">
     <div class="nav-group">
       <div class="nav-group-title">العمل اليومي</div>
@@ -325,7 +284,6 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
       <button class="sidebtn active" data-action="new" title="تسجيل مريض"><span class="ico">➕</span> <span>تسجيل مريض</span></button>
       <button class="sidebtn" data-action="search" title="بحث مريض"><span class="ico">🔍</span> <span>بحث مريض</span></button>
     </div>
-    
     <div class="nav-group">
       <div class="nav-group-title">عمليات المختبر</div>
       <button class="sidebtn" data-action="sample" title="سحب العينات"><span class="ico">🧪</span> <span>سحب العينات</span></button>
@@ -333,14 +291,12 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
       <button class="sidebtn" data-action="show" title="عرض النتائج"><span class="ico">📄</span> <span>عرض النتائج</span></button>
       <button class="sidebtn" data-action="print" title="الطباعة"><span class="ico">🖨</span> <span>الطباعة</span></button>
     </div>
-    
     <div class="nav-group">
       <div class="nav-group-title">الإدارة والتقارير</div>
       <button class="sidebtn" data-action="reports" title="التقارير"><span class="ico">📊</span> <span>التقارير</span></button>
       <button class="sidebtn" data-action="devices" title="الأجهزة"><span class="ico">⚙</span> <span>الأجهزة</span></button>
       <button class="sidebtn" data-action="users" title="المستخدمين"><span class="ico">👥</span> <span>المستخدمين</span></button>
     </div>
-    
     <div class="nav-group" style="margin-top: auto;">
       <div class="nav-group-title">النظام</div>
       <button class="sidebtn" data-action="settings" title="الإعدادات"><span class="ico">⚙️</span> <span>الإعدادات</span></button>
@@ -350,44 +306,29 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
   </aside>
   
 <main class="main">
-  <!-- لوحة التحكم -->
   <div id="dashboardView" class="page-view active">
     <div class="dash-welcome">
       <h2>مرحباً بك في نظام إدارة المختبرات</h2>
       <p>نظرة سريعة على نشاط المختبر لليوم</p>
     </div>
-
     <div class="stats-grid">
       <div class="stat-card" onclick="document.querySelector('[data-action=\'new\']').click()">
-        <div class="stat-info">
-          <h3>مرضى اليوم</h3>
-          <div class="stat-value" id="statPatientsToday">0</div>
-        </div>
+        <div class="stat-info"><h3>مرضى اليوم</h3><div class="stat-value" id="statPatientsToday">0</div></div>
         <div class="stat-icon">👤</div>
       </div>
       <div class="stat-card orange" onclick="document.querySelector('[data-action=\'entry\']').click()">
-        <div class="stat-info">
-          <h3>تحاليل جديدة اليوم</h3>
-          <div class="stat-value" id="statNewTests">0</div>
-        </div>
+        <div class="stat-info"><h3>تحاليل جديدة اليوم</h3><div class="stat-value" id="statNewTests">0</div></div>
         <div class="stat-icon">⚗</div>
       </div>
       <div class="stat-card red" onclick="document.querySelector('[data-action=\'entry\']').click()">
-        <div class="stat-info">
-          <h3>قيد الانتظار</h3>
-          <div class="stat-value" id="statPending">0</div>
-        </div>
+        <div class="stat-info"><h3>قيد الانتظار</h3><div class="stat-value" id="statPending">0</div></div>
         <div class="stat-icon">⏳</div>
       </div>
       <div class="stat-card green" onclick="document.querySelector('[data-action=\'print\']').click()">
-        <div class="stat-info">
-          <h3>نتائج مكتملة للطباعة</h3>
-          <div class="stat-value" id="statCompleted">0</div>
-        </div>
+        <div class="stat-info"><h3>نتائج مكتملة للطباعة</h3><div class="stat-value" id="statCompleted">0</div></div>
         <div class="stat-icon">🖨</div>
       </div>
     </div>
-
     <div class="card">
       <div class="section-title">اختصارات سريعة</div>
       <div class="shortcuts-grid">
@@ -397,57 +338,66 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
         <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">🖨</span> الطباعة</button>
       </div>
     </div>
-
     <div class="card">
       <div class="section-title">أحدث النشاطات (محمي الخصوصية)</div>
-      <div class="activity-list" id="recentActivityList">
-        <div class="empty-state">لا توجد نشاطات حديثة.</div>
-      </div>
+      <div class="activity-list" id="recentActivityList"><div class="empty-state">لا توجد نشاطات حديثة.</div></div>
     </div>
   </div>
 
-  <!-- تسجيل مريض -->
+  <!-- تسجيل مريض - النموذج المحسن -->
   <div id="registrationView" class="page-view">
+    <!-- القسم 1: هوية المريض -->
     <div class="card">
-      <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
-      <div class="patient-grid">
-        <div class="field-group">
-          <label class="field-label">التاريخ / الوقت:</label>
-          <div class="inline-fields">
-            <input id="regDate" class="field readonly-field" readonly placeholder="التاريخ">
-            <input id="regTime" class="field readonly-field" readonly placeholder="الوقت">
+      <div class="form-section">
+        <div class="form-section-title"><span>♟</span> هوية المريض ومعلومات الزيارة</div>
+        <div class="patient-grid">
+          <div class="field-group">
+            <label class="field-label" for="patientId">رقم الملف <span class="opt">(تلقائي)</span></label>
+            <input id="patientId" class="field readonly-field" readonly placeholder="رقم الملف">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="regDate">تاريخ الزيارة <span class="opt">(تلقائي)</span></label>
+            <div class="inline-fields">
+              <input id="regDate" class="field readonly-field" readonly placeholder="التاريخ">
+              <input id="regTime" class="field readonly-field" readonly placeholder="الوقت">
+            </div>
+          </div>
+          <div class="field-group" style="grid-column: 1 / -1;">
+            <label class="field-label" for="patientName">الاسم الكامل <span class="req">*</span></label>
+            <input id="patientName" class="field" value="" placeholder="أدخل اسم المريض الثلاثي" required autofocus>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="gender">الجنس <span class="req">*</span></label>
+            <select id="gender" class="field" required><option>الذكر</option><option>الأنثى</option></select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="age">العمر <span class="req">*</span></label>
+            <input id="age" class="field age" type="number" min="0" placeholder="مثال: 32" required>
           </div>
         </div>
-        <div class="field-group">
-          <label class="field-label" for="patientId">رقم الملف:</label>
-          <input id="patientId" class="field readonly-field" value="2026-00125">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="patientName">الاسم الكامل:</label>
-          <input id="patientName" class="field" value="علي حسن محمد">
-        </div>
-        <div class="field-group">
-          <label class="field-label">الجنس / العمر:</label>
-          <div class="inline-fields">
-            <select id="gender" class="field"><option>الذكر</option><option>الأنثى</option></select>
-            <input id="age" class="field age" type="number" value="32" min="0" placeholder="العمر">
+      </div>
+
+      <!-- القسم 2: معلومات الاتصال والتحويل -->
+      <div class="form-section">
+        <div class="form-section-title"><span>📞</span> معلومات الاتصال والتحويل</div>
+        <div class="patient-grid">
+          <div class="field-group">
+            <label class="field-label" for="phone">رقم الهاتف <span class="opt">(اختياري)</span></label>
+            <input id="phone" class="field" type="tel" placeholder="07XXXXXXXXX" dir="ltr" style="text-align: right;">
           </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="phone">رقم الهاتف:</label>
-          <input id="phone" class="field" value="07812345678">
-        </div>
-        <div class="field-group">
-          <label class="field-label" for="doctor">الطبيب المحول:</label>
-          <input id="doctor" class="field" value="د. أحمد الساعدي">
-        </div>
-        <div class="field-group" style="grid-column: 1 / -1;">
-          <label class="field-label" for="patientNote">ملاحظة:</label>
-          <input id="patientNote" class="field">
+          <div class="field-group">
+            <label class="field-label" for="doctor">الطبيب المحول <span class="opt">(اختياري)</span></label>
+            <input id="doctor" class="field" placeholder="اسم الطبيب">
+          </div>
+          <div class="field-group" style="grid-column: 1 / -1;">
+            <label class="field-label" for="patientNote">ملاحظات الزيارة <span class="opt">(اختياري)</span></label>
+            <input id="patientNote" class="field" placeholder="أي ملاحظات إضافية حول حالة المريض أو الزيارة">
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- القسم 3: التحاليل -->
     <div class="card">
       <div class="section-title">
         <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
@@ -461,17 +411,19 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
       </div>
     </div>
 
+    <!-- القسم 4: الملاحظات السريرية -->
     <div class="card">
-      <div class="section-title"><span>ملاحظات النتيجة</span><span class="titleico">▤</span></div>
-      <textarea id="resultNote" placeholder="اكتب ملاحظات الطبيب أو المختبر...">يرجى متابعة الطبيب المختص.</textarea>
+      <div class="form-section-title"><span>📝</span> الملاحظات السريرية / النتيجة</div>
+      <textarea id="resultNote" placeholder="اكتب ملاحظات الطبيب أو المختبر هنا...">يرجى متابعة الطبيب المختص.</textarea>
     </div>
 
+    <!-- أزرار التحكم -->
     <div class="actionbar">
-      <button class="btn blue" id="saveBtn"><span class="ico">💾</span> حفظ</button>
+      <button class="btn blue" id="saveBtn"><span class="ico">💾</span> حفظ السجل</button>
       <button class="btn green" id="printBtn"><span class="ico">🖨</span> طباعة</button>
       <button class="btn red" id="pdfBtn"><span class="ico">📄</span> حفظ PDF</button>
       <button class="btn blue" id="showBtn"><span class="ico">👁</span> عرض النتيجة</button>
-      <button class="btn gray back-to-home"><span class="ico">↩</span> عودة</button>
+      <button class="btn gray back-to-home" id="clearBtn"><span class="ico">🗑</span> مسح / جديد</button>
     </div>
   </div>
 
@@ -542,50 +494,54 @@ input[type=checkbox] { accent-color: var(--blue-500); width: 16px; height: 16px;
     </div>
   </div>
 </div>
-   <script>
+<script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
-function toast(msg){
+function toast(msg, type='success'){
   const t=$('#toast');
   t.textContent=msg;
-  t.classList.add('show');
+  t.className = 'toast show ' + type;
   clearTimeout(window.toastTimer);
   window.toastTimer=setTimeout(()=>{
     t.classList.remove('show');
     setTimeout(()=>t.style.display='none', 300);
-  }, 2600);
+  }, 3000);
   t.style.display='block';
 }
-
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 // ==========================================
-// منطق التنقل (Navigation Logic)
+// منطق التنقل
 // ==========================================
 const sidebar = $('#sidebar');
 const sidebarOverlay = $('#sidebarOverlay');
-
-// زر طي القائمة (سطح المكتب)
-$('#desktopToggle').onclick = () => {
-  sidebar.classList.toggle('collapsed');
-};
-
-// زر فتح القائمة (الموبايل والتابليت)
+$('#desktopToggle').onclick = () => { sidebar.classList.toggle('collapsed'); };
 function toggleMobileMenu() {
   sidebar.classList.toggle('mobile-open');
   sidebarOverlay.classList.toggle('active');
 }
-
-// إغلاق القائمة عند النقر على رابط في الموبايل
 $$('.sidebtn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (window.innerWidth <= 1024) { // تحديث الشرط ليتطابق مع CSS
-      toggleMobileMenu();
-    }
-  });
+  btn.addEventListener('click', () => { if (window.innerWidth <= 1024) toggleMobileMenu(); });
 });
 
 // ==========================================
-// كتالوج التحاليل
+// تتبع التغييرات غير المحفوظة (Unsaved Changes)
+// ==========================================
+let isDirty = false;
+const formInputs = $$('#registrationView input, #registrationView select, #registrationView textarea');
+
+formInputs.forEach(input => {
+  input.addEventListener('input', () => { isDirty = true; });
+});
+
+window.addEventListener('beforeunload', (e) => {
+  if (isDirty) {
+    e.preventDefault();
+    e.returnValue = 'لديك تغييرات غير محفوظة. هل أنت متأكد من مغادرة الصفحة؟';
+  }
+});
+
+// ==========================================
+// كتالوج التحاليل والوظائف المساعدة
 // ==========================================
 const labCatalog = [
   { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" }, { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
@@ -638,9 +594,6 @@ const labCatalog = [
   { name: "Rh Factor", unit: "-", range: "Positive/Negative" }, { name: "Prothrombin Time", unit: "sec", range: "11 - 13.5" }
 ];
 
-// ==========================================
-// الوظائف الأصلية
-// ==========================================
 function flagOf(value, rangeStr){
   const v=parseFloat(value); 
   if(isNaN(v) || value === '') return {key:'pending', label:'بانتظار', color:'var(--text-muted)'};
@@ -668,7 +621,6 @@ function addTestToTable(name, unit, range, savedValue = '') {
     <td class="test-name">${esc(name)}</td>
     <td class="seq-cell"></td>
   `;
-  
   const inp = tr.querySelector('.result-input');
   const updateFlag = () => {
     const f = flagOf(inp.value, range);
@@ -677,19 +629,15 @@ function addTestToTable(name, unit, range, savedValue = '') {
     inp.style.color = (f.key === 'high' || f.key === 'low') ? 'var(--danger)' : 'var(--text-main)';
     inp.style.borderColor = (f.key === 'high' || f.key === 'low') ? 'var(--danger)' : 'var(--border-color)';
   };
-  
-  inp.addEventListener('input', updateFlag);
+  inp.addEventListener('input', () => { updateFlag(); isDirty = true; });
   if (savedValue !== '') updateFlag();
-
   $('#testsTable tbody').appendChild(tr);
   renumberTable();
   if(!savedValue) toast('تم إضافة: ' + name);
 }
 
 function renumberTable() {
-  $$('#testsTable tbody tr').forEach((tr, i) => {
-    tr.querySelector('.seq-cell').textContent = i + 1;
-  });
+  $$('#testsTable tbody tr').forEach((tr, i) => { tr.querySelector('.seq-cell').textContent = i + 1; });
 }
 
 function getTests(){
@@ -697,10 +645,7 @@ function getTests(){
     .filter(r=>r.cells[0].querySelector('input').checked)
     .map(r=>{
       const inp = r.querySelector('.result-input');
-      return {
-        name: r.dataset.name, unit: r.dataset.unit, range: r.dataset.range,
-        value: inp ? inp.value : '', status: r.cells[1].textContent.trim()
-      };
+      return { name: r.dataset.name, unit: r.dataset.unit, range: r.dataset.range, value: inp ? inp.value : '', status: r.cells[1].textContent.trim() };
     });
 }
 
@@ -729,21 +674,11 @@ function updateDashboard() {
     const activities = [];
 
     records.forEach(r => {
-      if (r.date === todayDate) {
-        patientsToday++;
-        newTestsToday += (r.tests || []).length;
-      }
+      if (r.date === todayDate) { patientsToday++; newTestsToday += (r.tests || []).length; }
       let allCompleted = true;
-      (r.tests || []).forEach(t => {
-        if (t.status === 'بانتظار' || !t.value) {
-          pendingTests++;
-          allCompleted = false;
-        }
-      });
+      (r.tests || []).forEach(t => { if (t.status === 'بانتظار' || !t.value) { pendingTests++; allCompleted = false; } });
       if (allCompleted && r.tests && r.tests.length > 0) completedResults++;
-      if (r.savedAt) {
-        activities.push({ time: r.savedAt, id: r.id, maskedName: maskName(r.name), action: allCompleted ? 'اكتملت النتائج' : 'قيد الإدخال' });
-      }
+      if (r.savedAt) { activities.push({ time: r.savedAt, id: r.id, maskedName: maskName(r.name), action: allCompleted ? 'اكتملت النتائج' : 'قيد الإدخال' }); }
     });
 
     $('#statPatientsToday').textContent = patientsToday;
@@ -758,19 +693,12 @@ function updateDashboard() {
       $('#recentActivityList').innerHTML = recent.map(a => `
         <div class="activity-item">
           <div class="act-icon">♙</div>
-          <div class="act-details">
-            <strong>${a.maskedName} <small style="color:var(--text-muted);font-weight:normal;">(${a.id})</small></strong>
-            <span>${a.action}</span>
-          </div>
+          <div class="act-details"><strong>${a.maskedName} <small style="color:var(--text-muted);font-weight:normal;">(${a.id})</small></strong><span>${a.action}</span></div>
           <div class="act-time">${new Date(a.time).toLocaleTimeString('ar-IQ', {hour:'2-digit', minute:'2-digit'})}</div>
         </div>
       `).join('');
-    } else {
-      $('#recentActivityList').innerHTML = '<div class="empty-state">لا توجد نشاطات حديثة.</div>';
-    }
-  } catch (e) {
-    $('#recentActivityList').innerHTML = '<div class="empty-state" style="color:var(--danger); border-color:var(--danger);">تعذر تحميل البيانات.</div>';
-  }
+    } else { $('#recentActivityList').innerHTML = '<div class="empty-state">لا توجد نشاطات حديثة.</div>'; }
+  } catch (e) { $('#recentActivityList').innerHTML = '<div class="empty-state" style="color:var(--danger); border-color:var(--danger);">تعذر تحميل البيانات.</div>'; }
 }
 
 function maskName(name) {
@@ -782,9 +710,9 @@ function maskName(name) {
 
 function buildResultView() {
   const name=$('#patientName').value.trim();
-  if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return false;}
+  if(!name){toast('يرجى إدخال اسم المريض أولاً', 'error');$('#patientName').focus();return false;}
   const tests=getTests();
-  if(!tests.length){toast('لم تقم بإضافة أي تحليل!');return false;}
+  if(!tests.length){toast('لم تقم بإضافة أي تحليل!', 'error');return false;}
   
   $('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;
   $('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;
@@ -794,18 +722,14 @@ function buildResultView() {
   
   $('#resultRows').innerHTML=tests.map(t=>{
     const f = flagOf(t.value, t.range);
-    return `<tr>
-      <td dir="ltr">${esc(t.name)}</td>
-      <td class="res-val" style="color:${f.color}; font-weight:bold;">${esc(t.value || '-')}</td>
-      <td>${esc(t.unit)}</td>
-      <td dir="ltr">${esc(t.range)}</td>
-      <td><span class="status ${f.key}">${esc(t.status)}</span></td>
-    </tr>`;
+    return `<tr><td dir="ltr">${esc(t.name)}</td><td class="res-val" style="color:${f.color}; font-weight:bold;">${esc(t.value || '-')}</td><td>${esc(t.unit)}</td><td dir="ltr">${esc(t.range)}</td><td><span class="status ${f.key}">${esc(t.status)}</span></td></tr>`;
   }).join('');
-  
   return true;
 }
 
+// ==========================================
+// أزرار التحكم والحفظ
+// ==========================================
 $('#showBtn').onclick = () => { if(buildResultView()) showPage('resultViewPage'); };
 $('#printBtn').onclick = () => { if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(), 300); } };
 $('#pdfBtn').onclick = () => { 
@@ -820,19 +744,63 @@ $('#pdfBtn').onclick = () => {
 
 $$('.back-to-home').forEach(btn => btn.onclick = () => showPage('registrationView'));
 
-$('#saveBtn').onclick = () => {
-  const record={id:$('#patientId').value,name:$('#patientName').value,date:$('#regDate').value,time:$('#regTime').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+$('#saveBtn').onclick = function() {
+  // التحقق من الحقول الإلزامية
+  const nameInput = $('#patientName');
+  const ageInput = $('#age');
+  let valid = true;
+
+  if (!nameInput.value.trim()) {
+    nameInput.classList.add('invalid');
+    toast('يرجى إدخال اسم المريض', 'error');
+    nameInput.focus();
+    valid = false;
+  } else { nameInput.classList.remove('invalid'); }
+
+  if (!ageInput.value.trim() || isNaN(ageInput.value)) {
+    ageInput.classList.add('invalid');
+    toast('يرجى إدخال العمر بشكل صحيح', 'error');
+    if (valid) ageInput.focus();
+    valid = false;
+  } else { ageInput.classList.remove('invalid'); }
+
+  if (!valid) return;
+
+  // منع الحفظ المزدوج وإظهار حالة التحميل
+  const btn = this;
+  if (btn.classList.contains('loading')) return;
+  btn.classList.add('loading');
+
+  const record={id:$('#patientId').value,name:nameInput.value.trim(),date:$('#regDate').value,time:$('#regTime').value,age:ageInput.value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+  
   try{
     const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
     const i=records.findIndex(x=>x.id===record.id);
     if(i>=0) records[i]=record; else records.push(record);
     localStorage.setItem('najafLabRecords',JSON.stringify(records));
-    toast('تم حفظ بيانات المريض بنجاح');
-    updateDashboard();
-    if(buildResultView()) showPage('resultViewPage');
-  }catch(e){ toast('تعذر الحفظ'); }
+    
+    isDirty = false; // تم الحفظ بنجاح
+    
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      toast('تم حفظ بيانات المريض بنجاح', 'success');
+      updateDashboard();
+      if(buildResultView()) showPage('resultViewPage');
+    }, 600); // تأخير بسيط لإظهار تأثير التحميل
+    
+  }catch(e){ 
+    btn.classList.remove('loading');
+    toast('تعذر الحفظ، مساحة التخزين ممتلئة', 'error'); 
+  }
 };
 
+// مسح النموذج (جديد)
+$('#clearBtn').onclick = () => {
+  if (isDirty && !confirm('لديك تغييرات غير محفوظة. هل أنت متأكد من مسح النموذج؟')) return;
+  document.querySelector('[data-action="new"]').click();
+};
+
+// نافذة إضافة التحليل
 $('#addTest').onclick=()=>{ $('#modalBackdrop').style.display='flex'; $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value=''; renderTestList(''); $('#searchTestInput').focus(); };
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
@@ -861,28 +829,36 @@ $('#confirmManualAdd').onclick = () => {
   const name = $('#manualName').value.trim();
   const unit = $('#manualUnit').value.trim() || '—';
   const range = $('#manualRange').value.trim() || 'غير محدد';
-  if(!name) { toast('أدخل اسم التحليل'); return; }
+  if(!name) { toast('أدخل اسم التحليل', 'error'); return; }
   addTestToTable(name, unit, range);
   $('#manualName').value = ''; $('#manualUnit').value = ''; $('#manualRange').value = '';
   $('#manualName').focus();
 };
 
-$('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
+$('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked); isDirty=true;};
 
 // القائمة الجانبية والتفاعل
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
   const action=b.dataset.action;
+  
+  // التحقق من التغييرات غير المحفوظة قبل الانتقال
+  if (action !== 'new' && action !== 'entry' && action !== 'show' && isDirty) {
+    if (!confirm('لديك تغييرات غير محفوظة. هل تريد المغادرة؟')) return;
+  }
+
   $$('.sidebtn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   
   switch(action) {
-    case 'dashboard': showPage('dashboardView'); break;
+    case 'dashboard': isDirty = false; showPage('dashboardView'); break;
     case 'new':
-      ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
+      isDirty = false;
+      ['#patientName','#phone','#patientNote','#resultNote', '#age'].forEach(s=>$(s).value='');
       $('#patientId').value='2026-'+String(Date.now()).slice(-5);
       $('#testsTable tbody').innerHTML = ''; 
       $('#regDate').value = ''; 
       showPage('registrationView');
+      setTimeout(()=>$('#patientName').focus(), 100);
       toast('تم تجهيز صفحة مريض جديد');
       break;
     case 'search':
@@ -891,13 +867,14 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
         const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
         const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
         if(r){
+          isDirty = false;
           showPage('registrationView');
           $('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;
           $('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;
           $('#resultNote').value=r.resultNote;$('#regDate').value=r.date||''; $('#regTime').value=r.time||'';
           $('#testsTable tbody').innerHTML = ''; (r.tests||[]).forEach(t => addTestToTable(t.name, t.unit, t.range, t.value));
-          toast('تم تحميل البيانات');
-        }else toast('لم يتم العثور على سجل');
+          toast('تم تحميل البيانات بنجاح');
+        }else toast('لم يتم العثور على سجل', 'error');
       }
       break;
     case 'sample': toast('تم تسجيل سحب العينة بنجاح'); break;
@@ -922,6 +899,9 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').st
 
 document.addEventListener('DOMContentLoaded', () => {
   updateDashboard();
+  if (window.innerWidth > 1024) {
+    $('#patientName').focus();
+  }
 });
 </script>
 </body>
