@@ -13,15 +13,25 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .app{margin:8px auto;max-width:1800px;min-height:calc(100vh - 16px);border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #092b5525;background:#f1f6fc;border:1px solid #a8c2df;display:flex;flex-direction:column;width: 100%;}
 .topbar{height:106px;flex-shrink:0;background:linear-gradient(110deg,#062c59,#064a9a);color:white;display:flex;align-items:center;padding:12px 22px;gap:22px;box-shadow:0 3px 10px #07254d30;z-index:10}
 .brand{display:flex;align-items:center;gap:15px;min-width:300px}.brand-mark{width:58px;height:68px;display:grid;place-items:center;font-size:50px;color:#fff}.brand h1{margin:0;font-size:30px;line-height:1.3;font-weight:750;white-space:nowrap}.brand p{margin:3px 0 0;font-size:16px;white-space:nowrap}
-.topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600;transition: all 0.1s;}.navitem .ico{font-size:28px;line-height:1}.navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
+.topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}
+.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600;transition: all 0.1s;font-size:13px;}
+.navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
 .userbox{display:flex;align-items:center;gap:12px;background:#052d60aa;border:1px solid #ffffff10;padding:8px 12px;border-radius:12px;white-space:nowrap}.userbox strong{display:block;font-size:15px}.userbox small{opacity:.85}.avatar{width:42px;height:42px;border-radius:50%;background:#dceafa;color:#14529c;display:grid;place-items:center;font-size:24px}
 .workspace{display:flex;flex:1;min-height:0;width: 100%;}
 
+/* تنسيقات الأيقونات ثلاثية الأبعاد الجديدة */
+.ico-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.2)); transition: transform 0.2s; }
+.navitem:hover .ico-img { transform: scale(1.1); }
+.sidebtn .ico-img { width: 32px; height: 32px; margin-left: 8px; }
+.btn .ico-img { width: 22px; height: 22px; filter: brightness(0) invert(1); } /* لجعل أيقونات الأزرار بيضاء */
+.btn.gray .ico-img { filter: none; }
+
 /* القائمة الجانبية */
-.sidebar{width:240px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px;z-index:5}
-.sidebtn{min-height:49px;display:flex;align-items:center;gap:14px;text-align:right;background:transparent;color:#f5f8ff;padding:10px 13px;border-radius:8px;font-size:14px;font-weight:600;transition: all 0.1s;white-space:nowrap;}
-.sidebtn .ico{font-size:25px;width:27px;text-align:center}.sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
-.sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}.labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
+.sidebar{width:250px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px;z-index:5}
+.sidebtn{min-height:55px;display:flex;align-items:center;gap:10px;text-align:right;background:transparent;color:#f5f8ff;padding:8px 13px;border-radius:8px;font-size:14px;font-weight:600;transition: all 0.1s;white-space:nowrap;}
+.sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
+.sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}
+.labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
 
 .main{flex:1;min-width:0;padding:12px;display:grid;grid-template-columns:minmax(420px, .93fr) minmax(420px,1.07fr);gap:13px; width: 100%; max-width: 100%;}
 .leftcol,.rightcol{min-width:0;display:flex;flex-direction:column;gap:10px; width: 100%;}
@@ -29,7 +39,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:19px;font-weight:750;margin-bottom:10px; flex-wrap: wrap; gap: 10px;}
 .section-title .titleico{color:#1470e8;font-size:22px;margin-right:8px}
 
-/* حقول المريض الجديدة */
+/* حقول المريض */
 .patient-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px; width: 100%;}
 .field-group { display: flex; flex-direction: row; align-items: center; gap: 10px; width: 100%; }
 .field-group .field-label { width: 110px; flex-shrink: 0; text-align: left; font-size: 14px; font-weight: 650; color: #3e587a;}
@@ -44,9 +54,8 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .btn:active{transform:translateY(4px); box-shadow:none !important;}
 .btn.blue{background:linear-gradient(135deg,#0870f7,#0753d4);box-shadow:0 4px 0 #052b75, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.green{background:linear-gradient(135deg,#0c9a35,#087c27);box-shadow:0 4px 0 #044f18, 0 4px 6px rgba(0,0,0,0.2);}
-.btn.red{background:linear-gradient(135deg,#e01725,#bd0712);box-shadow:0 4px 0 #70040a, 0 4px 6px rgba(0,0,0,0.2);}
 .btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0;box-shadow:0 4px 0 #c4d4e8, 0 4px 6px rgba(0,0,0,0.1);}
-.btn.small{padding:8px 12px}.btn .ico{font-size:19px}
+.btn.small{padding:6px 12px; font-size:13px;}
 .actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px; width: 100%; box-sizing: border-box;}
 .actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px; width: 100%;}
 
@@ -78,49 +87,42 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 .modal{background:white;border-radius:12px;width:min(550px,100%);padding:20px;box-shadow:0 20px 60px #0004;max-height:90vh;overflow-y:auto; box-sizing: border-box;}
 .modal h3{margin:0 0 16px;color:#0a3268}.modal .field{margin-bottom:12px}.modal-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:12px}
 
-/* ========================================= */
-/* استعلامات الوسائط (Responsive) للهواتف */
-/* ========================================= */
+/* استعلامات الوسائط (Responsive) */
 @media(max-width:1250px){
   .topbar{gap:10px;padding:10px}.brand{min-width:230px}.brand h1{font-size:24px}.brand p{font-size:13px}
-  .navitem{min-width:60px;padding:6px}.navitem span:last-child{font-size:12px}.userbox{display:none}
-  .sidebar{width:205px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}
+  .navitem{min-width:60px;padding:6px}.userbox{display:none}
+  .sidebar{width:215px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}
   .actionbar{grid-template-columns:repeat(2,1fr)}
   .patient-grid{grid-template-columns:1fr;}
 }
-
 @media(max-width:900px){
   .app{margin:0;border-radius:0;min-height:100vh;border:none;}
   .topbar{height:auto;flex-wrap:wrap;padding:10px;gap:10px;}
   .brand{min-width:100%;justify-content:center;margin-bottom:5px;}
   .brand-mark{font-size:35px;width:40px;height:40px;}
-  .brand h1{font-size:22px;}
-  .brand p{font-size:12px;}
+  .brand h1{font-size:22px;}.brand p{font-size:12px;}
   .topnav{order:3;width:100%;flex-basis:100%;height:60px;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;-ms-overflow-style:none;}
   .topnav::-webkit-scrollbar{display:none;}
-  .navitem{min-width:65px;padding:5px;}
+  .navitem{min-width:75px;padding:5px; font-size:11px;}
+  .navitem .ico-img { width: 30px; height: 30px; }
   
   .workspace{flex-direction:column;}
-  
-  /* شريط جانبي أفقي للهواتف */
   .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:8px;gap:8px;scrollbar-width:none;-ms-overflow-style:none;border-bottom:2px solid #061f3e;}
   .sidebar::-webkit-scrollbar{display:none;}
-  .sidebtn{min-width:max-content;min-height:45px;font-size:13px;flex-direction:column;gap:3px;padding:8px 12px;}
-  .sidebtn .ico{font-size:22px;}
+  .sidebtn{min-width:max-content;min-height:50px;font-size:12px;flex-direction:column;gap:2px;padding:8px 12px;}
+  .sidebtn .ico-img { width: 28px; height: 28px; margin-left: 0; }
   .labphoto{display:none;}
   
   .main{grid-template-columns:1fr;padding:10px;gap:10px;}
   .rightcol{order:2;}.leftcol{order:1;}
   
-  /* تحويل حقول المريض لعمود واحد */
   .patient-grid{grid-template-columns:1fr;gap:8px;}
   .field-group { flex-direction: column; align-items: flex-start; gap: 4px; }
   .field-group .field-label { width: 100%; text-align: right; font-size: 13px;}
   
   .actionbar{grid-template-columns:1fr 1fr;gap:10px;}
-  .actionbar .btn{padding:14px 8px;font-size:14px;}
+  .actionbar .btn{padding:14px 8px;font-size:13px;}
 }
-
 @media(max-width:480px){
   .field{padding:8px 10px;font-size:15px;}
   .actionbar{grid-template-columns:1fr;}
@@ -153,33 +155,39 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 <div class="app">
 <header class="topbar">
   <div class="brand"><div class="brand-mark">⚗</div><div><h1>مختبر النجف</h1><p>نظام إدارة المختبرات الطبية</p></div></div>
+  
+  <!-- الشريط العلوي مع الأيقونات الجديدة -->
   <nav class="topnav" aria-label="التنقل الرئيسي">
-    <button class="navitem" data-target="dashboardView"><span class="ico">⌂</span><span>الرئيسية</span></button>
-    <button class="navitem active" data-target="registrationView"><span class="ico">♟♟</span><span>المرضى</span></button>
-    <button class="navitem" onclick="document.querySelector('[data-action=\'entry\']').click()"><span class="ico">♜</span><span>التحاليل</span></button>
-    <button class="navitem" onclick="document.querySelector('[data-action=\'show\']').click()"><span class="ico">▤</span><span>النتائج</span></button>
-    <button class="navitem" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">▣</span><span>الطباعة</span></button>
-    <button class="navitem" onclick="document.querySelector('[data-action=\'reports\']').click()"><span class="ico">▥</span><span>التقارير</span></button>
-    <button class="navitem" onclick="document.querySelector('[data-action=\'settings\']').click()"><span class="ico">⚙</span><span>الإعدادات</span></button>
+    <button class="navitem" data-target="dashboardView"><img src="icon-home.png" class="ico-img" alt="الرئيسية"><span>الرئيسية</span></button>
+    <button class="navitem active" data-target="registrationView"><img src="icon-patients.png" class="ico-img" alt="المرضى"><span>المرضى</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'entry\']').click()"><img src="icon-tests.png" class="ico-img" alt="التحاليل"><span>التحاليل</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'show\']').click()"><img src="icon-results.png" class="ico-img" alt="النتائج"><span>النتائج</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'print\']').click()"><img src="icon-print.png" class="ico-img" alt="الطباعة"><span>الطباعة</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'reports\']').click()"><img src="icon-reports.png" class="ico-img" alt="التقارير"><span>التقارير</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'settings\']').click()"><img src="icon-settings.png" class="ico-img" alt="الإعدادات"><span>الإعدادات</span></button>
   </nav>
+  
   <div class="userbox"><div><strong>حسين</strong><small>فني مختبر</small></div><div class="avatar">♙</div></div>
 </header>
 <div class="workspace">
-<aside class="sidebar">
-  <button class="sidebtn active" data-action="new"><span class="ico">♟＋</span>تسجيل مريض</button>
-  <button class="sidebtn" data-action="search"><span class="ico">⌕</span>بحث مريض</button>
-  <button class="sidebtn" data-action="sample"><span class="ico">♨</span>سحب العينات</button>
-  <button class="sidebtn" data-action="entry"><span class="ico">☑</span>إدخال النتائج</button>
-  <button class="sidebtn" data-action="show"><span class="ico">▤</span>النتائج</button>
-  <button class="sidebtn" data-action="print"><span class="ico">▣</span>الطباعة</button>
-  <button class="sidebtn" data-action="reports"><span class="ico">▥</span>التقارير</button>
-  <button class="sidebtn" data-action="devices"><span class="ico">⚙</span>الأجهزة</button>
-  <button class="sidebtn" data-action="users"><span class="ico">♙</span>المستخدمين</button>
-  <button class="sidebtn" data-action="settings"><span class="ico">⚙</span>الإعدادات</button>
-  <button class="sidebtn" data-action="backup"><span class="ico">▤</span>النسخ الاحتياطي</button>
-  <button class="sidebtn logout" data-action="exit"><span class="ico">⏻</span>خروج</button>
-  <div class="labphoto" title="صورة مختبر طبي"></div>
-</aside>
+  
+  <!-- القائمة الجانبية مع الأيقونات الجديدة -->
+  <aside class="sidebar">
+    <button class="sidebtn active" data-action="new"><img src="icon-new-patient.png" class="ico-img">تسجيل مريض</button>
+    <button class="sidebtn" data-action="search"><img src="icon-search.png" class="ico-img">بحث مريض</button>
+    <button class="sidebtn" data-action="sample"><img src="icon-tests.png" class="ico-img">سحب العينات</button>
+    <button class="sidebtn" data-action="entry"><img src="icon-results.png" class="ico-img">إدخال النتائج</button>
+    <button class="sidebtn" data-action="show"><img src="icon-reports.png" class="ico-img">النتائج</button>
+    <button class="sidebtn" data-action="print"><img src="icon-print.png" class="ico-img">الطباعة</button>
+    <button class="sidebtn" data-action="reports"><img src="icon-reports.png" class="ico-img">التقارير</button>
+    <button class="sidebtn" data-action="devices"><img src="icon-microscope.png" class="ico-img">الأجهزة</button>
+    <button class="sidebtn" data-action="users"><img src="icon-users.png" class="ico-img">المستخدمين</button>
+    <button class="sidebtn" data-action="settings"><img src="icon-settings.png" class="ico-img">الإعدادات</button>
+    <button class="sidebtn" data-action="backup"><img src="icon-backup.png" class="ico-img">النسخ الاحتياطي</button>
+    <button class="sidebtn logout" data-action="exit"><span class="ico">⏻</span>خروج</button>
+    <div class="labphoto" title="صورة مختبر طبي"></div>
+  </aside>
+  
 <main class="main">
   <!-- صفحة لوحة التحكم الرئيسية -->
   <div id="dashboardView" class="page-view active" style="grid-column: 1 / -1; display: flex; gap: 13px;">
@@ -198,7 +206,6 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
       <div class="section-title"><span>بيانات المريض</span><span class="titleico">♟</span></div>
       <div class="patient-grid">
         
-        <!-- حقول المريض منظمة بشكل يمنع التمدد -->
         <div class="field-group">
           <label class="field-label">التاريخ / الوقت:</label>
           <div class="inline-fields">
@@ -246,7 +253,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
     <div class="card tests-card">
       <div class="section-title">
         <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
-        <button class="btn blue small" id="addTest">＋ إضافة تحليل</button>
+        <button class="btn blue small" id="addTest"><img src="icon-add.png" class="ico-img" style="filter:none; width:18px;"> إضافة تحليل</button>
       </div>
       <div class="table-wrap">
         <table id="testsTable">
@@ -262,10 +269,10 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
     </div>
 
     <div class="actionbar">
-      <button class="btn blue" id="saveBtn"><span class="ico">▣</span>حفظ</button>
-      <button class="btn green" id="printBtn"><span class="ico">▣</span>طباعة</button>
-      <button class="btn blue" id="showBtn"><span class="ico">◉</span>عرض النتيجة</button>
-      <button class="btn gray back-to-home"><span class="ico">↩</span>عودة</button>
+      <button class="btn blue" id="saveBtn"><img src="icon-backup.png" class="ico-img"> حفظ</button>
+      <button class="btn green" id="printBtn"><img src="icon-print.png" class="ico-img"> طباعة</button>
+      <button class="btn blue" id="showBtn"><img src="icon-results.png" class="ico-img"> عرض النتيجة</button>
+      <button class="btn gray back-to-home"><span class="ico">↩</span> عودة</button>
     </div>
   </div>
 
@@ -282,7 +289,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
         <div class="table-wrap"><table class="result-table"><thead><tr><th>التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى الطبيعي</th><th>الحالة</th></tr></thead><tbody id="resultRows"></tbody></table></div>
         <div class="result-note"><b>ملاحظات:</b><div id="outNote"></div></div>
         <p style="text-align:left;margin-top:30px">توقيع المختبر: __________________</p>
-        <button class="btn blue back-to-home" style="margin-top: 20px; width: 100%;">العودة للتحرير</button>
+        <button class="btn blue back-to-home" style="margin-top: 20px; width: 100%;"><span class="ico">↩</span> العودة للتحرير</button>
       </div>
     </div>
   </div>
@@ -320,7 +327,6 @@ const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-// قاعدة بيانات التحاليل
 const labCatalog = [
   { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" }, { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
   { name: "WBC", unit: "10³/µL", range: "4 - 11" }, { name: "RBC", unit: "10^6/µL", range: "4.2 - 5.9" },
@@ -573,4 +579,3 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').st
 </script>
 </body>
 </html>
-
