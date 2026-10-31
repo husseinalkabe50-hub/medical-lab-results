@@ -11,15 +11,27 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .app{margin:8px auto;max-width:1800px;min-height:calc(100vh - 16px);border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #092b5525;background:#f1f6fc;border:1px solid #a8c2df;display:flex;flex-direction:column}
 .topbar{height:106px;flex-shrink:0;background:linear-gradient(110deg,#062c59,#064a9a);color:white;display:flex;align-items:center;padding:12px 22px;gap:22px;box-shadow:0 3px 10px #07254d30}
 .brand{display:flex;align-items:center;gap:15px;min-width:300px}.brand-mark{width:58px;height:68px;display:grid;place-items:center;font-size:50px;color:#fff}.brand h1{margin:0;font-size:30px;line-height:1.3;font-weight:750;white-space:nowrap}.brand p{margin:3px 0 0;font-size:16px;white-space:nowrap}
-.topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600}.navitem .ico{font-size:28px;line-height:1}.navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
+.topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600;transition: all 0.1s;}.navitem .ico{font-size:28px;line-height:1}.navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
 .userbox{display:flex;align-items:center;gap:12px;background:#052d60aa;border:1px solid #ffffff10;padding:8px 12px;border-radius:12px;white-space:nowrap}.userbox strong{display:block;font-size:15px}.userbox small{opacity:.85}.avatar{width:42px;height:42px;border-radius:50%;background:#dceafa;color:#14529c;display:grid;place-items:center;font-size:24px}
 .workspace{display:flex;flex:1;min-height:0}
-.sidebar{width:240px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px}.sidebtn{min-height:49px;display:flex;align-items:center;gap:14px;text-align:right;background:transparent;color:#f5f8ff;padding:10px 13px;border-radius:8px;font-size:14px;font-weight:600}.sidebtn .ico{font-size:25px;width:27px;text-align:center}.sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}.sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}.labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
+.sidebar{width:240px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px}
+.sidebtn{min-height:49px;display:flex;align-items:center;gap:14px;text-align:right;background:transparent;color:#f5f8ff;padding:10px 13px;border-radius:8px;font-size:14px;font-weight:600;transition: all 0.1s;}
+.sidebtn .ico{font-size:25px;width:27px;text-align:center}.sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
+.sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}.labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
 .main{flex:1;min-width:0;padding:12px;display:grid;grid-template-columns:minmax(420px, .93fr) minmax(420px,1.07fr);gap:13px}
 .leftcol,.rightcol{min-width:0;display:flex;flex-direction:column;gap:10px}.card{background:#fff;border:1px solid #e4ebf3;border-radius:10px;box-shadow:0 2px 8px #244b7410;padding:12px}
 .section-title{display:flex;align-items:center;justify-content:space-between;color:#0c2d62;font-size:19px;font-weight:750;margin-bottom:10px}.section-title .titleico{color:#1470e8;font-size:22px;margin-right:8px}
 .patient-grid{display:grid;grid-template-columns:1fr 105px;gap:7px 12px;align-items:center}.field-label{font-size:15px;color:#3e587a;font-weight:650}.field{width:100%;height:36px;border:1px solid #d3deeb;border-radius:6px;padding:6px 10px;color:#263d5b;background:#fff;box-shadow:inset 0 1px 2px #183d5a08;outline:none}.field:focus,textarea:focus{border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c}.inline-fields{display:flex;gap:7px;align-items:center}.inline-fields .field{min-width:0}.age{width:80px;flex-shrink:0}
-.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border-radius:7px;padding:11px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:white;font-weight:700;box-shadow:0 2px 4px #173d6b12;transition:.15s}.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}.btn.blue{background:linear-gradient(135deg,#0870f7,#0753d4)}.btn.green{background:linear-gradient(135deg,#0c9a35,#087c27)}.btn.red{background:linear-gradient(135deg,#e01725,#bd0712)}.btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0}.btn.small{padding:8px 12px}.btn .ico{font-size:19px}.actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px}.actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px}
+
+/* أزرار ثلاثية الأبعاد 3D */
+.btn{border-radius:8px;padding:12px 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:white;font-weight:700;transition:.1s;margin-bottom:4px;}
+.btn:active{transform:translateY(4px); box-shadow:none !important;}
+.btn.blue{background:linear-gradient(135deg,#0870f7,#0753d4);box-shadow:0 4px 0 #052b75, 0 4px 6px rgba(0,0,0,0.2);}
+.btn.green{background:linear-gradient(135deg,#0c9a35,#087c27);box-shadow:0 4px 0 #044f18, 0 4px 6px rgba(0,0,0,0.2);}
+.btn.red{background:linear-gradient(135deg,#e01725,#bd0712);box-shadow:0 4px 0 #70040a, 0 4px 6px rgba(0,0,0,0.2);}
+.btn.gray{background:#edf3fa;color:#20466e;border:1px solid #d7e3f0;box-shadow:0 4px 0 #c4d4e8, 0 4px 6px rgba(0,0,0,0.1);}
+.btn.small{padding:8px 12px}.btn .ico{font-size:19px}.actionbar{display:grid;grid-template-columns:1fr 1.25fr 1fr 1fr;gap:10px}.actionbar .btn{white-space:nowrap;padding:12px 8px;font-size:14px}
+
 .tests-card{padding:10px}.table-wrap{overflow:auto;border:1px solid #dce5ef;border-radius:6px}table{width:100%;border-collapse:collapse;min-width:470px;font-size:12.5px}th{background:#eef4fb;color:#314d70;font-weight:750}td,th{padding:7px 5px;border-bottom:1px solid #e0e8f1;text-align:center;white-space:nowrap}tbody tr:hover{background:#f4f8fe}tbody tr:last-child td{border-bottom:0}.test-name{text-align:left;direction:ltr}.status{display:inline-block;border-radius:5px;padding:4px 9px;color:#fff;font-weight:700;min-width:54px}.normal{background:#078d2d}.high{background:#d20b1b}.low{background:#e18b00}.pending{background:#8a94a6}.result-high{color:#d20b1b;font-weight:800}.result-normal{color:#172b45;font-weight:700}input[type=checkbox]{accent-color:#0967e8;width:17px;height:17px;vertical-align:middle}
 textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-radius:6px;padding:10px;outline:none}
 .rightcol{gap:10px}.result-panel{flex:1;min-height:530px;display:flex;align-items:center;justify-content:center;text-align:center;padding:35px 25px}.empty-state{max-width:520px}.empty-illustration{width:270px;height:270px;margin:0 auto 18px;position:relative;display:grid;place-items:center}.empty-illustration:before{content:"";position:absolute;width:245px;height:220px;background:#e4efff;border-radius:48% 52% 54% 46%;transform:rotate(-14deg)}.doc-icon{position:relative;width:150px;height:205px;background:#fff;border:4px solid #104c9d;border-radius:13px 13px 13px 13px;box-shadow:0 4px 10px #0b458019;display:flex;flex-direction:column;align-items:center;padding:18px 17px;gap:11px}.doc-icon:after{content:"";position:absolute;top:-4px;right:-4px;width:30px;height:30px;background:#e4efff;border-left:4px solid #104c9d;border-bottom:4px solid #104c9d;clip-path:polygon(0 0,100% 100%,0 100%)}.flask{font-size:42px;color:#104c9d;line-height:1.2}.line{height:7px;background:#a9bed8;border-radius:5px;width:100%}.chart-bars{display:flex;align-items:end;gap:6px;height:35px;margin-right:8px}.chart-bars span{width:12px;background:#4486d8;border-radius:2px 2px 0 0}.chart-bars span:nth-child(1){height:13px}.chart-bars span:nth-child(2){height:23px}.chart-bars span:nth-child(3){height:34px}.empty-state h2{font-size:25px;color:#0a2d65;margin:10px 0 16px}.empty-state p{font-size:19px;line-height:1.8;color:#5d7290;margin:0 auto 26px}.show-btn{min-width:260px;font-size:18px;padding:15px 25px}
@@ -28,8 +40,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 @media(max-width:900px){.app{margin:0;border-radius:0;min-height:100vh}.topbar{height:auto;flex-wrap:wrap}.brand{min-width:0;flex:1}.brand-mark{font-size:38px;width:42px}.brand h1{font-size:22px}.topnav{order:3;width:100%;flex-basis:100%;height:65px;overflow-x:auto;justify-content:flex-start}.navitem{min-width:68px}.workspace{flex-direction:column}.sidebar{width:100%;display:flex;flex-direction:row;overflow-x:auto;padding:6px}.sidebtn{min-width:max-content;min-height:44px;font-size:12px}.sidebtn .ico{font-size:20px}.labphoto{display:none}.main{grid-template-columns:1fr;padding:8px}.rightcol{order:2}.leftcol{order:1}.result-panel{min-height:430px}.patient-grid{grid-template-columns:1fr 95px}}
 @media(max-width:480px){.brand h1{font-size:19px}.brand p{font-size:11px}.brand-mark{width:35px}.navitem{min-width:59px}.navitem .ico{font-size:21px}.navitem span:last-child{font-size:10px}.main{padding:6px}.card{padding:9px}.patient-grid{grid-template-columns:1fr 85px;gap:6px}.field-label{font-size:13px}.field{font-size:13px}.actionbar{gap:6px}.actionbar .btn{font-size:12px;padding:10px 5px}.empty-illustration{transform:scale(.82);margin-top:-15px;margin-bottom:-10px}.empty-state h2{font-size:21px}.empty-state p{font-size:16px}.show-btn{min-width:0;width:100%}}
 
-/* تنسيقات إضافية للصفحات الجديدة */
-.result-input{width:80px;height:32px;text-align:center;border:1px solid #d3deeb;border-radius:5px;font-weight:700;font-size:14px;color:#172b45;}
+.result-input{width:70px;height:28px;text-align:center;border:1px solid #d3deeb;border-radius:5px;font-weight:700;font-size:13px;color:#172b45;}
 .result-input:focus{outline:none;border-color:#3e8cff;box-shadow:0 0 0 3px #0b6cf21c;}
 .test-item { padding: 10px 15px; border-bottom: 1px solid #e0e8f1; cursor: pointer; text-align: right; transition: 0.2s; }
 .test-item:hover { background-color: #e9f1fa; }
@@ -38,15 +49,12 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 .page-view.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .readonly-field { background-color: #f4f8fd; color: #58708e; cursor: not-allowed; text-align: center; font-weight: bold; }
-.stat-card { background: #fff; border-radius: 10px; padding: 20px; text-align: center; border-top: 4px solid #0864ed; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-.stat-card h3 { margin: 0 0 10px 0; color: #58708e; }
-.stat-card h1 { margin: 0; font-size: 36px; color: #0864ed; }
 
 @media print{
   @page{size:A4;margin:12mm}
   body{background:#fff}
   .topbar,.sidebar,.topnav,.actionbar,.leftcol,.userbox,
-  .toast,.modal-backdrop,.labphoto,.back-to-home,.no-print{display:none!important}
+  .toast,.modal-backdrop,.labphoto,#backBtn,.back-to-home{display:none!important}
   .app{box-shadow:none;border:0;margin:0;max-width:none;border-radius:0;min-height:0}
   .workspace,.main,.rightcol{display:block;padding:0}
   .card.result-panel{border:0;box-shadow:none;min-height:0;padding:0}
@@ -67,19 +75,22 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <nav class="topnav" aria-label="التنقل الرئيسي">
     <button class="navitem" data-target="dashboardView"><span class="ico">⌂</span><span>الرئيسية</span></button>
     <button class="navitem active" data-target="registrationView"><span class="ico">♟♟</span><span>المرضى</span></button>
-    <button class="navitem" data-target="searchView"><span class="ico">♜</span><span>السجلات</span></button>
-    <button class="navitem" data-target="reportsView"><span class="ico">▥</span><span>التقارير</span></button>
-    <button class="navitem" data-target="settingsView"><span class="ico">⚙</span><span>الإعدادات</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'entry\']').click()"><span class="ico">♜</span><span>التحاليل</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'show\']').click()"><span class="ico">▤</span><span>النتائج</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">▣</span><span>الطباعة</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'reports\']').click()"><span class="ico">▥</span><span>التقارير</span></button>
+    <button class="navitem" onclick="document.querySelector('[data-action=\'settings\']').click()"><span class="ico">⚙</span><span>الإعدادات</span></button>
   </nav>
   <div class="userbox"><div><strong>حسين</strong><small>فني مختبر</small></div><div class="avatar">♙</div></div>
 </header>
 <div class="workspace">
 <aside class="sidebar">
   <button class="sidebtn active" data-action="new"><span class="ico">♟＋</span>تسجيل مريض جديد</button>
-  <button class="sidebtn" data-action="search"><span class="ico">⌕</span>سجل المرضى والبحث</button>
-  <button class="sidebtn" data-action="sample"><span class="ico">♨</span>سحب العينات (المعلقة)</button>
+  <button class="sidebtn" data-action="search"><span class="ico">⌕</span>البحث عن مريض</button>
+  <button class="sidebtn" data-action="sample"><span class="ico">♨</span>سحب العينات</button>
   <button class="sidebtn" data-action="entry"><span class="ico">☑</span>إدخال النتائج</button>
-  <button class="sidebtn" data-action="review"><span class="ico">▤</span>النتائج المكتملة</button>
+  <button class="sidebtn" data-action="show"><span class="ico">▤</span>عرض النتائج</button>
+  <button class="sidebtn" data-action="print"><span class="ico">▣</span>الطباعة</button>
   <button class="sidebtn" data-action="reports"><span class="ico">▥</span>التقارير والإحصائيات</button>
   <button class="sidebtn" data-action="devices"><span class="ico">⚙</span>إدارة الأجهزة</button>
   <button class="sidebtn" data-action="users"><span class="ico">♙</span>إدارة المستخدمين</button>
@@ -89,22 +100,18 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <div class="labphoto" title="صورة مختبر طبي"></div>
 </aside>
 <main class="main">
-  
-  <!-- 1. صفحة لوحة التحكم الرئيسية -->
+  <!-- صفحة لوحة التحكم الرئيسية -->
   <div id="dashboardView" class="page-view active" style="grid-column: 1 / -1; display: flex; gap: 13px;">
     <div class="leftcol" style="flex: 1;">
       <div class="card" style="text-align: center; padding: 50px;">
         <h2 style="color: #0a2d65; font-size: 28px;">مرحباً بك في نظام إدارة المختبرات</h2>
-        <p style="color: #5d7290; font-size: 18px; margin-bottom: 30px;">يرجى اختيار "تسجيل مريض جديد" للبدء، أو تصفح سجل المرضى.</p>
-        <div style="display: flex; justify-content: center; gap: 15px;">
-            <button class="btn blue show-btn" onclick="document.querySelector('[data-action=\'new\']').click()" style="margin: 0 auto;">تسجيل مريض جديد</button>
-            <button class="btn gray show-btn" onclick="document.querySelector('[data-action=\'search\']').click()" style="margin: 0 auto;">سجل المرضى</button>
-        </div>
+        <p style="color: #5d7290; font-size: 18px; margin-bottom: 30px;">يرجى اختيار "تسجيل مريض جديد" من القائمة الجانبية للبدء.</p>
+        <button class="btn blue show-btn" id="startNewPatientBtn" style="margin: 0 auto;">تسجيل مريض جديد الآن</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. صفحة تسجيل مريض جديد (إدخال البيانات وطلب التحاليل فقط) -->
+  <!-- صفحة تسجيل مريض جديد -->
   <div id="registrationView" class="page-view" style="grid-column: 1 / -1; flex-direction: column; gap: 10px;">
     <div class="card">
       <div class="section-title"><span>بيانات المريض والتسجيل</span><span class="titleico">♟</span></div>
@@ -132,33 +139,13 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
       </div>
     </div>
 
-    <!-- جدول طلب التحاليل (بدون إدخال نتائج هنا) -->
     <div class="card tests-card">
       <div class="section-title"><span>التحاليل المطلوبة <span class="titleico">⚗</span></span><button class="btn blue small" id="addTest">＋ إضافة تحليل</button></div>
       <div class="table-wrap"><table id="testsTable">
-        <thead><tr><th><input type="checkbox" id="selectAll" checked aria-label="تحديد الكل"></th><th>المدى الطبيعي</th><th>الوحدة</th><th>اسم التحليل</th><th>تسلسل</th><th>إجراء</th></tr></thead>
+        <thead><tr><th><input type="checkbox" id="selectAll" checked aria-label="تحديد الكل"></th><th>الحالة</th><th>المدى الطبيعي</th><th>الوحدة</th><th>النتيجة</th><th>اسم التحليل</th><th>تسلسل</th></tr></thead>
         <tbody>
-          <!-- سيتم إضافة التحاليل هنا -->
+          <!-- الجدول فارغ ليتم ملؤه عبر زر الإضافة -->
         </tbody>
-      </table></div>
-    </div>
-
-    <div class="actionbar">
-      <button class="btn blue" id="saveBtn"><span class="ico">▣</span>حفظ ومتابعة للنتائج</button>
-      <button class="btn gray back-to-home"><span class="ico">↩</span>إلغاء والعودة</button>
-    </div>
-  </div>
-
-  <!-- 3. صفحة إدخال نتائج التحاليل (النافذة الجديدة التي تظهر عند الحفظ) -->
-  <div id="resultsEntryView" class="page-view" style="grid-column: 1 / -1; flex-direction: column; gap: 10px;">
-    <div class="card">
-      <div class="section-title">
-          <span>إدخال نتائج التحاليل للمريض: <span id="entryPatientName" style="color: #0864ed;"></span></span>
-          <span class="titleico">☑</span>
-      </div>
-      <div class="table-wrap"><table id="entryTestsTable">
-        <thead><tr><th>تسلسل</th><th>اسم التحليل</th><th>الوحدة</th><th>المدى الطبيعي</th><th>النتيجة</th><th>الحالة</th></tr></thead>
-        <tbody></tbody>
       </table></div>
     </div>
 
@@ -168,12 +155,14 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
     </div>
 
     <div class="actionbar">
-      <button class="btn green" id="saveResultsBtn"><span class="ico">▣</span>حفظ النتائج وإظهار التقرير</button>
-      <button class="btn gray" id="backToRegBtn"><span class="ico">↩</span>عودة لتعديل البيانات</button>
+      <button class="btn blue" id="saveBtn"><span class="ico">▣</span>حفظ</button>
+      <button class="btn green" id="printBtn"><span class="ico">▣</span>طباعة النتيجة</button>
+      <button class="btn blue" id="showBtn"><span class="ico">◉</span>عرض النتيجة</button>
+      <button class="btn gray back-to-home"><span class="ico">↩</span>عودة للرئيسية</button>
     </div>
   </div>
 
-  <!-- 4. صفحة عرض النتيجة للطباعة -->
+  <!-- صفحة عرض النتيجة للطباعة -->
   <div id="resultViewPage" class="page-view" style="grid-column: 1 / -1;">
     <div class="card result-panel" style="min-height: 600px; align-items: flex-start; padding: 20px;">
       <div class="result-view" id="resultView" style="display:block;">
@@ -186,57 +175,10 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
         <div class="table-wrap"><table class="result-table"><thead><tr><th>التحليل</th><th>النتيجة</th><th>الوحدة</th><th>المدى الطبيعي</th><th>الحالة</th></tr></thead><tbody id="resultRows"></tbody></table></div>
         <div class="result-note"><b>ملاحظات:</b><div id="outNote"></div></div>
         <p style="text-align:left;margin-top:30px">توقيع المختبر: __________________</p>
-        <button class="btn blue no-print" onclick="window.print()" style="margin-top: 20px;">طباعة التقرير</button>
-        <button class="btn gray back-to-home no-print" style="margin-top: 20px;">العودة للرئيسية</button>
+        <button class="btn blue back-to-home" style="margin-top: 20px;">العودة للتحرير</button>
       </div>
     </div>
   </div>
-
-  <!-- 5. صفحة سجل المرضى والبحث -->
-  <div id="searchView" class="page-view" style="grid-column: 1 / -1;">
-    <div class="card">
-      <div class="section-title">
-          <span>سجل المرضى</span>
-          <input class="field" id="searchInput" placeholder="ابحث بالاسم أو الرقم..." style="width: 300px; margin: 0;">
-      </div>
-      <div class="table-wrap">
-          <table id="searchResultsTable">
-            <thead><tr><th>الرقم</th><th>الاسم</th><th>التاريخ</th><th>الطبيب</th><th>الحالة</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. صفحة التقارير والإحصائيات -->
-  <div id="reportsView" class="page-view" style="grid-column: 1 / -1;">
-    <div style="display:flex; gap: 15px; flex-wrap: wrap;">
-        <div class="stat-card" style="flex:1;">
-            <h3>إجمالي المرضى المسجلين</h3>
-            <h1 id="statTotal" style="color: #0864ed;">0</h1>
-        </div>
-        <div class="stat-card" style="flex:1; border-top-color: #e18b00;">
-            <h3>مرضى بانتظار النتائج</h3>
-            <h1 id="statPending" style="color: #e18b00;">0</h1>
-        </div>
-        <div class="stat-card" style="flex:1; border-top-color: #078b2c;">
-            <h3>نتائج مكتملة</h3>
-            <h1 id="statCompleted" style="color: #078b2c;">0</h1>
-        </div>
-    </div>
-  </div>
-
-  <!-- 7. صفحة الإعدادات العامة -->
-  <div id="settingsView" class="page-view" style="grid-column: 1 / -1;">
-    <div class="card">
-        <div class="section-title"><span>إعدادات النظام</span><span class="titleico">⚙</span></div>
-        <div style="padding: 20px; text-align: center; color: #58708e;">
-            <h3>إعدادات المختبر العامة</h3>
-            <p>هذه الصفحة مخصصة لتعديل اسم المختبر، الشعار، وبيانات الاتصال (نموذج تجريبي).</p>
-        </div>
-    </div>
-  </div>
-
 </main>
 </div>
 </div>
@@ -246,8 +188,10 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal" style="width:min(550px,100%)">
     <h3 id="modalTitle">إضافة تحليل جديد</h3>
+    
     <input class="field" id="searchTestInput" placeholder="ابحث في القائمة (مثال: Hemoglobin)..." style="margin-bottom: 10px;">
     <div id="testList" style="max-height: 200px; overflow-y: auto; border: 1px solid #d3deeb; border-radius: 6px; background: #f9fbff; margin-bottom: 15px;"></div>
+    
     <div style="background: #eef4fb; padding: 10px; border-radius: 6px; border: 1px solid #d7e1ed;">
       <h4 style="margin: 0 0 8px 0; color: #0a3268; font-size: 14px;">أو أضف تحليلاً يدوياً (إذا لم يكن موجوداً):</h4>
       <div style="display: flex; gap: 5px; flex-wrap: wrap;">
@@ -257,6 +201,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
         <button class="btn green small" id="confirmManualAdd" style="flex: 1; padding: 0 10px;">إضافة</button>
       </div>
     </div>
+
     <div class="modal-actions" style="margin-top: 15px;">
       <button class="btn gray" id="cancelAdd">إغلاق النافذة</button>
     </div>
@@ -276,30 +221,49 @@ const labCatalog = [
   { name: "Neutrophils", unit: "%", range: "40 - 60" }, { name: "Lymphocytes", unit: "%", range: "20 - 40" },
   { name: "Monocytes", unit: "%", range: "2 - 8" }, { name: "Eosinophils", unit: "%", range: "1 - 4" },
   { name: "Basophils", unit: "%", range: "0.5 - 1" }, { name: "ESR", unit: "mm/hr", range: "0 - 20" },
-  { name: "Urea", unit: "mg/dL", range: "15 - 40" }, { name: "BUN", unit: "mg/dL", range: "7 - 20" }, 
-  { name: "Creatinine", unit: "mg/dL", range: "0.6 - 1.3" }, { name: "Uric Acid", unit: "mg/dL", range: "3.4 - 7.0" },
+  { name: "Reticulocyte Count", unit: "%", range: "0.5 - 2.5" }, { name: "Urea", unit: "mg/dL", range: "15 - 40" },
+  { name: "BUN", unit: "mg/dL", range: "7 - 20" }, { name: "Creatinine", unit: "mg/dL", range: "0.6 - 1.3" },
+  { name: "Uric Acid", unit: "mg/dL", range: "3.4 - 7.0" }, { name: "eGFR", unit: "mL/min", range: "> 90" },
   { name: "Sodium (Na)", unit: "mEq/L", range: "135 - 145" }, { name: "Potassium (K)", unit: "mEq/L", range: "3.5 - 5.1" },
   { name: "Chloride (Cl)", unit: "mEq/L", range: "98 - 107" }, { name: "Calcium", unit: "mg/dL", range: "8.5 - 10.5" },
-  { name: "SGPT (ALT)", unit: "U/L", range: "0 - 40" }, { name: "SGOT (AST)", unit: "U/L", range: "0 - 40" },
-  { name: "Alkaline Phosphatase (ALP)", unit: "U/L", range: "40 - 130" }, { name: "GGT", unit: "U/L", range: "9 - 48" },
-  { name: "Total Bilirubin", unit: "mg/dL", range: "0.1 - 1.2" }, { name: "Direct Bilirubin", unit: "mg/dL", range: "0 - 0.3" },
-  { name: "Albumin", unit: "g/dL", range: "3.5 - 5.0" }, { name: "Total Protein", unit: "g/dL", range: "6.0 - 8.3" },
-  { name: "Glucose (FBS)", unit: "mg/dL", range: "70 - 110" }, { name: "Glucose (RBS)", unit: "mg/dL", range: "70 - 140" },
-  { name: "HbA1c", unit: "%", range: "4 - 5.6" }, { name: "Insulin", unit: "µU/mL", range: "2 - 25" },
-  { name: "Total Cholesterol", unit: "mg/dL", range: "< 200" }, { name: "Triglycerides", unit: "mg/dL", range: "< 150" },
-  { name: "HDL", unit: "mg/dL", range: "40 - 60" }, { name: "LDL", unit: "mg/dL", range: "< 130" },
+  { name: "Phosphorus", unit: "mg/dL", range: "2.5 - 4.5" }, { name: "SGPT (ALT)", unit: "U/L", range: "0 - 40" },
+  { name: "SGOT (AST)", unit: "U/L", range: "0 - 40" }, { name: "Alkaline Phosphatase (ALP)", unit: "U/L", range: "40 - 130" },
+  { name: "GGT", unit: "U/L", range: "9 - 48" }, { name: "Total Bilirubin", unit: "mg/dL", range: "0.1 - 1.2" },
+  { name: "Direct Bilirubin", unit: "mg/dL", range: "0 - 0.3" }, { name: "Albumin", unit: "g/dL", range: "3.5 - 5.0" },
+  { name: "Total Protein", unit: "g/dL", range: "6.0 - 8.3" }, { name: "Glucose (FBS)", unit: "mg/dL", range: "70 - 110" },
+  { name: "Glucose (RBS)", unit: "mg/dL", range: "70 - 140" }, { name: "HbA1c", unit: "%", range: "4 - 5.6" },
+  { name: "Insulin", unit: "µU/mL", range: "2 - 25" }, { name: "Total Cholesterol", unit: "mg/dL", range: "< 200" },
+  { name: "Triglycerides", unit: "mg/dL", range: "< 150" }, { name: "HDL", unit: "mg/dL", range: "40 - 60" },
+  { name: "LDL", unit: "mg/dL", range: "< 130" }, { name: "VLDL", unit: "mg/dL", range: "5 - 40" },
   { name: "TSH", unit: "µIU/mL", range: "0.4 - 4.0" }, { name: "T3", unit: "ng/dL", range: "80 - 200" },
   { name: "T4", unit: "µg/dL", range: "5 - 12" }, { name: "Free T3", unit: "pg/mL", range: "2.3 - 4.2" },
-  { name: "Free T4", unit: "ng/dL", range: "0.8 - 1.8" }, { name: "Vitamin D", unit: "ng/mL", range: "30 - 100" },
-  { name: "Vitamin B12", unit: "pg/mL", range: "200 - 900" }, { name: "Ferritin", unit: "ng/mL", range: "12 - 300" },
-  { name: "Iron", unit: "µg/dL", range: "60 - 170" }, { name: "CRP", unit: "mg/L", range: "< 5" },
-  { name: "PT", unit: "sec", range: "11 - 13.5" }, { name: "INR", unit: "Ratio", range: "0.8 - 1.1" }
+  { name: "Free T4", unit: "ng/dL", range: "0.8 - 1.8" }, { name: "Testosterone", unit: "ng/dL", range: "300 - 1000" },
+  { name: "Estradiol", unit: "pg/mL", range: "15 - 350" }, { name: "Progesterone", unit: "ng/mL", range: "0.1 - 25" },
+  { name: "Prolactin", unit: "ng/mL", range: "4 - 15" }, { name: "FSH", unit: "mIU/mL", range: "1.5 - 12.4" },
+  { name: "LH", unit: "mIU/mL", range: "1.7 - 8.6" }, { name: "Cortisol", unit: "µg/dL", range: "6 - 23" },
+  { name: "Vitamin D (25-OH)", unit: "ng/mL", range: "30 - 100" }, { name: "Vitamin B12", unit: "pg/mL", range: "200 - 900" },
+  { name: "Folic Acid", unit: "ng/mL", range: "3 - 17" }, { name: "Ferritin", unit: "ng/mL", range: "12 - 300" },
+  { name: "Iron", unit: "µg/dL", range: "60 - 170" }, { name: "Magnesium", unit: "mg/dL", range: "1.7 - 2.2" },
+  { name: "Troponin I", unit: "ng/mL", range: "< 0.04" }, { name: "CK-MB", unit: "ng/mL", range: "0 - 6.3" },
+  { name: "CK (Total)", unit: "U/L", range: "30 - 200" }, { name: "BNP", unit: "pg/mL", range: "< 100" },
+  { name: "PT", unit: "sec", range: "11 - 13.5" }, { name: "INR", unit: "Ratio", range: "0.8 - 1.1" },
+  { name: "PTT", unit: "sec", range: "25 - 35" }, { name: "D-Dimer", unit: "ng/mL", range: "< 500" },
+  { name: "CRP", unit: "mg/L", range: "< 5" }, { name: "Procalcitonin", unit: "ng/mL", range: "< 0.5" },
+  { name: "ANA", unit: "Titer", range: "Negative" }, { name: "RF (Rheumatoid Factor)", unit: "IU/mL", range: "< 14" },
+  { name: "ASO", unit: "IU/mL", range: "< 200" }, { name: "Immunoglobulin E (IgE)", unit: "IU/mL", range: "< 100" },
+  { name: "Urine Protein", unit: "mg/dL", range: "Negative" }, { name: "Urine Glucose", unit: "mg/dL", range: "Negative" },
+  { name: "Urine WBC", unit: "/HPF", range: "0 - 5" }, { name: "Urine RBC", unit: "/HPF", range: "0 - 2" },
+  { name: "Urine Pus Cells", unit: "/HPF", range: "0 - 5" }, { name: "Urine pH", unit: "", range: "4.5 - 8.0" },
+  { name: "Amylase", unit: "U/L", range: "30 - 110" }, { name: "Lipase", unit: "U/L", range: "0 - 160" },
+  { name: "Lactate", unit: "mmol/L", range: "0.5 - 2.2" }, { name: "Ammonia", unit: "µmol/L", range: "15 - 45" },
+  { name: "PSA (Total)", unit: "ng/mL", range: "< 4.0" }, { name: "CA-125", unit: "U/mL", range: "< 35" },
+  { name: "CEA", unit: "ng/mL", range: "< 3.0" }, { name: "AFP", unit: "ng/mL", range: "< 10" },
+  { name: "H. pylori Antigen", unit: "Stool", range: "Negative" }, { name: "HBsAg", unit: "Blood", range: "Negative" },
+  { name: "Anti-HCV", unit: "Blood", range: "Negative" }, { name: "HIV Ab", unit: "Blood", range: "Negative" },
+  { name: "VDRL", unit: "Blood", range: "Negative" }, { name: "Blood Group", unit: "-", range: "A/B/AB/O" },
+  { name: "Rh Factor", unit: "-", range: "Positive/Negative" }, { name: "Prothrombin Time", unit: "sec", range: "11 - 13.5" }
 ];
 
-// متغير عام لتخزين المريض الحالي
-let currentPatientRecord = null;
-
-// 2. دالة حساب الحالة
 function flagOf(value, rangeStr){
   const v=parseFloat(value); 
   if(isNaN(v) || value === '') return {key:'pending', label:'بانتظار'};
@@ -315,40 +279,27 @@ function flagOf(value, rangeStr){
   return {key:'normal', label:'طبيعي'};
 }
 
-// 3. التنقل بين الصفحات
-function showPage(pageId) {
-  $$('.page-view').forEach(p => p.classList.remove('active'));
-  const target = $(`#${pageId}`);
-  if (target) {
-    target.classList.add('active');
-    target.style.display = (pageId === 'registrationView' || pageId === 'dashboardView' || pageId === 'resultsEntryView') ? 'flex' : 'block';
-    
-    if(pageId === 'registrationView') {
-        const now = new Date();
-        $('#regDate').value = now.toLocaleDateString('ar-IQ');
-        $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
-    }
-    if(pageId === 'searchView') renderSearchTable();
-    if(pageId === 'reportsView') renderReports();
-  }
-}
-
-$$('.back-to-home').forEach(btn => btn.onclick = () => showPage('dashboardView'));
-
-// 4. إضافة تحليل لجدول الطلب
-function addTestToOrder(name, unit, range) {
+function addTestToTable(name, unit, range) {
   const tr = document.createElement('tr');
   tr.dataset.name = name; tr.dataset.unit = unit; tr.dataset.range = range;
   tr.innerHTML = `
     <td><input type="checkbox" checked></td>
+    <td><span class="status pending">بانتظار</span></td>
     <td>${esc(range)}</td>
     <td>${esc(unit)}</td>
+    <td><input class="result-input" type="number" step="any" placeholder="النتيجة"></td>
     <td class="test-name">${esc(name)}</td>
     <td class="seq-cell"></td>
-    <td><button class="btn red small del-btn" style="padding: 2px 8px;">✕</button></td>
   `;
   
-  tr.querySelector('.del-btn').onclick = () => { tr.remove(); renumberTable(); };
+  tr.querySelector('.result-input').addEventListener('input', function() {
+    const f = flagOf(this.value, range);
+    const badge = tr.cells[1].querySelector('.status');
+    badge.className = 'status ' + f.key; badge.textContent = f.label;
+    this.style.color = (f.key === 'high' || f.key === 'low') ? '#d20b1b' : '#172b45';
+    this.style.backgroundColor = (f.key === 'high' || f.key === 'low') ? '#fdeef0' : '#fff';
+  });
+
   $('#testsTable tbody').appendChild(tr);
   renumberTable();
   toast('تم إضافة: ' + name);
@@ -360,30 +311,79 @@ function renumberTable() {
   });
 }
 
-function getOrderedTests(){
+function getTests(){
   return [...$('#testsTable tbody').rows]
     .filter(r=>r.cells[0].querySelector('input').checked)
     .map(r=>{
+      const inp = r.querySelector('.result-input');
       return {
         name: r.dataset.name, unit: r.dataset.unit, range: r.dataset.range,
-        value: '', status: 'pending'
+        value: inp ? inp.value : '', status: r.cells[1].textContent.trim()
       };
     });
 }
 
-// 5. نافذة البحث عن التحاليل
-$('#addTest').onclick=()=>{
-  $('#modalBackdrop').style.display='flex';
-  $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value='';
-  renderTestList('');
-  $('#searchTestInput').focus();
+function showPage(pageId) {
+  $$('.page-view').forEach(p => p.style.display = 'none');
+  const target = $(`#${pageId}`);
+  if (target) {
+    target.style.display = (pageId === 'registrationView' || pageId === 'dashboardView') ? 'flex' : 'block';
+    if(pageId === 'registrationView') {
+        const now = new Date();
+        if(!$('#regDate').value) {
+            $('#regDate').value = now.toLocaleDateString('ar-IQ');
+            $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
+        }
+    }
+  }
+}
+
+// بناء واجهة النتيجة
+function buildResultView() {
+  const name=$('#patientName').value.trim();
+  if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return false;}
+  const tests=getTests();
+  if(!tests.length){toast('لم تقم بإضافة أي تحليل!');return false;}
+  
+  $('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;
+  $('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;
+  $('#outDoctor').textContent=$('#doctor').value;$('#outNote').textContent=$('#resultNote').value||'لا توجد ملاحظات';
+  $('#outRegDate').textContent = $('#regDate').value + ' - ' + $('#regTime').value;
+  $('#reportDate').textContent=new Date().toLocaleDateString('ar-IQ');
+  
+  $('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value || '-')}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
+  return true;
+}
+
+// الأزرار الرئيسية
+$('#showBtn').onclick = () => { if(buildResultView()) showPage('resultViewPage'); };
+$('#printBtn').onclick = () => { if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(), 300); } };
+$('#startNewPatientBtn').onclick = () => { document.querySelector('[data-action="new"]').click(); };
+$$('.back-to-home').forEach(btn => btn.onclick = () => showPage('dashboardView'));
+
+// زر الحفظ (يوجه لصفحة النتيجة بعد الحفظ)
+$('#saveBtn').onclick = () => {
+  const record={id:$('#patientId').value,name:$('#patientName').value,date:$('#regDate').value,time:$('#regTime').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+  try{
+    const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
+    const i=records.findIndex(x=>x.id===record.id);
+    if(i>=0) records[i]=record; else records.push(record);
+    localStorage.setItem('najafLabRecords',JSON.stringify(records));
+    toast('تم حفظ بيانات المريض بنجاح');
+    
+    // التوجيه لنافذة النتائج بعد الحفظ
+    if(buildResultView()) showPage('resultViewPage');
+  }catch(e){ toast('تعذر الحفظ'); }
 };
+
+// نافذة التحاليل
+$('#addTest').onclick=()=>{ $('#modalBackdrop').style.display='flex'; $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value=''; renderTestList(''); $('#searchTestInput').focus(); };
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
 function renderTestList(query) {
   let filtered = query ? labCatalog.filter(t => t.name.toLowerCase().includes(query.toLowerCase())) : labCatalog.slice(0, 5);
   if (filtered.length === 0) {
-    $('#testList').innerHTML = '<div style="padding: 15px; text-align: center; color: #666;">لا توجد نتائج. أضفه يدوياً.</div>';
+    $('#testList').innerHTML = '<div style="padding: 15px; text-align: center; color: #666; font-size: 14px;">لا توجد نتائج. أضفه يدوياً من الأسفل.</div>';
     return;
   }
   $('#testList').innerHTML = filtered.map(t => `
@@ -392,225 +392,82 @@ function renderTestList(query) {
     </div>
   `).join('');
 }
+
 $('#searchTestInput').addEventListener('input', e => renderTestList(e.target.value));
 $('#testList').addEventListener('click', e => {
   const item = e.target.closest('.test-item');
   if(!item) return;
-  addTestToOrder(item.dataset.name, item.dataset.unit, item.dataset.range);
+  addTestToTable(item.dataset.name, item.dataset.unit, item.dataset.range);
   $('#searchTestInput').value = ''; renderTestList(''); $('#searchTestInput').focus();
 });
+
 $('#confirmManualAdd').onclick = () => {
   const name = $('#manualName').value.trim();
+  const unit = $('#manualUnit').value.trim() || '—';
+  const range = $('#manualRange').value.trim() || 'غير محدد';
   if(!name) { toast('أدخل اسم التحليل'); return; }
-  addTestToOrder(name, $('#manualUnit').value.trim() || '—', $('#manualRange').value.trim() || 'غير محدد');
-  $('#manualName').value = ''; $('#manualUnit').value = ''; $('#manualRange').value = ''; $('#manualName').focus();
+  addTestToTable(name, unit, range);
+  $('#manualName').value = ''; $('#manualUnit').value = ''; $('#manualRange').value = '';
+  $('#manualName').focus();
 };
+
 $('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked)};
 
-// 6. حفظ بيانات المريض -> الانتقال لصفحة النتائج
-$('#saveBtn').onclick=()=>{
-  const name=$('#patientName').value.trim();
-  if(!name){toast('يرجى إدخال اسم المريض');$('#patientName').focus();return}
-  const tests=getOrderedTests();
-  if(!tests.length){toast('يرجى إضافة تحليل واحد على الأقل');return}
-
-  currentPatientRecord = {
-    id: $('#patientId').value, name: name, date: $('#regDate').value, time: $('#regTime').value,
-    age: $('#age').value, gender: $('#gender').value, phone: $('#phone').value, 
-    doctor: $('#doctor').value, note: $('#patientNote').value, resultNote: $('#resultNote').value,
-    tests: tests, status: 'pending', savedAt: new Date().toISOString()
-  };
-
-  // حفظ مبدئي كمسودة في التخزين المحلي
-  saveToLocalStorage(currentPatientRecord);
-
-  // الانتقال لصفحة إدخال النتائج
-  loadResultsEntryView();
-  showPage('resultsEntryView');
-  toast('تم حفظ الطلب. يرجى إدخال النتائج.');
-};
-
-// 7. تحميل صفحة إدخال النتائج
-function loadResultsEntryView() {
-  if(!currentPatientRecord) return;
-  $('#entryPatientName').textContent = currentPatientRecord.name + ' (ملف: ' + currentPatientRecord.id + ')';
-  $('#resultNote').value = currentPatientRecord.resultNote || '';
-
-  const tbody = $('#entryTestsTable tbody');
-  tbody.innerHTML = currentPatientRecord.tests.map((t, i) => `
-    <tr data-index="${i}">
-      <td>${i+1}</td>
-      <td class="test-name">${esc(t.name)}</td>
-      <td>${esc(t.unit)}</td>
-      <td>${esc(t.range)}</td>
-      <td><input class="result-input" type="number" step="any" value="${t.value || ''}" placeholder="النتيجة"></td>
-      <td><span class="status ${t.status === 'pending' ? 'pending' : 'normal'}">${t.status === 'pending' ? 'بانتظار' : t.status}</span></td>
-    </tr>
-  `).join('');
-
-  // ربط حدث التحديث اللحظي للحالة
-  $$('#entryTestsTable tbody tr').forEach(tr => {
-    const input = tr.querySelector('.result-input');
-    const t = currentPatientRecord.tests[tr.dataset.index];
-    input.addEventListener('input', function() {
-      const f = flagOf(this.value, t.range);
-      const badge = tr.querySelector('.status');
-      badge.className = 'status ' + f.key; badge.textContent = f.label;
-      this.style.color = (f.key === 'high' || f.key === 'low') ? '#d20b1b' : '#172b45';
-    });
-  });
-}
-
-// 8. حفظ النتائج النهائية -> الانتقال لصفحة الطباعة
-$('#saveResultsBtn').onclick=()=>{
-  if(!currentPatientRecord) return;
-
-  let allFilled = true;
-  $$('#entryTestsTable tbody tr').forEach(tr => {
-    const idx = tr.dataset.index;
-    const input = tr.querySelector('.result-input');
-    const f = flagOf(input.value, currentPatientRecord.tests[idx].range);
-    
-    currentPatientRecord.tests[idx].value = input.value;
-    currentPatientRecord.tests[idx].status = f.label;
-    
-    if(input.value === '') allFilled = false;
-  });
-
-  if(!allFilled) {
-    if(!confirm('بعض التحاليل لم يتم إدخال نتيجتها. هل تريد المتابعة؟')) return;
-    currentPatientRecord.status = 'pending';
-  } else {
-    currentPatientRecord.status = 'completed';
-  }
-
-  currentPatientRecord.resultNote = $('#resultNote').value;
-  saveToLocalStorage(currentPatientRecord);
-
-  // تحميل صفحة الطباعة
-  loadPrintView(currentPatientRecord);
-  showPage('resultViewPage');
-  toast('تم حفظ النتائج بنجاح');
-};
-
-// 9. تحميل صفحة الطباعة
-function loadPrintView(record) {
-  $('#outName').textContent = record.name;
-  $('#outId').textContent = record.id;
-  $('#outAge').textContent = record.age;
-  $('#outGender').textContent = record.gender;
-  $('#outDoctor').textContent = record.doctor;
-  $('#outNote').textContent = record.resultNote || 'لا توجد ملاحظات';
-  $('#outRegDate').textContent = record.date + ' - ' + record.time;
-  $('#reportDate').textContent = new Date().toLocaleDateString('ar-IQ');
-  
-  $('#resultRows').innerHTML = record.tests.map(t => `
-    <tr>
-      <td dir="ltr">${esc(t.name)}</td>
-      <td><b>${esc(t.value || '-')}</b></td>
-      <td>${esc(t.unit)}</td>
-      <td>${esc(t.range)}</td>
-      <td><span class="status ${flagOf(t.value, t.range).key}">${esc(t.status)}</span></td>
-    </tr>
-  `).join('');
-}
-
-// 10. التخزين المحلي
-function getRecords() { try { return JSON.parse(localStorage.getItem('najafLabRecords')||'[]'); } catch { return []; } }
-function saveToLocalStorage(record) {
-  const records = getRecords();
-  const i = records.findIndex(x => x.id === record.id);
-  if(i >= 0) records[i] = record; else records.push(record);
-  localStorage.setItem('najafLabRecords', JSON.stringify(records));
-}
-
-// 11. سجل المرضى والبحث
-function renderSearchTable(query = '') {
-  const records = getRecords();
-  const q = query.trim().toLowerCase();
-  const filtered = records.filter(r => !q || r.id.includes(q) || r.name.toLowerCase().includes(q));
-  
-  $('#searchResultsTable tbody').innerHTML = filtered.length ? filtered.map(r => `
-    <tr>
-      <td>${esc(r.id)}</td>
-      <td>${esc(r.name)}</td>
-      <td>${esc(r.date)}</td>
-      <td>${esc(r.doctor)}</td>
-      <td><span class="status ${r.status === 'completed' ? 'normal' : 'pending'}">${r.status === 'completed' ? 'مكتمل' : 'معلق'}</span></td>
-      <td>
-        <button class="btn blue small" onclick="loadPatientForEdit('${r.id}')">تعديل</button>
-        <button class="btn green small" onclick="loadPatientForResults('${r.id}')">إدخال نتائج</button>
-      </td>
-    </tr>
-  `).join('') : '<tr><td colspan="6" style="text-align:center; padding:20px;">لا توجد سجلات مطابقة</td></tr>';
-}
-
-$('#searchInput').addEventListener('input', e => renderSearchTable(e.target.value));
-
-// دوال استدعاء المريض من السجل
-window.loadPatientForEdit = function(id) {
-  const r = getRecords().find(x => x.id === id);
-  if(!r) return;
-  $('#patientId').value = r.id; $('#patientName').value = r.name; $('#age').value = r.age;
-  $('#gender').value = r.gender; $('#phone').value = r.phone; $('#doctor').value = r.doctor;
-  $('#patientNote').value = r.note; $('#regDate').value = r.date; $('#regTime').value = r.time;
-  
-  // إعادة بناء جدول التحاليل
-  $('#testsTable tbody').innerHTML = '';
-  r.tests.forEach(t => addTestToOrder(t.name, t.unit, t.range));
-  currentPatientRecord = r;
-  showPage('registrationView');
-};
-
-window.loadPatientForResults = function(id) {
-  const r = getRecords().find(x => x.id === id);
-  if(!r) return;
-  currentPatientRecord = r;
-  loadResultsEntryView();
-  showPage('resultsEntryView');
-};
-
-// 12. التقارير
-function renderReports() {
-  const records = getRecords();
-  $('#statTotal').textContent = records.length;
-  $('#statPending').textContent = records.filter(r => r.status === 'pending').length;
-  $('#statCompleted').textContent = records.filter(r => r.status === 'completed').length;
-}
-
-// 13. تفعيل جميع الأزرار والقوائم
+// تفعيل أزرار القائمة الجانبية
 $$('.sidebtn').forEach(b=>b.onclick=()=>{
   const action=b.dataset.action;
   $$('.sidebtn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   
-  if(action==='new'){
-    ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
-    $('#patientId').value='2026-'+String(Date.now()).slice(-5);
-    $('#testsTable tbody').innerHTML = ''; currentPatientRecord = null;
-    showPage('registrationView');
+  switch(action) {
+    case 'new':
+      ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
+      $('#patientId').value='2026-'+String(Date.now()).slice(-5);
+      $('#testsTable tbody').innerHTML = ''; 
+      $('#regDate').value = ''; // ليقوم بتحديثها
+      showPage('registrationView');
+      toast('تم تجهيز صفحة مريض جديد');
+      break;
+    case 'search':
+      const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');
+      if(q!==null){
+        const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
+        const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
+        if(r){
+          showPage('registrationView');
+          $('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;
+          $('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;
+          $('#resultNote').value=r.resultNote;$('#regDate').value=r.date||''; $('#regTime').value=r.time||'';
+          $('#testsTable tbody').innerHTML = ''; (r.tests||[]).forEach(t => addTestToTable(t.name, t.unit, t.range));
+          toast('تم تحميل البيانات');
+        }else toast('لم يتم العثور على سجل');
+      }
+      break;
+    case 'sample': toast('تم تسجيل سحب العينة بنجاح'); break;
+    case 'entry': showPage('registrationView'); toast('يمكنك إدخال النتائج الآن'); break;
+    case 'show': if(buildResultView()) showPage('resultViewPage'); break;
+    case 'print': if(buildResultView()) { showPage('resultViewPage'); setTimeout(()=>window.print(),300); } break;
+    case 'reports': 
+      const count = JSON.parse(localStorage.getItem('najafLabRecords')||'[]').length;
+      alert(`إحصائيات النظام:\n- عدد المرضى المحفوظين: ${count}\n- حالة النظام: يعمل بكفاءة`);
+      break;
+    case 'backup':
+      const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();
+      toast('تم إنشاء النسخة الاحتياطية');
+      break;
+    case 'exit': if(confirm('هل تريد إغلاق النظام؟')) window.close(); break;
+    default: toast('قسم ( '+b.textContent.trim()+' ) قيد التطوير'); break;
   }
-  else if(action==='search'){ showPage('searchView'); }
-  else if(action==='reports'){ showPage('reportsView'); }
-  else if(action==='entry' || action==='sample'){ showPage('searchView'); $('#searchInput').value=''; renderSearchTable(); toast('اختر مريضاً لإدخال النتائج'); }
-  else if(action==='review'){ showPage('searchView'); $('#searchInput').value=''; renderSearchTable(); toast('قائمة المراجعة'); }
-  else if(action==='settings' || action==='devices' || action==='users'){ showPage('settingsView'); }
-  else if(action==='backup'){
-    const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-backup.json';a.click();
-    toast('تم النسخ الاحتياطي');
-  }
-  else if(action==='exit'){ if(confirm('خروج؟')) toast('أغلق الصفحة للخروج'); }
 });
 
-$$('.topnav .navitem').forEach(b=>b.onclick=()=>{
+// تفعيل أزرار الشريط العلوي
+$$('.topnav .navitem').forEach(b=>b.onclick=()=>{ 
   $$('.topnav .navitem').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
-  const target = b.dataset.target;
-  if(target) showPage(target);
+  if(b.dataset.target) showPage(b.dataset.target);
 });
 
-// إغلاق النوافذ بـ Escape
 window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').style.display='none'});
 </script>
 </body>
