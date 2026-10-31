@@ -8,10 +8,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 /* ========================================= */
-/* 1. Design Tokens (الثيم التركوازي الجديد) */
+/* 1. Design Tokens (الثيم التركوازي) */
 /* ========================================= */
 :root {
-  /* ألوان القائمة والشريط الجديد (الأخضر المزرق) */
+  /* ألوان القائمة والشريط */
   --teal-bg-main: #064E52;
   --teal-bg-dark: #032F3B;
   --teal-active-bg: #087F83;
@@ -20,20 +20,20 @@
   --teal-text-main: #F3FFFF;
   --teal-text-sub: #B5D9D8;
 
-  /* تحديث ألوان النظام الأساسية لتتناسق مع الثيم */
+  /* ألوان النظام الأساسية */
   --navy-900: #032F3B; 
   --navy-800: #064E52;
   --navy-700: #087F83;
-  
-  /* الأزرار الرئيسية والتركيز */
-  --blue-500: #12CFC3; /* اللون التركوازي المضيء */
+  --blue-500: #12CFC3;
   --blue-600: #087F83;
   --blue-400: #38E5DC;
   
   /* ألوان الحالات */
-  --success: #10b981; --success-bg: #ecfdf5;
-  --danger: #ef4444; --danger-bg: #fef2f2;
-  --warning: #f59e0b; --warning-bg: #fffbeb;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --violet: #8b5cf6;
+  --print-blue: #3b82f6;
   
   /* خلفيات المحتوى */
   --bg-body: #f1f5f9; --surface: #ffffff; --surface-tint: #f8fafc;
@@ -45,7 +45,7 @@
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-  --transition-fast: 0.2s ease-in-out;
+  --transition-fast: 0.15s ease-in-out;
   --sidebar-width: 260px; --sidebar-collapsed: 80px;
 }
 
@@ -63,7 +63,7 @@ button { cursor: pointer; border: none; background: transparent; }
 .workspace { display: flex; flex: 1; width: 100%; min-width: 0; overflow: hidden; }
 
 /* ========================================= */
-/* 3. شريط التنقل العلوي (Topbar) - تم تغييره للأخضر المزرق */
+/* 3. شريط التنقل العلوي (Topbar) */
 /* ========================================= */
 .topbar { height: 70px; flex-shrink: 0; background: linear-gradient(135deg, var(--teal-bg-dark), var(--teal-bg-main)); color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--sp-5); box-shadow: 0 4px 12px rgba(3,47,59,0.25); z-index: 20; position: relative; }
 .topbar-right { display: flex; align-items: center; gap: var(--sp-4); }
@@ -83,67 +83,21 @@ button { cursor: pointer; border: none; background: transparent; }
 .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal-active-bg); color: var(--teal-text-main); border: 1px solid var(--teal-glow); display: grid; place-items: center; font-size: 16px; }
 
 /* ========================================= */
-/* 4. القائمة الجانبية (Sidebar) - تم تغييرها للأخضر المزرق */
+/* 4. القائمة الجانبية (Sidebar) */
 /* ========================================= */
-.sidebar { 
-  width: var(--sidebar-width); 
-  flex-shrink: 0; 
-  background: linear-gradient(180deg, var(--teal-bg-main), var(--teal-bg-dark)); 
-  color: var(--teal-text-sub); 
-  display: flex; 
-  flex-direction: column; 
-  padding: var(--sp-4) 0; 
-  z-index: 100; 
-  transition: width var(--transition-fast); 
-  overflow-y: auto; 
-  overflow-x: hidden; 
-  border-left: 1px solid rgba(53, 229, 220, 0.1); 
-}
+.sidebar { width: var(--sidebar-width); flex-shrink: 0; background: linear-gradient(180deg, var(--teal-bg-main), var(--teal-bg-dark)); color: var(--teal-text-sub); display: flex; flex-direction: column; padding: var(--sp-4) 0; z-index: 100; transition: width var(--transition-fast); overflow-y: auto; overflow-x: hidden; border-left: 1px solid rgba(53, 229, 220, 0.1); }
 .sidebar.collapsed { width: var(--sidebar-collapsed); }
-
 .nav-group { display: flex; flex-direction: column; padding: 0 var(--sp-3); margin-bottom: var(--sp-4); width: 100%; }
 .nav-group-title { font-size: 11px; font-weight: 700; color: var(--teal-text-sub); opacity: 0.7; margin: var(--sp-2) var(--sp-3); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; transition: opacity var(--transition-fast); }
 .sidebar.collapsed .nav-group-title { opacity: 0; pointer-events: none; }
-
-.sidebtn { 
-  display: flex; 
-  align-items: center; 
-  gap: var(--sp-3); 
-  width: 100%; 
-  padding: 10px var(--sp-3); 
-  border-radius: var(--radius-md); 
-  font-size: 14px; 
-  font-weight: 600; 
-  color: var(--teal-text-sub); 
-  transition: all var(--transition-fast); 
-  white-space: nowrap; 
-  text-align: right; 
-  position: relative; 
-  margin-bottom: 2px;
-}
-
-/* حالة التمرير (Hover) */
-.sidebtn:hover { 
-  background: rgba(18, 207, 195, 0.1); 
-  color: var(--teal-text-main); 
-}
-
-/* الحالة النشطة (Active) */
-.sidebtn.active { 
-  background: linear-gradient(90deg, var(--teal-active-bg), var(--teal-bright)); 
-  color: var(--teal-text-main); 
-  border-right: 3px solid var(--teal-glow); 
-  box-shadow: inset 0 0 10px rgba(53, 229, 220, 0.3), 0 2px 8px rgba(0,0,0,0.2); 
-}
-
+.sidebtn { display: flex; align-items: center; gap: var(--sp-3); width: 100%; padding: 10px var(--sp-3); border-radius: var(--radius-md); font-size: 14px; font-weight: 600; color: var(--teal-text-sub); transition: all var(--transition-fast); white-space: nowrap; text-align: right; position: relative; margin-bottom: 2px; }
+.sidebtn:hover { background: rgba(18, 207, 195, 0.1); color: var(--teal-text-main); }
+.sidebtn.active { background: linear-gradient(90deg, var(--teal-active-bg), var(--teal-bright)); color: var(--teal-text-main); border-right: 3px solid var(--teal-glow); box-shadow: inset 0 0 10px rgba(53, 229, 220, 0.3), 0 2px 8px rgba(0,0,0,0.2); }
 .sidebtn .ico { width: 24px; height: 24px; display: grid; place-items: center; font-size: 20px; flex-shrink: 0; transition: transform 0.2s; }
 .sidebtn:hover .ico { transform: scale(1.1); }
-.sidebtn span:not(.ico) { transition: opacity var(--transition-fast); overflow: hidden; }
 .sidebar.collapsed .sidebtn span:not(.ico) { opacity: 0; width: 0; display: none; }
 .sidebar.collapsed .sidebtn { justify-content: center; padding: 10px 0; }
 .sidebar.collapsed .sidebtn.active { border-right: none; border-bottom: 3px solid var(--teal-glow); }
-
-/* زر الخروج */
 .sidebtn.logout { margin-top: auto; color: #ff8a8a; background: rgba(239, 68, 68, 0.05); }
 .sidebtn.logout:hover { background: rgba(239, 68, 68, 0.15); color: #ffb3b3; }
 
@@ -151,28 +105,137 @@ button { cursor: pointer; border: none; background: transparent; }
 .main { flex: 1; min-width: 0; padding: var(--sp-5); display: flex; flex-direction: column; gap: var(--sp-5); overflow-y: auto; background: var(--surface-tint); }
 
 /* ========================================= */
-/* 5. الأزرار (Buttons) */
+/* 5. الأزرار (Premium 3D Buttons) */
 /* ========================================= */
-.btn { border-radius: var(--radius-md); padding: 10px 20px; display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2); color: white; font-weight: 600; font-size: 14px; transition: all var(--transition-fast); border: 1px solid transparent; position: relative; }
-.btn:active:not(:disabled) { transform: translateY(2px); box-shadow: none !important; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.btn.blue { background: linear-gradient(to bottom, var(--blue-400), var(--blue-500)); border-color: var(--blue-600); box-shadow: 0 3px 0 var(--navy-700), var(--shadow-sm); color: #064E52; }
-.btn.blue:hover:not(:disabled) { background: linear-gradient(to bottom, var(--teal-glow), var(--teal-bright)); }
-.btn.green { background: linear-gradient(to bottom, #34d399, var(--success)); border-color: #047857; box-shadow: 0 3px 0 #065f46, var(--shadow-sm); }
-.btn.green:hover:not(:disabled) { background: linear-gradient(to bottom, #6ee7b7, var(--success)); }
-.btn.red { background: linear-gradient(to bottom, #f87171, var(--danger)); border-color: #b91c1c; box-shadow: 0 3px 0 #991b1b, var(--shadow-sm); }
-.btn.red:hover:not(:disabled) { background: linear-gradient(to bottom, #fca5a5, var(--danger)); }
-.btn.gray { background: var(--surface); color: var(--text-main); border-color: var(--border-color); box-shadow: 0 2px 0 #cbd5e1, var(--shadow-sm); }
-.btn.gray:hover:not(:disabled) { background: var(--surface-tint); }
-.btn.small { padding: 6px 12px; font-size: 13px; }
-.btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; }
-.btn.loading::after { content: ""; position: absolute; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; }
+.btn {
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  position: relative;
+  outline: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+}
+
+/* التأثير ثلاثي الأبعاد عند النقر */
+.btn:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: none !important;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none !important;
+}
+
+/* Primary (تركوازي لامع) */
+.btn.primary {
+  background: linear-gradient(180deg, var(--blue-400), var(--teal-bright));
+  border-color: var(--blue-600);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 var(--navy-700), 0 6px 12px rgba(18, 207, 195, 0.3);
+  color: #032F3B;
+  text-shadow: none;
+}
+.btn.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #5bfcf2, var(--teal-bright));
+}
+
+/* Success / Save (أخضر احترافي) */
+.btn.green {
+  background: linear-gradient(180deg, #34d399, var(--success));
+  border-color: #047857;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #065f46, 0 6px 12px rgba(16, 185, 129, 0.3);
+}
+.btn.green:hover:not(:disabled) {
+  background: linear-gradient(180deg, #6ee7b7, var(--success));
+}
+
+/* Print (أزرق واضح للطباعة) */
+.btn.print {
+  background: linear-gradient(180deg, #60a5fa, var(--print-blue));
+  border-color: #1d4ed8;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #1e3a8a, 0 6px 12px rgba(59, 130, 246, 0.3);
+}
+.btn.print:hover:not(:disabled) {
+  background: linear-gradient(180deg, #93c5fd, var(--print-blue));
+}
+
+/* Search / Navigation (بنفسجي أنيق) */
+.btn.violet {
+  background: linear-gradient(180deg, #a78bfa, var(--violet));
+  border-color: #6d28d9;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #4c1d95, 0 6px 12px rgba(139, 92, 246, 0.3);
+}
+.btn.violet:hover:not(:disabled) {
+  background: linear-gradient(180deg, #c4b5fd, var(--violet));
+}
+
+/* Danger (أحمر للتحذير) */
+.btn.red {
+  background: linear-gradient(180deg, #f87171, var(--danger));
+  border-color: #b91c1c;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #991b1b, 0 6px 12px rgba(239, 68, 68, 0.3);
+}
+.btn.red:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fca5a5, var(--danger));
+}
+
+/* Secondary (رمادي/تركوازي فاتح) */
+.btn.gray {
+  background: linear-gradient(180deg, #ffffff, #f1f5f9);
+  border-color: #cbd5e1;
+  color: var(--navy-800);
+  box-shadow: inset 0 1px 0 #ffffff, 0 3px 0 #cbd5e1, 0 4px 8px rgba(0,0,0,0.05);
+  text-shadow: none;
+}
+.btn.gray:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffffff, #e2e8f0);
+}
+
+/* Warning (برتقالي) */
+.btn.warning {
+  background: linear-gradient(180deg, #fbbf24, var(--warning));
+  border-color: #b45309;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #78350f, 0 6px 12px rgba(245, 158, 11, 0.3);
+  color: #422006;
+  text-shadow: none;
+}
+.btn.warning:hover:not(:disabled) {
+  background: linear-gradient(180deg, #fcd34d, var(--warning));
+}
+
+/* أحجام الأزرار */
+.btn.small { padding: 6px 14px; font-size: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 0 var(--navy-700), 0 4px 8px rgba(0,0,0,0.1); }
+.btn.small.gray { box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.05); }
+.btn.small:active:not(:disabled) { transform: translateY(3px); }
+
+/* حالة التحميل (Loading Spinner) */
+.btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; text-shadow: none; }
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* أزرار الحذف في الجدول */
-.btn-delete { background: transparent; color: var(--danger); padding: 5px; border-radius: var(--radius-md); transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
-.btn-delete:hover { background: var(--danger-bg); }
-  /* ========================================= */
+/* زر حذف الصف في الجدول */
+.btn-delete { background: transparent; color: var(--danger); padding: 6px; border-radius: var(--radius-md); transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+.btn-delete:hover { background: #fef2f2; transform: scale(1.1); }
+/* ========================================= */
 /* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
 .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--sp-5); width: 100%; }
@@ -180,7 +243,7 @@ button { cursor: pointer; border: none; background: transparent; }
 .form-section { margin-bottom: var(--sp-5); border-bottom: 1px dashed var(--border-color); padding-bottom: var(--sp-4); }
 .form-section:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 .form-section-title { font-size: 15px; font-weight: 700; color: var(--navy-800); margin-bottom: var(--sp-4); display: flex; align-items: center; gap: var(--sp-2); }
-.form-section-title span { color: var(--blue-500); }
+.form-section-title span { color: var(--teal-active-bg); }
 .patient-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--sp-4); }
 .field-group { display: flex; flex-direction: column; gap: var(--sp-1); }
 .field-group .field-label { font-size: 13px; font-weight: 600; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;}
@@ -361,7 +424,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 }
 </style>
 </head>
-<body>
+ <body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="app">
@@ -466,7 +529,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
       <div class="section-title">البحث عن مريض</div>
       <div class="search-bar">
         <input type="text" id="searchInput" placeholder="ابحث بالاسم، رقم الملف، أو رقم الهاتف..." autocomplete="off">
-        <button class="btn blue" id="searchBtn"><span class="ico">🔍</span> بحث</button>
+        <button class="btn violet" id="searchBtn"><span class="ico">🔍</span> بحث</button>
       </div>
       
       <div id="searchLoading" class="search-loading">جاري البحث...</div>
@@ -555,7 +618,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div class="card">
       <div class="section-title">
         <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
-        <button class="btn blue small" id="addTest"><span class="ico">➕</span> إضافة تحليل</button>
+        <button class="btn primary small" id="addTest"><span class="ico">➕</span> إضافة تحليل</button>
       </div>
       <div class="table-wrap">
         <table id="testsTable">
@@ -582,10 +645,10 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     </div>
 
     <div class="actionbar">
-      <button class="btn blue" id="saveBtn" title="حفظ (Alt+S)"><span class="ico">💾</span> حفظ السجل</button>
-      <button class="btn green" id="printBtn" title="طباعة (Alt+P)"><span class="ico">🖨</span> طباعة</button>
+      <button class="btn green" id="saveBtn" title="حفظ (Alt+S)"><span class="ico">💾</span> حفظ السجل</button>
+      <button class="btn print" id="printBtn" title="طباعة (Alt+P)"><span class="ico">🖨</span> طباعة</button>
       <button class="btn red" id="pdfBtn"><span class="ico">📄</span> حفظ PDF</button>
-      <button class="btn blue" id="showBtn"><span class="ico">👁</span> عرض النتيجة</button>
+      <button class="btn primary" id="showBtn"><span class="ico">👁</span> عرض النتيجة</button>
       <button class="btn gray back-to-home" id="clearBtn"><span class="ico">🗑</span> مسح / جديد</button>
     </div>
   </div>
@@ -689,7 +752,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     </div>
   </div>
 </div>
-<script>
+ <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg, type='success'){
   const t=$('#toast');
@@ -858,7 +921,7 @@ function performSearch() {
         <td>${esc(r.date)}</td>
         <td>${(r.tests || []).length}</td>
         <td style="display: flex; gap: 5px;">
-          <button class="btn blue small" onclick="openRecord('${r.id}')" title="فتح للتعديل">فتح</button>
+          <button class="btn primary small" onclick="openRecord('${r.id}')" title="فتح للتعديل">فتح</button>
           <button class="btn gray small" onclick="viewHistory('${r.phone || r.name}')" title="سجل الزيارات">السجل</button>
           <button class="btn green small" onclick="createNewVisit('${r.id}')" title="زيارة جديدة">زيارة جديدة</button>
         </td>
@@ -911,7 +974,7 @@ function viewHistory(key) {
   
   $('#historyTimeline').innerHTML = history.map((r, idx) => {
     const compareBtn = idx < history.length - 1 ? 
-      `<button class="btn blue small" onclick="compareVisits('${history[idx+1].id}', '${r.id}')" style="margin-right: auto;">مقارنة مع السابق</button>` : '';
+      `<button class="btn primary small" onclick="compareVisits('${history[idx+1].id}', '${r.id}')" style="margin-right: auto;">مقارنة مع السابق</button>` : '';
     return `
       <div class="history-item">
         <div class="history-date"><span>${esc(r.date)} - ${esc(r.time)}</span><span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">ملف: ${esc(r.id)}</span></div>
@@ -1299,4 +1362,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>
+</html>  
