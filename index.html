@@ -11,24 +11,26 @@ html, body { max-width: 100vw; overflow-x: hidden; margin: 0; padding: 0; }
 body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#dce9f7,#f4f8fd);color:#152d50;font-size:14px;min-height:100vh;}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 .app{margin:8px auto;max-width:1800px;min-height:calc(100vh - 16px);border-radius:14px;overflow:hidden;box-shadow:0 12px 38px #092b5525;background:#f1f6fc;border:1px solid #a8c2df;display:flex;flex-direction:column;width: 100%;}
-.topbar{height:106px;flex-shrink:0;background:linear-gradient(110deg,#062c59,#064a9a);color:white;display:flex;align-items:center;padding:12px 22px;gap:22px;box-shadow:0 3px 10px #07254d30;z-index:10}
+.topbar{height:110px;flex-shrink:0;background:linear-gradient(110deg,#062c59,#064a9a);color:white;display:flex;align-items:center;padding:12px 22px;gap:22px;box-shadow:0 3px 10px #07254d30;z-index:10}
 .brand{display:flex;align-items:center;gap:15px;min-width:300px}.brand-mark{width:58px;height:68px;display:grid;place-items:center;font-size:50px;color:#fff}.brand h1{margin:0;font-size:30px;line-height:1.3;font-weight:750;white-space:nowrap}.brand p{margin:3px 0 0;font-size:16px;white-space:nowrap}
-.topnav{display:flex;align-items:stretch;gap:8px;flex:1;justify-content:center;height:82px}
-.navitem{color:#f4f8ff;background:transparent;min-width:76px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-weight:600;transition: all 0.1s;font-size:13px;}
+.topnav{display:flex;align-items:stretch;gap:10px;flex:1;justify-content:center;height:85px}
+.navitem{color:#f4f8ff;background:transparent;min-width:85px;padding:8px 10px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-weight:600;transition: all 0.1s;font-size:13.5px;}
 .navitem.active{background:#0868f5;box-shadow:inset 0 0 0 1px #ffffff20}.navitem:hover{background:#ffffff20}
 .userbox{display:flex;align-items:center;gap:12px;background:#052d60aa;border:1px solid #ffffff10;padding:8px 12px;border-radius:12px;white-space:nowrap}.userbox strong{display:block;font-size:15px}.userbox small{opacity:.85}.avatar{width:42px;height:42px;border-radius:50%;background:#dceafa;color:#14529c;display:grid;place-items:center;font-size:24px}
 .workspace{display:flex;flex:1;min-height:0;width: 100%;}
 
-/* تنسيقات الأيقونات ثلاثية الأبعاد الجديدة */
-.ico-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0px 2px 3px rgba(0,0,0,0.2)); transition: transform 0.2s; }
+/* ========================================= */
+/* تنسيقات الأيقونات ثلاثية الأبعاد (تم تكبيرها) */
+/* ========================================= */
+.ico-img { width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.25)); transition: transform 0.2s; }
 .navitem:hover .ico-img { transform: scale(1.1); }
-.sidebtn .ico-img { width: 32px; height: 32px; margin-left: 8px; }
-.btn .ico-img { width: 22px; height: 22px; filter: brightness(0) invert(1); } /* لجعل أيقونات الأزرار بيضاء */
+.sidebtn .ico-img { width: 42px; height: 42px; margin-left: 10px; }
+.btn .ico-img { width: 28px; height: 28px; filter: brightness(0) invert(1); } /* لجعل أيقونات الأزرار بيضاء */
 .btn.gray .ico-img { filter: none; }
 
 /* القائمة الجانبية */
-.sidebar{width:250px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px;z-index:5}
-.sidebtn{min-height:55px;display:flex;align-items:center;gap:10px;text-align:right;background:transparent;color:#f5f8ff;padding:8px 13px;border-radius:8px;font-size:14px;font-weight:600;transition: all 0.1s;white-space:nowrap;}
+.sidebar{width:260px;flex-shrink:0;background:linear-gradient(180deg,#092e58,#061f3e);color:white;padding:10px 7px;display:flex;flex-direction:column;gap:3px;z-index:5}
+.sidebtn{min-height:60px;display:flex;align-items:center;gap:10px;text-align:right;background:transparent;color:#f5f8ff;padding:8px 13px;border-radius:8px;font-size:15px;font-weight:600;transition: all 0.1s;white-space:nowrap;}
 .sidebtn.active{background:#0870f8}.sidebtn:hover{background:#ffffff17}
 .sidebtn.logout{margin-top:7px;background:#a30d2b35;border:1px solid #db284b50}
 .labphoto{margin-top:auto;min-height:160px;background:linear-gradient(0deg,#032c58aa,#032c5820),url('https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=700&q=80') center/cover;border-radius:4px}
@@ -90,8 +92,8 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 /* استعلامات الوسائط (Responsive) */
 @media(max-width:1250px){
   .topbar{gap:10px;padding:10px}.brand{min-width:230px}.brand h1{font-size:24px}.brand p{font-size:13px}
-  .navitem{min-width:60px;padding:6px}.userbox{display:none}
-  .sidebar{width:215px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}
+  .navitem{min-width:65px;padding:6px}.userbox{display:none}
+  .sidebar{width:230px}.main{grid-template-columns:minmax(350px,1fr) minmax(350px,1fr)}
   .actionbar{grid-template-columns:repeat(2,1fr)}
   .patient-grid{grid-template-columns:1fr;}
 }
@@ -101,16 +103,18 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   .brand{min-width:100%;justify-content:center;margin-bottom:5px;}
   .brand-mark{font-size:35px;width:40px;height:40px;}
   .brand h1{font-size:22px;}.brand p{font-size:12px;}
-  .topnav{order:3;width:100%;flex-basis:100%;height:60px;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;-ms-overflow-style:none;}
+  
+  /* تكبير الشريط العلوي في الهاتف ليتسع للأيقونات الكبيرة */
+  .topnav{order:3;width:100%;flex-basis:100%;height:80px;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;-ms-overflow-style:none;}
   .topnav::-webkit-scrollbar{display:none;}
-  .navitem{min-width:75px;padding:5px; font-size:11px;}
-  .navitem .ico-img { width: 30px; height: 30px; }
+  .navitem{min-width:80px;padding:5px; font-size:12px;}
+  .navitem .ico-img { width: 42px; height: 42px; } /* تكبير أيقونة الشريط العلوي للهاتف */
   
   .workspace{flex-direction:column;}
-  .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:8px;gap:8px;scrollbar-width:none;-ms-overflow-style:none;border-bottom:2px solid #061f3e;}
+  .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:10px;gap:10px;scrollbar-width:none;-ms-overflow-style:none;border-bottom:2px solid #061f3e;}
   .sidebar::-webkit-scrollbar{display:none;}
-  .sidebtn{min-width:max-content;min-height:50px;font-size:12px;flex-direction:column;gap:2px;padding:8px 12px;}
-  .sidebtn .ico-img { width: 28px; height: 28px; margin-left: 0; }
+  .sidebtn{min-width:max-content;min-height:65px;font-size:13px;flex-direction:column;gap:4px;padding:8px 15px;}
+  .sidebtn .ico-img { width: 38px; height: 38px; margin-left: 0; } /* تكبير أيقونة القائمة الجانبية للهاتف */
   .labphoto{display:none;}
   
   .main{grid-template-columns:1fr;padding:10px;gap:10px;}
@@ -175,9 +179,10 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
   <aside class="sidebar">
     <button class="sidebtn active" data-action="new"><img src="icon-new-patient.png" class="ico-img">تسجيل مريض</button>
     <button class="sidebtn" data-action="search"><img src="icon-search.png" class="ico-img">بحث مريض</button>
-    <button class="sidebtn" data-action="sample"><img src="icon-analysis.png" class="ico-img">سحب العينات</button>
-    <button class="sidebtn" data-action="entry"><img src="icon-tests.png" class="ico-img">إدخال النتائج</button>
-    <button class="sidebtn" data-action="show"><img src="icon-results.png" class="ico-img">النتائج</button>
+    <!-- هنا استخدمنا icon-tests.png لأن صورة icon-analysis غير موجودة -->
+    <button class="sidebtn" data-action="sample"><img src="icon-tests.png" class="ico-img">سحب العينات</button>
+    <button class="sidebtn" data-action="entry"><img src="icon-results.png" class="ico-img">إدخال النتائج</button>
+    <button class="sidebtn" data-action="show"><img src="icon-chart.png" class="ico-img">النتائج</button>
     <button class="sidebtn" data-action="print"><img src="icon-print.png" class="ico-img">الطباعة</button>
     <button class="sidebtn" data-action="reports"><img src="icon-chart.png" class="ico-img">التقارير</button>
     <button class="sidebtn" data-action="devices"><img src="icon-device.png" class="ico-img">الأجهزة</button>
@@ -253,7 +258,7 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
     <div class="card tests-card">
       <div class="section-title">
         <span>التحاليل المطلوبة <span class="titleico">⚗</span></span>
-        <button class="btn blue small" id="addTest"><img src="icon-add.png" class="ico-img" style="filter:none; width:18px;"> إضافة تحليل</button>
+        <button class="btn blue small" id="addTest"><img src="icon-add.png" class="ico-img" style="filter:none;"> إضافة تحليل</button>
       </div>
       <div class="table-wrap">
         <table id="testsTable">
