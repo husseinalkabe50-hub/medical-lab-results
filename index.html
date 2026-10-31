@@ -11,7 +11,6 @@
 /* 1. Design Tokens (الثيم التركوازي) */
 /* ========================================= */
 :root {
-  /* ألوان القائمة والشريط */
   --teal-bg-main: #064E52;
   --teal-bg-dark: #032F3B;
   --teal-active-bg: #087F83;
@@ -19,26 +18,19 @@
   --teal-bright: #12CFC3;
   --teal-text-main: #F3FFFF;
   --teal-text-sub: #B5D9D8;
-
-  /* ألوان النظام الأساسية */
   --navy-900: #032F3B; 
   --navy-800: #064E52;
   --navy-700: #087F83;
   --blue-500: #12CFC3;
   --blue-600: #087F83;
   --blue-400: #38E5DC;
-  
-  /* ألوان الحالات */
   --success: #10b981;
   --danger: #ef4444;
   --warning: #f59e0b;
   --violet: #8b5cf6;
   --print-blue: #3b82f6;
-  
-  /* خلفيات المحتوى */
   --bg-body: #f1f5f9; --surface: #ffffff; --surface-tint: #f8fafc;
   --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0;
-  
   --font-family: "Segoe UI", Tahoma, Arial, sans-serif;
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
   --radius-md: 10px; --radius-lg: 14px; --radius-full: 9999px;
@@ -124,118 +116,32 @@ button { cursor: pointer; border: none; background: transparent; }
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   box-sizing: border-box;
 }
+.btn:active:not(:disabled) { transform: translateY(4px); box-shadow: none !important; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none !important; }
 
-/* التأثير ثلاثي الأبعاد عند النقر */
-.btn:active:not(:disabled) {
-  transform: translateY(4px);
-  box-shadow: none !important;
-}
+.btn.primary { background: linear-gradient(180deg, var(--blue-400), var(--teal-bright)); border-color: var(--blue-600); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 var(--navy-700), 0 6px 12px rgba(18, 207, 195, 0.3); color: #032F3B; text-shadow: none; }
+.btn.primary:hover:not(:disabled) { background: linear-gradient(180deg, #5bfcf2, var(--teal-bright)); }
+.btn.green { background: linear-gradient(180deg, #34d399, var(--success)); border-color: #047857; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #065f46, 0 6px 12px rgba(16, 185, 129, 0.3); }
+.btn.green:hover:not(:disabled) { background: linear-gradient(180deg, #6ee7b7, var(--success)); }
+.btn.print { background: linear-gradient(180deg, #60a5fa, var(--print-blue)); border-color: #1d4ed8; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #1e3a8a, 0 6px 12px rgba(59, 130, 246, 0.3); }
+.btn.print:hover:not(:disabled) { background: linear-gradient(180deg, #93c5fd, var(--print-blue)); }
+.btn.violet { background: linear-gradient(180deg, #a78bfa, var(--violet)); border-color: #6d28d9; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #4c1d95, 0 6px 12px rgba(139, 92, 246, 0.3); }
+.btn.violet:hover:not(:disabled) { background: linear-gradient(180deg, #c4b5fd, var(--violet)); }
+.btn.red { background: linear-gradient(180deg, #f87171, var(--danger)); border-color: #b91c1c; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #991b1b, 0 6px 12px rgba(239, 68, 68, 0.3); }
+.btn.red:hover:not(:disabled) { background: linear-gradient(180deg, #fca5a5, var(--danger)); }
+.btn.gray { background: linear-gradient(180deg, #ffffff, #f1f5f9); border-color: #cbd5e1; color: var(--navy-800); box-shadow: inset 0 1px 0 #ffffff, 0 3px 0 #cbd5e1, 0 4px 8px rgba(0,0,0,0.05); text-shadow: none; }
+.btn.gray:hover:not(:disabled) { background: linear-gradient(180deg, #ffffff, #e2e8f0); }
 
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none !important;
-}
-
-/* Primary (تركوازي لامع) */
-.btn.primary {
-  background: linear-gradient(180deg, var(--blue-400), var(--teal-bright));
-  border-color: var(--blue-600);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 var(--navy-700), 0 6px 12px rgba(18, 207, 195, 0.3);
-  color: #032F3B;
-  text-shadow: none;
-}
-.btn.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #5bfcf2, var(--teal-bright));
-}
-
-/* Success / Save (أخضر احترافي) */
-.btn.green {
-  background: linear-gradient(180deg, #34d399, var(--success));
-  border-color: #047857;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #065f46, 0 6px 12px rgba(16, 185, 129, 0.3);
-}
-.btn.green:hover:not(:disabled) {
-  background: linear-gradient(180deg, #6ee7b7, var(--success));
-}
-
-/* Print (أزرق واضح للطباعة) */
-.btn.print {
-  background: linear-gradient(180deg, #60a5fa, var(--print-blue));
-  border-color: #1d4ed8;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #1e3a8a, 0 6px 12px rgba(59, 130, 246, 0.3);
-}
-.btn.print:hover:not(:disabled) {
-  background: linear-gradient(180deg, #93c5fd, var(--print-blue));
-}
-
-/* Search / Navigation (بنفسجي أنيق) */
-.btn.violet {
-  background: linear-gradient(180deg, #a78bfa, var(--violet));
-  border-color: #6d28d9;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #4c1d95, 0 6px 12px rgba(139, 92, 246, 0.3);
-}
-.btn.violet:hover:not(:disabled) {
-  background: linear-gradient(180deg, #c4b5fd, var(--violet));
-}
-
-/* Danger (أحمر للتحذير) */
-.btn.red {
-  background: linear-gradient(180deg, #f87171, var(--danger));
-  border-color: #b91c1c;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #991b1b, 0 6px 12px rgba(239, 68, 68, 0.3);
-}
-.btn.red:hover:not(:disabled) {
-  background: linear-gradient(180deg, #fca5a5, var(--danger));
-}
-
-/* Secondary (رمادي/تركوازي فاتح) */
-.btn.gray {
-  background: linear-gradient(180deg, #ffffff, #f1f5f9);
-  border-color: #cbd5e1;
-  color: var(--navy-800);
-  box-shadow: inset 0 1px 0 #ffffff, 0 3px 0 #cbd5e1, 0 4px 8px rgba(0,0,0,0.05);
-  text-shadow: none;
-}
-.btn.gray:hover:not(:disabled) {
-  background: linear-gradient(180deg, #ffffff, #e2e8f0);
-}
-
-/* Warning (برتقالي) */
-.btn.warning {
-  background: linear-gradient(180deg, #fbbf24, var(--warning));
-  border-color: #b45309;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #78350f, 0 6px 12px rgba(245, 158, 11, 0.3);
-  color: #422006;
-  text-shadow: none;
-}
-.btn.warning:hover:not(:disabled) {
-  background: linear-gradient(180deg, #fcd34d, var(--warning));
-}
-
-/* أحجام الأزرار */
 .btn.small { padding: 6px 14px; font-size: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 0 var(--navy-700), 0 4px 8px rgba(0,0,0,0.1); }
 .btn.small.gray { box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.05); }
 .btn.small:active:not(:disabled) { transform: translateY(3px); }
 
-/* حالة التحميل (Loading Spinner) */
 .btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; text-shadow: none; }
-.btn.loading::after {
-  content: "";
-  position: absolute;
-  width: 18px; height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 0.8s linear infinite;
-}
+.btn.loading::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* زر حذف الصف في الجدول */
 .btn-delete { background: transparent; color: var(--danger); padding: 6px; border-radius: var(--radius-md); transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
 .btn-delete:hover { background: #fef2f2; transform: scale(1.1); }
-/* ========================================= */
+  /* ========================================= */
 /* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
 .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--sp-5); width: 100%; }
@@ -292,10 +198,8 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 .search-bar input { flex: 1; height: 48px; font-size: 16px; padding: 0 var(--sp-4); border-radius: var(--radius-md); border: 2px solid var(--border-color); transition: all var(--transition-fast); }
 .search-bar input:focus { border-color: var(--teal-bright); outline: none; box-shadow: 0 0 0 4px rgba(18, 207, 195, 0.15); }
 .search-bar button { height: 48px; padding: 0 30px; font-size: 16px; }
-
 .search-loading { text-align: center; padding: 40px; color: var(--teal-active-bg); font-weight: 600; font-size: 16px; display: none; }
 .search-empty { text-align: center; padding: 40px; color: var(--text-muted); font-size: 15px; background: var(--surface-tint); border-radius: var(--radius-md); border: 1px dashed var(--border-color); display: none; }
-
 .history-timeline { position: relative; padding-right: 20px; margin-top: 20px; }
 .history-timeline::before { content: ''; position: absolute; right: 6px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
 .history-item { position: relative; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 15px; box-shadow: var(--shadow-sm); }
@@ -319,11 +223,6 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 .stat-icon { font-size: 28px; opacity: 0.8; }
 .stat-info h3 { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
 .stat-value { font-size: 24px; font-weight: 800; color: var(--navy-800); line-height: 1; }
-.shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--sp-3); }
-.shortcut-btn { background: var(--surface-tint); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: var(--sp-4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-2); color: var(--navy-800); font-weight: 700; font-size: 13px; transition: all var(--transition-fast); box-shadow: 0 2px 0 #cbd5e1; }
-.shortcut-btn:hover { background: var(--surface); border-color: var(--teal-bright); transform: translateY(-2px); }
-.shortcut-btn:active { transform: translateY(2px); box-shadow: none; }
-.shortcut-btn .ico { font-size: 24px; }
 .activity-list { display: flex; flex-direction: column; gap: var(--sp-2); }
 .activity-item { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-3); background: var(--surface-tint); border: 1px solid var(--border-color); border-radius: var(--radius-md); }
 .act-details { flex: 1; margin-right: var(--sp-3); display: flex; flex-direction: column; gap: 2px; }
@@ -334,7 +233,38 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 .empty-state { text-align: center; color: var(--text-muted); padding: var(--sp-5); font-size: 14px; background: var(--surface-tint); border-radius: var(--radius-md); border: 1px dashed var(--border-color); }
 
 /* ========================================= */
-/* 10. النوافذ المنبثقة والرسائل */
+/* 10. أزرار الاختصارات السريعة (Premium 3D Shortcuts) */
+/* ========================================= */
+.shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--sp-3); }
+.shortcut-btn {
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.shortcut-btn .ico { font-size: 26px; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2)); }
+.shortcut-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.shortcut-btn:active { transform: translateY(4px) !important; box-shadow: none !important; }
+
+/* تخصيص الألوان لكل زر */
+.shortcut-btn.primary { background: linear-gradient(180deg, var(--blue-400), var(--teal-bright)); border-color: var(--blue-600); box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 var(--navy-700), 0 6px 12px rgba(18, 207, 195, 0.3); color: #032F3B; text-shadow: none; }
+.shortcut-btn.violet { background: linear-gradient(180deg, #a78bfa, var(--violet)); border-color: #6d28d9; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #4c1d95, 0 6px 12px rgba(139, 92, 246, 0.3); }
+.shortcut-btn.green { background: linear-gradient(180deg, #34d399, var(--success)); border-color: #047857; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #065f46, 0 6px 12px rgba(16, 185, 129, 0.3); }
+.shortcut-btn.print { background: linear-gradient(180deg, #60a5fa, var(--print-blue)); border-color: #1d4ed8; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 0 #1e3a8a, 0 6px 12px rgba(59, 130, 246, 0.3); }
+
+/* ========================================= */
+/* 11. النوافذ المنبثقة والرسائل */
 /* ========================================= */
 .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--navy-800); color: white; padding: var(--sp-3) var(--sp-5); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); display: none; z-index: 9999; font-weight: 600; font-size: 14px; opacity: 0; transition: all var(--transition-fast); border-right: 4px solid var(--teal-bright); }
 .toast.show { display: block; transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -345,7 +275,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 .modal h3 { color: var(--navy-800); text-align: center; margin-bottom: var(--sp-4); font-size: 18px; }
 
 /* ========================================= */
-/* 11. صفحة النتائج */
+/* 12. صفحة النتائج */
 /* ========================================= */
 .actionbar { display: flex; flex-wrap: wrap; gap: var(--sp-3); width: 100%; }
 .actionbar .btn { flex: 1 1 150px; }
@@ -377,7 +307,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 .signature-box .line { border-top: 2px dashed #cbd5e1; }
 
 /* ========================================= */
-/* 12. إخفاء وإظهار الصفحات والتجاوب */
+/* 13. إخفاء وإظهار الصفحات والتجاوب */
 /* ========================================= */
 .page-view { display: none !important; width: 100%; }
 .page-view.active { display: flex !important; flex-direction: column; gap: var(--sp-4); }
@@ -405,7 +335,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 }
 
 /* ========================================= */
-/* 13. الطباعة */
+/* 14. الطباعة */
 /* ========================================= */
 @media print {
   @page { size: A4; margin: 10mm; }
@@ -424,7 +354,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
 }
 </style>
 </head>
- <body>
+<body>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="app">
@@ -504,10 +434,11 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div class="card">
       <div class="section-title">اختصارات سريعة</div>
       <div class="shortcuts-grid">
-        <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'new\']').click()"><span class="ico">➕</span> مريض جديد</button>
-        <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'search\']').click()"><span class="ico">🔍</span> بحث مريض</button>
-        <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'entry\']').click()"><span class="ico">📝</span> إدخال نتائج</button>
-        <button class="shortcut-btn" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">🖨</span> الطباعة</button>
+        <!-- هنا تم إضافة كلاسات الألوان الجديدة -->
+        <button class="shortcut-btn primary" onclick="document.querySelector('[data-action=\'new\']').click()"><span class="ico">➕</span> مريض جديد</button>
+        <button class="shortcut-btn violet" onclick="document.querySelector('[data-action=\'search\']').click()"><span class="ico">🔍</span> بحث مريض</button>
+        <button class="shortcut-btn green" onclick="document.querySelector('[data-action=\'entry\']').click()"><span class="ico">📝</span> إدخال نتائج</button>
+        <button class="shortcut-btn print" onclick="document.querySelector('[data-action=\'print\']').click()"><span class="ico">🖨</span> الطباعة</button>
       </div>
       <div class="keyboard-hint">
         <span><span class="kbd">Alt + N</span> مريض جديد</span>
@@ -752,7 +683,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     </div>
   </div>
 </div>
- <script>
+<script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg, type='success'){
   const t=$('#toast');
@@ -1362,4 +1293,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-</html>  
+</html>
