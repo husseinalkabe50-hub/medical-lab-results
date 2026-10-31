@@ -135,22 +135,119 @@ textarea{width:100%;height:82px;resize:vertical;border:1px solid #d4deea;border-
 <script>
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
-function getTests(){return [...$('#testsTable tbody').rows].filter(r=>r.cells[0].querySelector('input').checked).map(r=>({name:r.dataset.name||r.cells[5].textContent,unit:r.dataset.unit||r.cells[3].textContent,range:r.dataset.range||r.cells[2].textContent,value:r.cells[4].textContent,status:r.cells[1].textContent.trim()}))}
-function displayResult(){const name=$('#patientName').value.trim();if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return}const tests=getTests();if(!tests.length){toast('حدد تحليلاً واحداً على الأقل');return}
-$('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;$('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;$('#outDoctor').textContent=$('#doctor').value;$('#outNote').textContent=$('#resultNote').value||'لا توجد ملاحظات';$('#reportDate').textContent=new Date().toLocaleDateString('ar-IQ');
-$('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value)}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
-$('#emptyState').style.display='none';$('#resultView').style.display='block';toast('تم تجهيز نموذج النتيجة للعرض')}
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function toast(msg){const t=$('#toast');t.textContent=msg;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2600)}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+// دالة لحساب الحالة (طبيعي / مرتفع / منخفض) تلقائياً
+function flagOf(value, rangeStr){
+  const v=parseFloat(value); if(isNaN(v)) return {key:'normal', label:'مدخل'};
+  const nums = String(rangeStr).match(/-?\d+(\.\d+)?/g);
+  if(!nums) return {key:'normal', label:'طبيعي'};
+  if(rangeStr.includes('<') && v >= parseFloat(nums[0])) return {key:'high', label:'مرتفع'};
+  if(rangeStr.includes('>') && v <= parseFloat(nums[0])) return {key:'low', label:'منخفض'};
+  if(nums.length >= 2) {
+    const min = parseFloat(nums[0]), max = parseFloat(nums[1]);
+    if(v < min) return {key:'low', label:'منخفض'};
+    if(v > max) return {key:'high', label:'مرتفع'};
+  }
+  return {key:'normal', label:'طبيعي'};
+}
+
+// جعل خانات النتائج قابلة للتعديل
+$$('#testsTable tbody tr').forEach(tr => {
+  const cell = tr.cells[4]; const val = cell.textContent.trim();
+  cell.innerHTML = `<input class="result-input" type="number" step="any" value="${val}">`;
+  cell.querySelector('input').addEventListener('input', function() {
+    const f = flagOf(this.value, tr.dataset.range || tr.cells[2].textContent);
+    const badge = tr.cells[1].querySelector('.status');
+    badge.className = 'status ' + f.key; badge.textContent = f.label;
+    this.style.color = (f.key==='high'||f.key==='low') ? '#d20b1b' : '#172b45';
+  });
+});
+
+function getTests(){
+  return [...$('#testsTable tbody').rows]
+    .filter(r=>r.cells[0].querySelector('input').checked)
+    .map(r=>{
+      const inp = r.querySelector('.result-input');
+      return {
+        name: r.dataset.name || r.cells[5].textContent,
+        unit: r.dataset.unit || r.cells[3].textContent,
+        range: r.dataset.range || r.cells[2].textContent,
+        value: inp ? inp.value : r.cells[4].textContent,
+        status: r.cells[1].textContent.trim()
+      };
+    });
+}
+
+function displayResult(){
+  const name=$('#patientName').value.trim();
+  if(!name){toast('يرجى إدخال اسم المريض أولاً');$('#patientName').focus();return}
+  const tests=getTests();if(!tests.length){toast('حدد تحليلاً واحداً على الأقل');return}
+  
+  $('#outName').textContent=name;$('#outId').textContent=$('#patientId').value;
+  $('#outAge').textContent=$('#age').value;$('#outGender').textContent=$('#gender').value;
+  $('#outDoctor').textContent=$('#doctor').value;$('#outNote').textContent=$('#resultNote').value||'لا توجد ملاحظات';
+  $('#reportDate').textContent=new Date().toLocaleDateString('ar-IQ');
+  
+  $('#resultRows').innerHTML=tests.map(t=>`<tr><td dir="ltr">${esc(t.name)}</td><td><b>${esc(t.value)}</b></td><td>${esc(t.unit)}</td><td>${esc(t.range)}</td><td>${esc(t.status)}</td></tr>`).join('');
+  $('#emptyState').style.display='none';$('#resultView').style.display='block';
+  toast('تم تجهيز نموذج النتيجة للعرض');
+}
+
 $('#showBtn').onclick=$('#showBtn2').onclick=displayResult;
 $('#backBtn').onclick=()=>{$('#resultView').style.display='none';$('#emptyState').style.display='block'};
-$('#printBtn').onclick=()=>{displayResult();setTimeout(()=>window.print(),150)};
-$('#pdfBtn').onclick=()=>{displayResult();setTimeout(()=>{toast('اختر "حفظ كملف PDF" من نافذة الطباعة');window.print()},150)};
-$('#saveBtn').onclick=()=>{const record={id:$('#patientId').value,name:$('#patientName').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};try{const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const i=records.findIndex(x=>x.id===record.id);if(i>=0)records[i]=record;else records.push(record);localStorage.setItem('najafLabRecords',JSON.stringify(records));toast('تم حفظ بيانات المريض محلياً على هذا الجهاز')}catch(e){toast('تعذر الحفظ في المتصفح')}}
-$('#selectAll').onchange=e=>$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked);
+$('#printBtn').onclick=()=>{displayResult();setTimeout(()=>window.print(),200)};
+$('#pdfBtn').onclick=()=>{displayResult();setTimeout(()=>{toast('اختر "حفظ كملف PDF"');window.print()},200)};
+
+$('#saveBtn').onclick=()=>{
+  const record={id:$('#patientId').value,name:$('#patientName').value,age:$('#age').value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+  try{const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const i=records.findIndex(x=>x.id===record.id);if(i>=0)records[i]=record;else records.push(record);localStorage.setItem('najafLabRecords',JSON.stringify(records));toast('تم حفظ بيانات المريض')}catch(e){toast('تعذر الحفظ')}
+};
+
+$('#selectAll').onchange=e=>{
+  $$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked);
+};
+
 $('#addTest').onclick=()=>{$('#modalBackdrop').style.display='flex';$('#newTestName').focus()};
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
-$('#confirmAdd').onclick=()=>{const name=$('#newTestName').value.trim(),value=$('#newTestValue').value,unit=$('#newTestUnit').value.trim()||'—',range=$('#newTestRange').value.trim()||'غير محدد';if(!name||value===''){toast('أدخل اسم التحليل والنتيجة');return}const tr=document.createElement('tr');tr.dataset.name=name;tr.dataset.unit=unit;tr.dataset.range=range;tr.innerHTML=`<td><input type="checkbox" checked></td><td><span class="status normal">مدخل</span></td><td>${esc(range)}</td><td>${esc(unit)}</td><td class="result-normal">${esc(value)}</td><td class="test-name">${esc(name)}</td><td>${$('#testsTable tbody').rows.length+1}</td>`;$('#testsTable tbody').appendChild(tr);$('#modalBackdrop').style.display='none';['#newTestName','#newTestValue','#newTestUnit','#newTestRange'].forEach(s=>$(s).value='');toast('تمت إضافة التحليل')}
-$$('.sidebtn').forEach(b=>b.onclick=()=>{const action=b.dataset.action;$$('.sidebtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(action==='new'){['#patientName','#phone','#patientNote'].forEach(s=>$(s).value='');$('#patientId').value='2026-'+String(Date.now()).slice(-5);toast('تم تجهيز نموذج مريض جديد')}else if(action==='search'){const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');if(q!==null){const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const r=records.find(x=>x.id.includes(q)||x.name.includes(q));if(r){$('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;$('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;$('#resultNote').value=r.resultNote;toast('تم تحميل بيانات المريض')}else toast('لم يتم العثور على سجل محفوظ مطابق')}}else if(action==='print'){displayResult();setTimeout(()=>window.print(),150)}else if(action==='entry'||action==='review'){toast('يمكنك تعديل قائمة التحاليل ثم الضغط على عرض النتيجة')}else if(action==='backup'){const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();URL.revokeObjectURL(a.href);toast('تم إنشاء ملف النسخة الاحتياطية')}else if(action==='exit'){if(confirm('هل تريد إخفاء واجهة البرنامج؟'))toast('يمكنك إغلاق علامة تبويب المتصفح يدوياً')}else toast('قسم '+b.textContent.trim()+' — نموذج واجهة تجريبي')});
+
+$('#confirmAdd').onclick=()=>{
+  const name=$('#newTestName').value.trim(),value=$('#newTestValue').value,unit=$('#newTestUnit').value.trim()||'—',range=$('#newTestRange').value.trim()||'غير محدد';
+  if(!name||value===''){toast('أدخل اسم التحليل والنتيجة');return}
+  const f = flagOf(value, range);
+  const tr=document.createElement('tr');tr.dataset.name=name;tr.dataset.unit=unit;tr.dataset.range=range;
+  tr.innerHTML=`<td><input type="checkbox" checked></td><td><span class="status ${f.key}">${f.label}</span></td><td>${esc(range)}</td><td>${esc(unit)}</td><td><input class="result-input" type="number" step="any" value="${esc(value)}"></td><td class="test-name">${esc(name)}</td><td>${$('#testsTable tbody').rows.length+1}</td>`;
+  $('#testsTable tbody').appendChild(tr);
+  
+  tr.querySelector('.result-input').addEventListener('input', function() {
+    const f2 = flagOf(this.value, range);
+    const badge = tr.cells[1].querySelector('.status');
+    badge.className = 'status ' + f2.key; badge.textContent = f2.label;
+  });
+
+  $('#modalBackdrop').style.display='none';['#newTestName','#newTestValue','#newTestUnit','#newTestRange'].forEach(s=>$(s).value='');toast('تمت إضافة التحليل');
+};
+
+$$('.sidebtn').forEach(b=>b.onclick=()=>{
+  const action=b.dataset.action;$$('.sidebtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  if(action==='new'){
+    ['#patientName','#phone','#patientNote','#resultNote'].forEach(s=>$(s).value='');
+    $('#patientId').value='2026-'+String(Date.now()).slice(-5);
+    $('#resultView').style.display='none'; $('#emptyState').style.display='block';
+    toast('تم تجهيز نموذج مريض جديد');
+  }else if(action==='search'){
+    const q=prompt('أدخل اسم المريض أو رقم الملف للبحث:');
+    if(q!==null){const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');const r=records.find(x=>x.id.includes(q)||(x.name&&x.name.includes(q)));
+    if(r){$('#patientId').value=r.id;$('#patientName').value=r.name;$('#age').value=r.age;$('#gender').value=r.gender;$('#phone').value=r.phone;$('#doctor').value=r.doctor;$('#patientNote').value=r.note;$('#resultNote').value=r.resultNote;toast('تم تحميل البيانات')}else toast('لم يتم العثور على سجل')}
+  }else if(action==='print'){displayResult();setTimeout(()=>window.print(),200)}
+  else if(action==='backup'){const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();toast('تم إنشاء النسخة الاحتياطية')}
+  else if(action==='exit'){if(confirm('هل تريد إخفاء واجهة البرنامج؟'))toast('يمكنك إغلاق المتصفح')}
+  else toast('قسم '+b.textContent.trim()+' — نموذج تجريبي');
+});
+
 $$('.topnav .navitem').forEach(b=>b.onclick=()=>{ $$('.topnav .navitem').forEach(x=>x.classList.remove('active'));b.classList.add('active');toast('تم اختيار قسم '+b.textContent.trim())});
 window.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalBackdrop').style.display='none'});
 </script>
