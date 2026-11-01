@@ -616,12 +616,44 @@ async function migrateOldData() {
 // ==========================================
 function checkLicense() {
   const savedKey = localStorage.getItem('najafLabLicense');
-  const expiryDate = localStorage.getItem('najafLabExpiry');
-  if (!savedKey || !expiryDate) { showLicenseScreen(); return false; }
-  const today = new Date(); const expiry = new Date(expiryDate);
-  if (today > expiry) { showLicenseScreen('انتهت صلاحية الاشتراك. يرجى التجديد.'); return false; }
-  $('#licenseOverlay').classList.add('hidden');
-  return true;
+  if (!savedKey) { showLicenseScreen(); return false; }
+
+  // التحقق من الكود
+  try {
+    const parts = savedKey.split('-');
+    if (parts.length !== 3 || parts[0] !== 'NAJAF') throw new Error('Invalid');
+
+    const encoded = parts[1];
+    const providedHash = parseInt(parts[2]);
+    
+    // التأكد من عدم التلاعب بالكود
+    let hash = 0;
+    for (let i = 0; i < encoded.length; i++) {
+      hash = ((hash << 5) - hash) + encoded.charCodeAt(i);
+      hash |= 0;
+    }
+    if (Math.abs(hash) !== providedHash) throw new Error('Tampered');
+
+    // فك التشفير ومعرفة تاريخ الانتهاء
+    const decoded = atob(encoded);
+    const [labName, expiryStr] = decoded.split('|');
+    const today = new Date();
+    const expiry = new Date(expiryStr);
+    
+    if (today > expiry) {
+      showLicenseScreen(`انتهت صلاحية الاشتراك في تاريخ: ${expiryStr}. يرجى التجديد.`);
+      return false;
+    }
+
+    // إذا كان كل شيء سليماً
+    $('#licenseOverlay').classList.add('hidden');
+    return true;
+
+  } catch (e) {
+    localStorage.removeItem('najafLabLicense');
+    showLicenseScreen('كود التفعيل غير صالح أو تم التلاعب به.');
+    return false;
+  }
 }
 
 function showLicenseScreen(errorMsg = '') {
@@ -633,13 +665,16 @@ function showLicenseScreen(errorMsg = '') {
 $('#activateBtn').onclick = () => {
   const key = $('#licenseKeyInput').value.trim().toUpperCase();
   if (!key) { showLicenseScreen('يرجى إدخال كود التفعيل أولاً.'); return; }
-  if (key === 'NAJAF-TRIAL-20271231') {
-    localStorage.setItem('najafLabLicense', key);
-    localStorage.setItem('najafLabExpiry', '2027-12-31');
+  
+  localStorage.setItem('najafLabLicense', key);
+  
+  if (checkLicense()) {
     toast('تم تفعيل النظام بنجاح!', 'success');
-    $('#licenseOverlay').classList.add('hidden');
-    location.reload();
-  } else { showLicenseScreen('كود التفعيل غير صحيح أو منتهي الصلاحية.'); }
+    setTimeout(() => location.reload(), 1000);
+  } else {
+    localStorage.removeItem('najafLabLicense'); // مسح الكود الخاطئ
+    showLicenseScreen('كود التفعيل غير صحيح أو منتهي الصلاحية.');
+  }
 };
 
 // ==========================================
