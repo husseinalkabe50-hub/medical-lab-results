@@ -551,8 +551,10 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div style="margin-top: 20px; display: flex; justify-content: center;"><button class="btn gray" onclick="document.getElementById('compareModal').style.display='none'" style="width: 100%; max-width: 200px;">إغلاق</button></div>
   </div>
 </div>
-
 <script>
+// ==========================================
+// 1. الأدوات المساعدة (Utilities)
+// ==========================================
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg, type='success'){
   const t=$('#toast'); t.textContent=msg; t.className = 'toast show ' + type;
@@ -562,6 +564,9 @@ function toast(msg, type='success'){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
+// ==========================================
+// 2. إعداد قاعدة البيانات
+// ==========================================
 const db = new Dexie('NajafLabDatabase');
 db.version(1).stores({ records: 'id, name, date, phone, savedAt' });
 
@@ -576,53 +581,94 @@ async function migrateOldData() {
   } catch (e) { console.error('خطأ أثناء نقل البيانات القديمة:', e); }
 }
 
-// نظام الترخيص مع دعم اللغة العربية
+// ==========================================
+// 3. نظام الترخيص والتفعيل (الإصدار الآمن)
+// ==========================================
 function checkLicense() {
   const savedKey = localStorage.getItem('najafLabLicense');
   const savedLabName = localStorage.getItem('najafLabName');
+  
   if (!savedKey || !savedLabName) { showLicenseScreen(); return false; }
 
   try {
-    const parts = savedKey.split('-');
-    if (parts.length !== 3 || parts[0] !== 'NAJAF') throw new Error('Invalid');
-    const encoded = parts[1]; const providedHash = parseInt(parts[2]);
+    if (!savedKey.startsWith('NAJAF-')) throw new Error('Invalid Format');
+    
+    // فصل الكود من آخر شرطة (لأن الكود المشفر يحتوي على شرطات)
+    const lastHyphenIndex = savedKey.lastIndexOf('-');
+    const encoded = savedKey.substring(6, lastHyphenIndex);
+    const providedHash = parseInt(savedKey.substring(lastHyphenIndex + 1));
+    
+    if (!encoded || isNaN(providedHash)) throw new Error('Invalid Format');
+
+    // حساب البصمة للتأكد من عدم التلاعب
     let hash = 0;
-    for (let i = 0; i < encoded.length; i++) { hash = ((hash << 5) - hash) + encoded.charCodeAt(i); hash |= 0; }
+    for (let i = 0; i < encoded.length; i++) {
+      hash = ((hash << 5) - hash) + encoded.charCodeAt(i);
+      hash |= 0;
+    }
     if (Math.abs(hash) !== providedHash) throw new Error('Tampered');
 
-    // فك التشفير مع دعم اللغة العربية
+    // فك التشفير
     const decoded = decodeURIComponent(escape(atob(encoded)));
     const [codeLabName, expiryStr] = decoded.split('|');
     
-    if (savedLabName.toLowerCase() !== codeLabName.toLowerCase()) {
+    // التحقق من تطابق الاسم (يتجاهل المسافات وحالة الأحرف)
+    if (savedLabName.trim().toLowerCase() !== codeLabName.trim().toLowerCase()) {
       showLicenseScreen(`عذراً، هذا الكود مخصص لمختبر (${codeLabName}) وليس لمختبركم.`);
       return false;
     }
 
-    const today = new Date(); const expiry = new Date(expiryStr);
-    if (today > expiry) { showLicenseScreen(`انتهت صلاحية الاشتراك في تاريخ: ${expiryStr}. يرجى التجديد.`); return false; }
+    // التحقق من التاريخ
+    const today = new Date();
+    const expiry = new Date(expiryStr);
+    
+    if (today > expiry) {
+      showLicenseScreen(`انتهت صلاحية الاشتراك في تاريخ: ${expiryStr}. يرجى التجديد.`);
+      return false;
+    }
 
+    // إذا كان كل شيء سليماً
     if(document.getElementById('headerLabName')) document.getElementById('headerLabName').textContent = savedLabName;
     if(document.getElementById('reportLabName')) document.getElementById('reportLabName').textContent = savedLabName + ' التخصصي';
+    
     $('#licenseOverlay').classList.add('hidden');
     return true;
+
   } catch (e) {
-    localStorage.removeItem('najafLabLicense'); showLicenseScreen('كود التفعيل غير صالح أو تم التلاعب به.'); return false;
+    console.error(e);
+    localStorage.removeItem('najafLabLicense');
+    showLicenseScreen('كود التفعيل غير صالح أو تم التلاعب به.');
+    return false;
   }
 }
+
 function showLicenseScreen(errorMsg = '') {
   $('#licenseOverlay').classList.remove('hidden');
-  if (errorMsg) { $('#licenseError').textContent = errorMsg; $('#licenseError').style.display = 'block'; } else { $('#licenseError').style.display = 'none'; }
+  if (errorMsg) { $('#licenseError').textContent = errorMsg; $('#licenseError').style.display = 'block'; } 
+  else { $('#licenseError').style.display = 'none'; }
 }
+
 $('#activateBtn').onclick = () => {
   const key = $('#licenseKeyInput').value.trim().toUpperCase();
   const labName = $('#licenseLabName').value.trim();
+  
   if (!labName) { showLicenseScreen('يرجى إدخال اسم المختبر أولاً.'); return; }
   if (!key) { showLicenseScreen('يرجى إدخال كود التفعيل أولاً.'); return; }
-  localStorage.setItem('najafLabName', labName); localStorage.setItem('najafLabLicense', key);
-  if (checkLicense()) { toast('تم تفعيل النظام بنجاح!', 'success'); setTimeout(() => location.reload(), 1000); } else { localStorage.removeItem('najafLabLicense'); }
+  
+  localStorage.setItem('najafLabName', labName); 
+  localStorage.setItem('najafLabLicense', key);
+  
+  if (checkLicense()) {
+    toast('تم تفعيل النظام بنجاح!', 'success');
+    setTimeout(() => location.reload(), 1000);
+  } else {
+    localStorage.removeItem('najafLabLicense');
+  }
 };
 
+// ==========================================
+// 4. النسخ الاحتياطي والاستعادة
+// ==========================================
 $('#exportDataBtn').onclick = async () => {
   try {
     const records = await db.records.toArray();
@@ -645,6 +691,9 @@ $('#importFileInput').onchange = (e) => {
   }; reader.readAsText(file);
 };
 
+// ==========================================
+// 5. منطق التنقل والواجهة
+// ==========================================
 const sidebar = $('#sidebar'); const sidebarOverlay = $('#sidebarOverlay');
 $('#desktopToggle').onclick = () => { sidebar.classList.toggle('collapsed'); };
 function toggleMobileMenu() { sidebar.classList.toggle('mobile-open'); sidebarOverlay.classList.toggle('active'); }
@@ -667,6 +716,9 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+// ==========================================
+// 6. كتالوج التحاليل
+// ==========================================
 const labCatalog = [
   { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" }, { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
   { name: "WBC", unit: "10³/µL", range: "4 - 11" }, { name: "RBC", unit: "10^6/µL", range: "4.2 - 5.9" },
@@ -919,6 +971,9 @@ $$('.sidebtn').forEach(b=>b.onclick=async ()=>{
   }
 });
 
+// ==========================================
+// 14. تشغيل النظام عند الإقلاع
+// ==========================================
 document.addEventListener('DOMContentLoaded', async () => {
   if (!checkLicense()) return; await migrateOldData(); await updateDashboard(); if (window.innerWidth > 1024) $('#patientName').focus();
 });
