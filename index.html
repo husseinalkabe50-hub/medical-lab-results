@@ -266,8 +266,14 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
   <div style="background: var(--surface); padding: 40px; border-radius: var(--radius-lg); width: min(450px, 100%); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
     <div style="font-size: 50px; color: var(--teal-active-bg); margin-bottom: 20px;">⚗</div>
     <h2 style="color: var(--navy-800); margin-bottom: 10px;">تفعيل نظام مختبر النجف</h2>
-    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">يرجى إدخال كود التفعيل الخاص بالمختبر لبدء الاستخدام</p>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">يرجى إدخال اسم المختبر وكود التفعيل الخاص بكم</p>
+    
+    <!-- حقل اسم المختبر الجديد -->
+    <input type="text" id="licenseLabName" class="field" placeholder="أدخل اسم المختبر المتفق عليه..." style="text-align: center; margin-bottom: 10px;" dir="rtl">
+    
+    <!-- حقل الكود -->
     <input type="text" id="licenseKeyInput" class="field" placeholder="أدخل كود التفعيل هنا..." style="text-align: center; font-family: monospace; font-size: 16px; margin-bottom: 20px;" dir="ltr">
+    
     <div id="licenseError" style="color: var(--danger); font-size: 13px; font-weight: bold; margin-bottom: 20px; display: none;"></div>
     <button id="activateBtn" class="btn primary" style="width: 100%; height: 48px; font-size: 16px;">تفعيل النظام</button>
     <p style="margin-top: 20px; font-size: 12px; color: var(--text-muted);">للدعم الفني والاشتراكات: <br> <strong dir="ltr">07800000000</strong></p>
@@ -284,7 +290,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div class="brand">
       <div class="brand-mark">⚗</div>
       <div class="brand-text">
-        <h1>مختبر النجف</h1>
+        <h1 id="headerLabName">مختبر النجف</h1>
         <p>نظام إدارة المختبرات الطبية</p>
       </div>
     </div>
@@ -371,7 +377,6 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
       <div class="activity-list" id="recentActivityList"><div class="empty-state">لا توجد نشاطات حديثة.</div></div>
     </div>
     
-    <!-- كارت النسخ الاحتياطي -->
     <div class="card">
       <div class="section-title">إدارة بيانات النظام</div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -497,7 +502,7 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
       <div class="report-container" id="reportToConvert">
         <div class="report-header">
           <div class="lab-info">
-            <h1>مختبر النجف التخصصي</h1>
+            <h1 id="reportLabName">مختبر النجف التخصصي</h1>
             <p>نظام إدارة المختبرات الطبية</p>
             <p>النجف الأشرف - شارع الكوفة | هاتف: 07800000000</p>
           </div>
@@ -572,7 +577,6 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div style="margin-top: 20px; display: flex; justify-content: center;"><button class="btn gray" onclick="document.getElementById('compareModal').style.display='none'" style="width: 100%; max-width: 200px;">إغلاق</button></div>
   </div>
 </div>
-
 <script>
 // ==========================================
 // 1. الأدوات المساعدة (Utilities)
@@ -612,13 +616,14 @@ async function migrateOldData() {
 }
 
 // ==========================================
-// 3. نظام الترخيص والتفعيل (License System)
+// 3. نظام الترخيص والتفعيل (License System - Strict Mode)
 // ==========================================
 function checkLicense() {
   const savedKey = localStorage.getItem('najafLabLicense');
-  if (!savedKey) { showLicenseScreen(); return false; }
+  const savedLabName = localStorage.getItem('najafLabName');
+  
+  if (!savedKey || !savedLabName) { showLicenseScreen(); return false; }
 
-  // التحقق من الكود
   try {
     const parts = savedKey.split('-');
     if (parts.length !== 3 || parts[0] !== 'NAJAF') throw new Error('Invalid');
@@ -634,9 +639,17 @@ function checkLicense() {
     }
     if (Math.abs(hash) !== providedHash) throw new Error('Tampered');
 
-    // فك التشفير ومعرفة تاريخ الانتهاء
+    // فك التشفير لمعرفة الاسم والتاريخ المخفيين داخل الكود
     const decoded = atob(encoded);
-    const [labName, expiryStr] = decoded.split('|');
+    const [codeLabName, expiryStr] = decoded.split('|');
+    
+    // 🚨 الفحص الأمني: هل الاسم المكتوب يطابق الاسم الموجود في الكود؟
+    if (savedLabName.toLowerCase() !== codeLabName.toLowerCase()) {
+      showLicenseScreen(`عذراً، هذا الكود مخصص لمختبر (${codeLabName}) وليس لمختبركم.`);
+      return false;
+    }
+
+    // فحص التاريخ
     const today = new Date();
     const expiry = new Date(expiryStr);
     
@@ -645,7 +658,10 @@ function checkLicense() {
       return false;
     }
 
-    // إذا كان كل شيء سليماً
+    // إذا كان كل شيء سليماً، نقوم بتحديث اسم المختبر في الواجهة ليطابق الاسم المصرح به
+    if(document.getElementById('headerLabName')) document.getElementById('headerLabName').textContent = savedLabName;
+    if(document.getElementById('reportLabName')) document.getElementById('reportLabName').textContent = savedLabName + ' التخصصي';
+
     $('#licenseOverlay').classList.add('hidden');
     return true;
 
@@ -664,16 +680,20 @@ function showLicenseScreen(errorMsg = '') {
 
 $('#activateBtn').onclick = () => {
   const key = $('#licenseKeyInput').value.trim().toUpperCase();
+  const labName = $('#licenseLabName').value.trim();
+  
+  if (!labName) { showLicenseScreen('يرجى إدخال اسم المختبر أولاً.'); return; }
   if (!key) { showLicenseScreen('يرجى إدخال كود التفعيل أولاً.'); return; }
   
+  // حفظ البيانات مؤقتاً للفحص
+  localStorage.setItem('najafLabName', labName);
   localStorage.setItem('najafLabLicense', key);
   
   if (checkLicense()) {
     toast('تم تفعيل النظام بنجاح!', 'success');
     setTimeout(() => location.reload(), 1000);
   } else {
-    localStorage.removeItem('najafLabLicense'); // مسح الكود الخاطئ
-    showLicenseScreen('كود التفعيل غير صحيح أو منتهي الصلاحية.');
+    localStorage.removeItem('najafLabLicense'); 
   }
 };
 
@@ -1112,7 +1132,7 @@ $$('.sidebtn').forEach(b=>b.onclick=async ()=>{
     case 'entry': showPage('registrationView'); toast('يمكنك إدخال النتائج الآن'); break;
     case 'show': if(buildResultView()) showPage('resultViewPage'); break;
     case 'print': $('#printBtn').click(); break;
-    case 'reports': const count = await db.records.count(); alert(`إحصائيات النظام:\n- إجمالي المرضى المحفوظين: ${count}\n- حالة النظام: يعمل بكفاءة (قاعدة بيانات IndexedDB)`); break;
+    case 'reports': const count = await db.records.count(); alert(`إحصائيات النظام:\n- إجمالي المرضى المحفوظين: ${count}\n- حالة النظام: يعمل بكفاءة`); break;
     case 'backup': $('#exportDataBtn').click(); break;
     case 'exit': if(confirm('هل تريد إغلاق النظام؟')) window.close(); break;
     default: toast('قسم ( '+b.textContent.trim()+' ) قيد التطوير'); break;
