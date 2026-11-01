@@ -6,6 +6,8 @@
 <title>مختبر النجف | نظام إدارة المختبرات الطبية</title>
 <!-- مكتبة تحويل HTML إلى PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- مكتبة Dexie.js لإدارة قاعدة بيانات IndexedDB (بديل localStorage) -->
+<script src="https://cdn.jsdelivr.net/npm/dexie@4.0.1/dist/dexie.min.js"></script>
 <style>
 /* ========================================= */
 /* 1. Design Tokens (الثيم التركوازي) */
@@ -125,7 +127,6 @@ button { cursor: pointer; border: none; background: transparent; }
   box-sizing: border-box;
 }
 
-/* التأثير ثلاثي الأبعاد عند النقر */
 .btn:active:not(:disabled) {
   transform: translateY(4px);
   box-shadow: none !important;
@@ -138,7 +139,6 @@ button { cursor: pointer; border: none; background: transparent; }
   box-shadow: none !important;
 }
 
-/* Primary (تركوازي لامع) */
 .btn.primary {
   background: linear-gradient(180deg, var(--blue-400), var(--teal-bright));
   border-color: var(--blue-600);
@@ -150,7 +150,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #5bfcf2, var(--teal-bright));
 }
 
-/* Success / Save (أخضر احترافي) */
 .btn.green {
   background: linear-gradient(180deg, #34d399, var(--success));
   border-color: #047857;
@@ -160,7 +159,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #6ee7b7, var(--success));
 }
 
-/* Print (أزرق واضح للطباعة) */
 .btn.print {
   background: linear-gradient(180deg, #60a5fa, var(--print-blue));
   border-color: #1d4ed8;
@@ -170,7 +168,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #93c5fd, var(--print-blue));
 }
 
-/* Search / Navigation (بنفسجي أنيق) */
 .btn.violet {
   background: linear-gradient(180deg, #a78bfa, var(--violet));
   border-color: #6d28d9;
@@ -180,7 +177,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #c4b5fd, var(--violet));
 }
 
-/* Danger (أحمر للتحذير) */
 .btn.red {
   background: linear-gradient(180deg, #f87171, var(--danger));
   border-color: #b91c1c;
@@ -190,7 +186,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #fca5a5, var(--danger));
 }
 
-/* Secondary (رمادي/تركوازي فاتح) */
 .btn.gray {
   background: linear-gradient(180deg, #ffffff, #f1f5f9);
   border-color: #cbd5e1;
@@ -202,7 +197,6 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #ffffff, #e2e8f0);
 }
 
-/* Warning (برتقالي) */
 .btn.warning {
   background: linear-gradient(180deg, #fbbf24, var(--warning));
   border-color: #b45309;
@@ -214,12 +208,10 @@ button { cursor: pointer; border: none; background: transparent; }
   background: linear-gradient(180deg, #fcd34d, var(--warning));
 }
 
-/* أحجام الأزرار */
 .btn.small { padding: 6px 14px; font-size: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 3px 0 var(--navy-700), 0 4px 8px rgba(0,0,0,0.1); }
 .btn.small.gray { box-shadow: inset 0 1px 0 #ffffff, 0 2px 0 #cbd5e1, 0 3px 6px rgba(0,0,0,0.05); }
 .btn.small:active:not(:disabled) { transform: translateY(3px); }
 
-/* حالة التحميل (Loading Spinner) */
 .btn.loading { pointer-events: none; opacity: 0.8; color: transparent !important; text-shadow: none; }
 .btn.loading::after {
   content: "";
@@ -232,10 +224,10 @@ button { cursor: pointer; border: none; background: transparent; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* زر حذف الصف في الجدول */
 .btn-delete { background: transparent; color: var(--danger); padding: 6px; border-radius: var(--radius-md); transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; }
 .btn-delete:hover { background: #fef2f2; transform: scale(1.1); }
- /* ========================================= */
+
+/* ========================================= */
 /* 6. الكروت والنماذج (Forms) */
 /* ========================================= */
 .card { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: var(--sp-5); width: 100%; }
@@ -422,9 +414,31 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
   .report-table th, .report-table td { border-color: #333 !important; }
   .report-table th, .report-table tr:nth-child(even), .report-header, .patient-info-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* تنسيقات إضافية لنظام الترخيص */
+#licenseOverlay { transition: opacity 0.3s; }
+#licenseOverlay.hidden { opacity: 0; pointer-events: none; }
+.license-badge { position: absolute; top: 80px; left: 20px; background: var(--surface); padding: 5px 10px; border-radius: var(--radius-md); font-size: 12px; font-weight: bold; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); z-index: 50; }
 </style>
 </head>
-  <body>
+<body>
+<!-- شاشة التفعيل (تظهر فقط إذا لم يكن البرنامج مفعلاً) -->
+<div id="licenseOverlay" style="position: fixed; inset: 0; background: var(--navy-900); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 20px; direction: rtl;">
+  <div style="background: var(--surface); padding: 40px; border-radius: var(--radius-lg); width: min(450px, 100%); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+    <div style="font-size: 50px; color: var(--teal-active-bg); margin-bottom: 20px;">⚗</div>
+    <h2 style="color: var(--navy-800); margin-bottom: 10px;">تفعيل نظام مختبر النجف</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px;">يرجى إدخال كود التفعيل الخاص بالمختبر لبدء الاستخدام</p>
+    
+    <input type="text" id="licenseKeyInput" class="field" placeholder="أدخل كود التفعيل هنا..." style="text-align: center; font-family: monospace; font-size: 16px; margin-bottom: 20px;" dir="ltr">
+    
+    <div id="licenseError" style="color: var(--danger); font-size: 13px; font-weight: bold; margin-bottom: 20px; display: none;"></div>
+    
+    <button id="activateBtn" class="btn primary" style="width: 100%; height: 48px; font-size: 16px;">تفعيل النظام</button>
+    
+    <p style="margin-top: 20px; font-size: 12px; color: var(--text-muted);">للدعم الفني والاشتراكات: <br> <strong dir="ltr">07800000000</strong></p>
+  </div>
+</div>
+
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="app">
@@ -520,6 +534,17 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
     <div class="card">
       <div class="section-title">أحدث النشاطات (محمي الخصوصية)</div>
       <div class="activity-list" id="recentActivityList"><div class="empty-state">لا توجد نشاطات حديثة.</div></div>
+    </div>
+    
+    <!-- كارت النسخ الاحتياطي الجديد -->
+    <div class="card">
+      <div class="section-title">إدارة بيانات النظام</div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn warning" id="exportDataBtn" style="flex: 1;"><span class="ico">📤</span> تصدير نسخة احتياطية</button>
+        <button class="btn primary" id="importDataBtn" style="flex: 1;"><span class="ico">📥</span> استيراد نسخة احتياطية</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">يُنصح بتصدير نسخة احتياطية أسبوعياً وحفظها في مكان آمن (فلاش ميموري أو سحابة).</p>
+      <input type="file" id="importFileInput" accept=".json" style="display: none;">
     </div>
   </div>
 
@@ -753,6 +778,9 @@ input[type=checkbox] { accent-color: var(--teal-bright); width: 18px; height: 18
   </div>
 </div>
 <script>
+// ==========================================
+// 1. الأدوات المساعدة (Utilities)
+// ==========================================
 const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 function toast(msg, type='success'){
   const t=$('#toast');
@@ -768,7 +796,343 @@ function toast(msg, type='success'){
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
 // ==========================================
-// منطق التنقل
+// 2. إعداد قاعدة البيانات (Dexie.js / IndexedDB)
+// ==========================================
+// هذه القاعدة تحل مشكلة الـ localStorage (لا نهائية ولا تفقد البيانات بمسح المتصفح)
+const db = new Dexie('NajafLabDatabase');
+db.version(1).stores({
+  // الحقول المفهرسة للبحث السريع
+  records: 'id, name, date, phone, savedAt' 
+});
+
+// دالة نقل البيانات القديمة (من localStorage إلى Dexie) عند التحديث لأول مرة
+async function migrateOldData() {
+  try {
+    const oldData = localStorage.getItem('najafLabRecords');
+    if (oldData) {
+      const records = JSON.parse(oldData);
+      if (Array.isArray(records) && records.length > 0) {
+        // التحقق مما إذا كانت القاعدة الجديدة فارغة لتجنب التكرار
+        const count = await db.records.count();
+        if (count === 0) {
+          await db.records.bulkAdd(records);
+          console.log('تم نقل البيانات القديمة بنجاح إلى قاعدة البيانات الجديدة.');
+        }
+      }
+      // مسح البيانات القديمة لتوفير المساحة
+      localStorage.removeItem('najafLabRecords');
+    }
+  } catch (e) {
+    console.error('خطأ أثناء نقل البيانات القديمة:', e);
+  }
+}
+
+// ==========================================
+// 3. نظام الترخيص والتفعيل (License System)
+// ==========================================
+// ملاحظة: هذا كود تجريبي للتفعيل. سنقوم بإنشاء "مولد أكواد" لاحقاً.
+const LICENSE_SECRET = 'NAJAF_LAB_SECRET_2026'; // مفتاح التشفير
+
+function checkLicense() {
+  // قراءة كود التفعيل المحفوظ (نستخدم localStorage هنا لأنه صغير جداً)
+  const savedKey = localStorage.getItem('najafLabLicense');
+  const expiryDate = localStorage.getItem('najafLabExpiry');
+  
+  if (!savedKey || !expiryDate) {
+    showLicenseScreen();
+    return false;
+  }
+
+  // التحقق من تاريخ الانتهاء
+  const today = new Date();
+  const expiry = new Date(expiryDate);
+  
+  if (today > expiry) {
+    showLicenseScreen('انتهت صلاحية الاشتراك. يرجى التجديد.');
+    return false;
+  }
+
+  // إذا كان كل شيء سليماً، نخفي الشاشة ونكمل
+  $('#licenseOverlay').classList.add('hidden');
+  return true;
+}
+
+function showLicenseScreen(errorMsg = '') {
+  $('#licenseOverlay').classList.remove('hidden');
+  if (errorMsg) {
+    $('#licenseError').textContent = errorMsg;
+    $('#licenseError').style.display = 'block';
+  } else {
+    $('#licenseError').style.display = 'none';
+  }
+}
+
+// زر التفعيل
+$('#activateBtn').onclick = () => {
+  const key = $('#licenseKeyInput').value.trim().toUpperCase();
+  if (!key) {
+    showLicenseScreen('يرجى إدخال كود التفعيل أولاً.');
+    return;
+  }
+
+  // كود تجريبي (للتجربة فقط) - لاحقاً سنستخدم خوارزمية تشفير حقيقية
+  // صيغة الكود التجريبي: NAJAF-TRIAL-20271231
+  if (key === 'NAJAF-TRIAL-20271231') {
+    localStorage.setItem('najafLabLicense', key);
+    localStorage.setItem('najafLabExpiry', '2027-12-31');
+    toast('تم تفعيل النظام بنجاح!', 'success');
+    $('#licenseOverlay').classList.add('hidden');
+    location.reload(); // إعادة تحميل لتطبيق التغييرات
+  } else {
+    showLicenseScreen('كود التفعيل غير صحيح أو منتهي الصلاحية.');
+  }
+};
+
+// ==========================================
+// 4. النسخ الاحتياطي والاستعادة (Backup & Restore)
+// ==========================================
+$('#exportDataBtn').onclick = async () => {
+  try {
+    const records = await db.records.toArray();
+    if (records.length === 0) {
+      toast('لا توجد بيانات لتصديرها', 'error');
+      return;
+    }
+    
+    const dataStr = JSON.stringify(records, null, 2);
+    const blob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = new Date().toISOString().split('T')[0];
+    a.download = `NajafLab_Backup_${dateStr}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    toast('تم تصدير النسخة الاحتياطية بنجاح', 'success');
+  } catch (e) {
+    console.error(e);
+    toast('حدث خطأ أثناء التصدير', 'error');
+  }
+};
+
+$('#importDataBtn').onclick = () => {
+  $('#importFileInput').click();
+};
+
+$('#importFileInput').onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    try {
+      const importedData = JSON.parse(event.target.result);
+      if (!Array.isArray(importedData)) throw new Error('صيغة الملف غير صحيحة');
+      
+      if (!confirm(`سيتم استبدال جميع البيانات الحالية بـ ${importedData.length} سجل من الملف. هل أنت متأكد؟`)) {
+        e.target.value = ''; // تفريغ المدخل
+        return;
+      }
+
+      // مسح القاعدة الحالية وإضافة البيانات الجديدة
+      await db.records.clear();
+      await db.records.bulkAdd(importedData);
+      
+      toast('تم استيراد البيانات بنجاح! سيتم تحديث الصفحة.', 'success');
+      setTimeout(() => location.reload(), 1500);
+      
+    } catch (err) {
+      console.error(err);
+      toast('الملف غير صالح أو تالف', 'error');
+    }
+    e.target.value = ''; // تفريغ المدخل
+  };
+  reader.readAsText(file);
+};
+
+// --- نهاية الدفعة الثالثة ---
+</script>
+<script>
+// ==========================================
+// 1. الأدوات المساعدة (Utilities)
+// ==========================================
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+function toast(msg, type='success'){
+  const t=$('#toast');
+  t.textContent=msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>{
+    t.classList.remove('show');
+    setTimeout(()=>t.style.display='none', 300);
+  }, 3000);
+  t.style.display='block';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+// ==========================================
+// 2. إعداد قاعدة البيانات (Dexie.js / IndexedDB)
+// ==========================================
+// هذه القاعدة تحل مشكلة الـ localStorage (لا نهائية ولا تفقد البيانات بمسح المتصفح)
+const db = new Dexie('NajafLabDatabase');
+db.version(1).stores({
+  // الحقول المفهرسة للبحث السريع
+  records: 'id, name, date, phone, savedAt' 
+});
+
+// دالة نقل البيانات القديمة (من localStorage إلى Dexie) عند التحديث لأول مرة
+async function migrateOldData() {
+  try {
+    const oldData = localStorage.getItem('najafLabRecords');
+    if (oldData) {
+      const records = JSON.parse(oldData);
+      if (Array.isArray(records) && records.length > 0) {
+        // التحقق مما إذا كانت القاعدة الجديدة فارغة لتجنب التكرار
+        const count = await db.records.count();
+        if (count === 0) {
+          await db.records.bulkAdd(records);
+          console.log('تم نقل البيانات القديمة بنجاح إلى قاعدة البيانات الجديدة.');
+        }
+      }
+      // مسح البيانات القديمة لتوفير المساحة
+      localStorage.removeItem('najafLabRecords');
+    }
+  } catch (e) {
+    console.error('خطأ أثناء نقل البيانات القديمة:', e);
+  }
+}
+
+// ==========================================
+// 3. نظام الترخيص والتفعيل (License System)
+// ==========================================
+// ملاحظة: هذا كود تجريبي للتفعيل. سنقوم بإنشاء "مولد أكواد" لاحقاً.
+const LICENSE_SECRET = 'NAJAF_LAB_SECRET_2026'; // مفتاح التشفير
+
+function checkLicense() {
+  // قراءة كود التفعيل المحفوظ (نستخدم localStorage هنا لأنه صغير جداً)
+  const savedKey = localStorage.getItem('najafLabLicense');
+  const expiryDate = localStorage.getItem('najafLabExpiry');
+  
+  if (!savedKey || !expiryDate) {
+    showLicenseScreen();
+    return false;
+  }
+
+  // التحقق من تاريخ الانتهاء
+  const today = new Date();
+  const expiry = new Date(expiryDate);
+  
+  if (today > expiry) {
+    showLicenseScreen('انتهت صلاحية الاشتراك. يرجى التجديد.');
+    return false;
+  }
+
+  // إذا كان كل شيء سليماً، نخفي الشاشة ونكمل
+  $('#licenseOverlay').classList.add('hidden');
+  return true;
+}
+
+function showLicenseScreen(errorMsg = '') {
+  $('#licenseOverlay').classList.remove('hidden');
+  if (errorMsg) {
+    $('#licenseError').textContent = errorMsg;
+    $('#licenseError').style.display = 'block';
+  } else {
+    $('#licenseError').style.display = 'none';
+  }
+}
+
+// زر التفعيل
+$('#activateBtn').onclick = () => {
+  const key = $('#licenseKeyInput').value.trim().toUpperCase();
+  if (!key) {
+    showLicenseScreen('يرجى إدخال كود التفعيل أولاً.');
+    return;
+  }
+
+  // كود تجريبي (للتجربة فقط) - لاحقاً سنستخدم خوارزمية تشفير حقيقية
+  // صيغة الكود التجريبي: NAJAF-TRIAL-20271231
+  if (key === 'NAJAF-TRIAL-20271231') {
+    localStorage.setItem('najafLabLicense', key);
+    localStorage.setItem('najafLabExpiry', '2027-12-31');
+    toast('تم تفعيل النظام بنجاح!', 'success');
+    $('#licenseOverlay').classList.add('hidden');
+    location.reload(); // إعادة تحميل لتطبيق التغييرات
+  } else {
+    showLicenseScreen('كود التفعيل غير صحيح أو منتهي الصلاحية.');
+  }
+};
+
+// ==========================================
+// 4. النسخ الاحتياطي والاستعادة (Backup & Restore)
+// ==========================================
+$('#exportDataBtn').onclick = async () => {
+  try {
+    const records = await db.records.toArray();
+    if (records.length === 0) {
+      toast('لا توجد بيانات لتصديرها', 'error');
+      return;
+    }
+    
+    const dataStr = JSON.stringify(records, null, 2);
+    const blob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = new Date().toISOString().split('T')[0];
+    a.download = `NajafLab_Backup_${dateStr}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    toast('تم تصدير النسخة الاحتياطية بنجاح', 'success');
+  } catch (e) {
+    console.error(e);
+    toast('حدث خطأ أثناء التصدير', 'error');
+  }
+};
+
+$('#importDataBtn').onclick = () => {
+  $('#importFileInput').click();
+};
+
+$('#importFileInput').onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (event) => {
+    try {
+      const importedData = JSON.parse(event.target.result);
+      if (!Array.isArray(importedData)) throw new Error('صيغة الملف غير صحيحة');
+      
+      if (!confirm(`سيتم استبدال جميع البيانات الحالية بـ ${importedData.length} سجل من الملف. هل أنت متأكد؟`)) {
+        e.target.value = ''; // تفريغ المدخل
+        return;
+      }
+
+      // مسح القاعدة الحالية وإضافة البيانات الجديدة
+      await db.records.clear();
+      await db.records.bulkAdd(importedData);
+      
+      toast('تم استيراد البيانات بنجاح! سيتم تحديث الصفحة.', 'success');
+      setTimeout(() => location.reload(), 1500);
+      
+    } catch (err) {
+      console.error(err);
+      toast('الملف غير صالح أو تالف', 'error');
+    }
+    e.target.value = ''; // تفريغ المدخل
+  };
+  reader.readAsText(file);
+};
+
+// --- نهاية الدفعة الثالثة ---
+</script>
+// ==========================================
+// 5. منطق التنقل والواجهة (Navigation & UI)
 // ==========================================
 const sidebar = $('#sidebar');
 const sidebarOverlay = $('#sidebarOverlay');
@@ -790,9 +1154,7 @@ window.addEventListener('beforeunload', (e) => {
   if (isDirty) { e.preventDefault(); e.returnValue = 'لديك تغييرات غير محفوظة. هل أنت متأكد من مغادرة الصفحة؟'; }
 });
 
-// ==========================================
 // اختصارات لوحة المفاتيح
-// ==========================================
 window.addEventListener('keydown', (e) => {
   const isInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
   if (e.key === 'Escape') {
@@ -812,7 +1174,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 // ==========================================
-// كتالوج التحاليل
+// 6. كتالوج التحاليل
 // ==========================================
 const labCatalog = [
   { name: "Hemoglobin (Hb)", unit: "g/dL", range: "12 - 16" }, { name: "Hematocrit (Hct)", unit: "%", range: "36 - 50" },
@@ -881,156 +1243,13 @@ function flagOf(value, rangeStr){
 }
 
 // ==========================================
-// منطق البحث والسجل
-// ==========================================
-let searchDebounce = null;
-$('#searchBtn').onclick = performSearch;
-$('#searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
-$('#searchInput').addEventListener('input', () => {
-  clearTimeout(searchDebounce);
-  searchDebounce = setTimeout(performSearch, 500);
-});
-
-function performSearch() {
-  const query = $('#searchInput').value.trim().toLowerCase();
-  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
-  
-  $('#searchLoading').style.display = 'block';
-  $('#searchEmpty').style.display = 'none';
-  $('#searchResultsWrap').style.display = 'none';
-
-  setTimeout(() => {
-    $('#searchLoading').style.display = 'none';
-    if (!query) { $('#searchEmpty').textContent = 'أدخل كلمة للبحث...'; $('#searchEmpty').style.display = 'block'; return; }
-
-    const filtered = records.filter(r => 
-      (r.name && r.name.toLowerCase().includes(query)) || 
-      (r.id && r.id.toLowerCase().includes(query)) || 
-      (r.phone && r.phone.includes(query))
-    );
-
-    if (filtered.length === 0) { $('#searchEmpty').textContent = 'لم يتم العثور على نتائج مطابقة.'; $('#searchEmpty').style.display = 'block'; return; }
-
-    filtered.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
-
-    $('#searchResultsBody').innerHTML = filtered.map(r => `
-      <tr>
-        <td style="font-weight: 700; color: var(--navy-800);">${esc(r.id)}</td>
-        <td>${esc(r.name)}</td>
-        <td dir="ltr" style="text-align: right;">${esc(r.phone || '—')}</td>
-        <td>${esc(r.date)}</td>
-        <td>${(r.tests || []).length}</td>
-        <td style="display: flex; gap: 5px;">
-          <button class="btn primary small" onclick="openRecord('${r.id}')" title="فتح للتعديل">فتح</button>
-          <button class="btn gray small" onclick="viewHistory('${r.phone || r.name}')" title="سجل الزيارات">السجل</button>
-          <button class="btn green small" onclick="createNewVisit('${r.id}')" title="زيارة جديدة">زيارة جديدة</button>
-        </td>
-      </tr>
-    `).join('');
-    $('#searchResultsWrap').style.display = 'block';
-  }, 300);
-}
-
-function openRecord(id) {
-  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
-  const r = records.find(x => x.id === id);
-  if (!r) { toast('السجل غير موجود', 'error'); return; }
-
-  isDirty = false;
-  showPage('registrationView');
-  $('#patientId').value = r.id; $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
-  $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = r.note;
-  $('#resultNote').value = r.resultNote; $('#regDate').value = r.date || ''; $('#regTime').value = r.time || '';
-  $('#testsTable tbody').innerHTML = '';
-  (r.tests || []).forEach(t => addTestToTable(t.name, t.unit, t.range, t.value));
-  toast('تم فتح السجل بنجاح');
-}
-
-function createNewVisit(id) {
-  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
-  const r = records.find(x => x.id === id);
-  if (!r) return;
-
-  isDirty = false;
-  showPage('registrationView');
-  $('#patientId').value = '2026-' + String(Date.now()).slice(-5);
-  $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
-  $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = '';
-  $('#resultNote').value = 'يرجى متابعة الطبيب المختص.';
-  $('#regDate').value = ''; $('#testsTable tbody').innerHTML = ''; 
-  const now = new Date();
-  $('#regDate').value = now.toLocaleDateString('ar-IQ');
-  $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
-  toast('تم تجهيز زيارة جديدة لنفس المريض');
-}
-
-function viewHistory(key) {
-  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
-  const history = records.filter(r => r.phone === key || r.name === key);
-  if (history.length === 0) { toast('لا يوجد سجل سابق', 'error'); return; }
-
-  history.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
-  $('#historyPatientName').textContent = history[0].name;
-  
-  $('#historyTimeline').innerHTML = history.map((r, idx) => {
-    const compareBtn = idx < history.length - 1 ? 
-      `<button class="btn primary small" onclick="compareVisits('${history[idx+1].id}', '${r.id}')" style="margin-right: auto;">مقارنة مع السابق</button>` : '';
-    return `
-      <div class="history-item">
-        <div class="history-date"><span>${esc(r.date)} - ${esc(r.time)}</span><span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">ملف: ${esc(r.id)}</span></div>
-        <div class="history-details"><div>عدد التحاليل: ${(r.tests || []).length} | الطبيب المحول: ${esc(r.doctor || '—')}</div></div>
-        <div class="history-actions">
-          <button class="btn gray small" onclick="openRecord('${r.id}')">عرض السجل</button>
-          ${compareBtn}
-        </div>
-      </div>
-    `;
-  }).join('');
-  showPage('historyView');
-}
-
-function compareVisits(id1, id2) {
-  const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
-  const r1 = records.find(x => x.id === id1);
-  const r2 = records.find(x => x.id === id2);
-  if (!r1 || !r2) { toast('تعذر إيجاد السجلات', 'error'); return; }
-
-  $('#compareDate1').textContent = `الزيارة 1: ${r1.date}`;
-  $('#compareDate2').textContent = `الزيارة 2: ${r2.date}`;
-
-  const tests1 = r1.tests || [];
-  const tests2 = r2.tests || [];
-  const allTestNames = [...new Set([...tests1.map(t => t.name), ...tests2.map(t => t.name)])];
-
-  const rows = allTestNames.map(name => {
-    const t1 = tests1.find(t => t.name === name);
-    const t2 = tests2.find(t => t.name === name);
-    let warning = '';
-    if (t1 && t2) { if (t1.unit !== t2.unit || t1.range !== t2.range) warning = '<span style="color: var(--warning); font-size: 11px; display: block;">⚠️ اختلاف في الوحدة أو المدى</span>'; }
-    const val1 = t1 ? `${t1.value} ${t1.unit}` : '—';
-    const val2 = t2 ? `${t2.value} ${t2.unit}` : '—';
-    const f1 = t1 ? flagOf(t1.value, t1.range) : null;
-    const f2 = t2 ? flagOf(t2.value, t2.range) : null;
-    let statusText = '';
-    if (f1 && f2) {
-      if (f1.key !== f2.key) statusText = `<span style="color: var(--danger); font-weight: bold;">تغير الحالة (${f2.label})</span>`;
-      else statusText = `<span style="color: var(--success);">مستقر (${f2.label})</span>`;
-    }
-    return `<tr><td style="font-weight: 600;" dir="ltr">${esc(name)}</td><td dir="ltr">${esc((t1 || t2).unit)}</td><td style="color:${f1 && (f1.key==='high'||f1.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val1)}</td><td style="color:${f2 && (f2.key==='high'||f2.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val2)}</td><td>${statusText}${warning}</td></tr>`;
-  });
-
-  $('#compareTable tbody').innerHTML = rows.join('');
-  $('#compareModal').style.display = 'flex';
-}
-
-// ==========================================
-// وظائف النموذج والتقرير
+// 7. الجداول وإدخال التحاليل
 // ==========================================
 function addTestToTable(name, unit, range, savedValue = '') {
   const existing = Array.from(document.querySelectorAll('#testsTable tbody tr')).find(tr => tr.dataset.name === name);
   if (existing && !savedValue) {
     toast('هذا التحليل موجود بالفعل في القائمة', 'error');
-    existing.style.backgroundColor = 'var(--warning-bg)';
+    existing.style.backgroundColor = '#fef3c7';
     setTimeout(() => existing.style.backgroundColor = '', 1000);
     return;
   }
@@ -1052,7 +1271,6 @@ function addTestToTable(name, unit, range, savedValue = '') {
   `;
   
   const inp = tr.querySelector('.result-input');
-  
   const updateFlag = () => {
     const f = flagOf(inp.value, range);
     const badge = tr.cells[1].querySelector('.status');
@@ -1122,9 +1340,13 @@ function showPage(pageId) {
   }
 }
 
-function updateDashboard() {
+// ==========================================
+// 8. لوحة التحكم (محدثة لتتوافق مع قاعدة البيانات)
+// ==========================================
+async function updateDashboard() {
   try {
-    const records = JSON.parse(localStorage.getItem('najafLabRecords') || '[]');
+    // جلب البيانات من قاعدة البيانات الجديدة (Dexie)
+    const records = await db.records.toArray();
     const todayDate = new Date().toLocaleDateString('ar-IQ');
     let patientsToday = 0, newTestsToday = 0, pendingTests = 0, completedResults = 0;
     const activities = [];
@@ -1154,7 +1376,10 @@ function updateDashboard() {
         </div>
       `).join('');
     } else { $('#recentActivityList').innerHTML = '<div class="empty-state">لا توجد نشاطات حديثة.</div>'; }
-  } catch (e) { $('#recentActivityList').innerHTML = '<div class="empty-state" style="color:var(--danger); border-color:var(--danger);">تعذر تحميل البيانات.</div>'; }
+  } catch (e) { 
+    console.error(e);
+    $('#recentActivityList').innerHTML = '<div class="empty-state" style="color:var(--danger); border-color:var(--danger);">تعذر تحميل البيانات.</div>'; 
+  }
 }
 
 function maskName(name) {
@@ -1164,6 +1389,171 @@ function maskName(name) {
   return name;
 }
 
+// ==========================================
+// 9. البحث والسجل (محدثة لتتوافق مع قاعدة البيانات)
+// ==========================================
+let searchDebounce = null;
+$('#searchBtn').onclick = performSearch;
+$('#searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') performSearch(); });
+$('#searchInput').addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(performSearch, 500);
+});
+
+async function performSearch() {
+  const query = $('#searchInput').value.trim().toLowerCase();
+  
+  $('#searchLoading').style.display = 'block';
+  $('#searchEmpty').style.display = 'none';
+  $('#searchResultsWrap').style.display = 'none';
+
+  try {
+    const records = await db.records.toArray();
+    
+    setTimeout(() => {
+      $('#searchLoading').style.display = 'none';
+      if (!query) { $('#searchEmpty').textContent = 'أدخل كلمة للبحث...'; $('#searchEmpty').style.display = 'block'; return; }
+
+      const filtered = records.filter(r => 
+        (r.name && r.name.toLowerCase().includes(query)) || 
+        (r.id && r.id.toLowerCase().includes(query)) || 
+        (r.phone && r.phone.includes(query))
+      );
+
+      if (filtered.length === 0) { $('#searchEmpty').textContent = 'لم يتم العثور على نتائج مطابقة.'; $('#searchEmpty').style.display = 'block'; return; }
+
+      filtered.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+
+      $('#searchResultsBody').innerHTML = filtered.map(r => `
+        <tr>
+          <td style="font-weight: 700; color: var(--navy-800);">${esc(r.id)}</td>
+          <td>${esc(r.name)}</td>
+          <td dir="ltr" style="text-align: right;">${esc(r.phone || '—')}</td>
+          <td>${esc(r.date)}</td>
+          <td>${(r.tests || []).length}</td>
+          <td style="display: flex; gap: 5px;">
+            <button class="btn primary small" onclick="openRecord('${r.id}')" title="فتح للتعديل">فتح</button>
+            <button class="btn gray small" onclick="viewHistory('${r.phone || r.name}')" title="سجل الزيارات">السجل</button>
+            <button class="btn green small" onclick="createNewVisit('${r.id}')" title="زيارة جديدة">زيارة جديدة</button>
+          </td>
+        </tr>
+      `).join('');
+      $('#searchResultsWrap').style.display = 'block';
+    }, 300);
+  } catch (e) {
+    console.error(e);
+    $('#searchLoading').style.display = 'none';
+    toast('خطأ في جلب البيانات', 'error');
+  }
+}
+
+async function openRecord(id) {
+  try {
+    const r = await db.records.get(id);
+    if (!r) { toast('السجل غير موجود', 'error'); return; }
+
+    isDirty = false;
+    showPage('registrationView');
+    $('#patientId').value = r.id; $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
+    $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = r.note;
+    $('#resultNote').value = r.resultNote; $('#regDate').value = r.date || ''; $('#regTime').value = r.time || '';
+    $('#testsTable tbody').innerHTML = '';
+    (r.tests || []).forEach(t => addTestToTable(t.name, t.unit, t.range, t.value));
+    toast('تم فتح السجل بنجاح');
+  } catch(e) {
+    toast('حدث خطأ أثناء فتح السجل', 'error');
+  }
+}
+
+async function createNewVisit(id) {
+  try {
+    const r = await db.records.get(id);
+    if (!r) return;
+
+    isDirty = false;
+    showPage('registrationView');
+    $('#patientId').value = '2026-' + String(Date.now()).slice(-5);
+    $('#patientName').value = r.name; $('#age').value = r.age; $('#gender').value = r.gender;
+    $('#phone').value = r.phone; $('#doctor').value = r.doctor; $('#patientNote').value = '';
+    $('#resultNote').value = 'يرجى متابعة الطبيب المختص.';
+    $('#regDate').value = ''; $('#testsTable tbody').innerHTML = ''; 
+    const now = new Date();
+    $('#regDate').value = now.toLocaleDateString('ar-IQ');
+    $('#regTime').value = now.toLocaleTimeString('ar-IQ', {hour: '2-digit', minute:'2-digit'});
+    toast('تم تجهيز زيارة جديدة لنفس المريض');
+  } catch(e) {
+    toast('حدث خطأ', 'error');
+  }
+}
+
+async function viewHistory(key) {
+  try {
+    const records = await db.records.toArray();
+    const history = records.filter(r => r.phone === key || r.name === key);
+    if (history.length === 0) { toast('لا يوجد سجل سابق', 'error'); return; }
+
+    history.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+    $('#historyPatientName').textContent = history[0].name;
+    
+    $('#historyTimeline').innerHTML = history.map((r, idx) => {
+      const compareBtn = idx < history.length - 1 ? 
+        `<button class="btn primary small" onclick="compareVisits('${history[idx+1].id}', '${r.id}')" style="margin-right: auto;">مقارنة مع السابق</button>` : '';
+      return `
+        <div class="history-item">
+          <div class="history-date"><span>${esc(r.date)} - ${esc(r.time)}</span><span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">ملف: ${esc(r.id)}</span></div>
+          <div class="history-details"><div>عدد التحاليل: ${(r.tests || []).length} | الطبيب المحول: ${esc(r.doctor || '—')}</div></div>
+          <div class="history-actions">
+            <button class="btn gray small" onclick="openRecord('${r.id}')">عرض السجل</button>
+            ${compareBtn}
+          </div>
+        </div>
+      `;
+    }).join('');
+    showPage('historyView');
+  } catch(e) {
+    toast('حدث خطأ أثناء جلب السجل', 'error');
+  }
+}
+
+async function compareVisits(id1, id2) {
+  try {
+    const r1 = await db.records.get(id1);
+    const r2 = await db.records.get(id2);
+    if (!r1 || !r2) { toast('تعذر إيجاد السجلات', 'error'); return; }
+
+    $('#compareDate1').textContent = `الزيارة 1: ${r1.date}`;
+    $('#compareDate2').textContent = `الزيارة 2: ${r2.date}`;
+
+    const tests1 = r1.tests || [];
+    const tests2 = r2.tests || [];
+    const allTestNames = [...new Set([...tests1.map(t => t.name), ...tests2.map(t => t.name)])];
+
+    const rows = allTestNames.map(name => {
+      const t1 = tests1.find(t => t.name === name);
+      const t2 = tests2.find(t => t.name === name);
+      let warning = '';
+      if (t1 && t2) { if (t1.unit !== t2.unit || t1.range !== t2.range) warning = '<span style="color: var(--warning); font-size: 11px; display: block;">⚠️ اختلاف في الوحدة أو المدى</span>'; }
+      const val1 = t1 ? `${t1.value} ${t1.unit}` : '—';
+      const val2 = t2 ? `${t2.value} ${t2.unit}` : '—';
+      const f1 = t1 ? flagOf(t1.value, t1.range) : null;
+      const f2 = t2 ? flagOf(t2.value, t2.range) : null;
+      let statusText = '';
+      if (f1 && f2) {
+        if (f1.key !== f2.key) statusText = `<span style="color: var(--danger); font-weight: bold;">تغير الحالة (${f2.label})</span>`;
+        else statusText = `<span style="color: var(--success);">مستقر (${f2.label})</span>`;
+      }
+      return `<tr><td style="font-weight: 600;" dir="ltr">${esc(name)}</td><td dir="ltr">${esc((t1 || t2).unit)}</td><td style="color:${f1 && (f1.key==='high'||f1.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val1)}</td><td style="color:${f2 && (f2.key==='high'||f2.key==='low') ? 'var(--danger)' : 'inherit'}">${esc(val2)}</td><td>${statusText}${warning}</td></tr>`;
+    });
+
+    $('#compareTable tbody').innerHTML = rows.join('');
+    $('#compareModal').style.display = 'flex';
+  } catch(e) {
+    toast('خطأ في المقارنة', 'error');
+  }
+}
+// ==========================================
+// 10. بناء التقرير والطباعة
+// ==========================================
 function buildResultView() {
   const name=$('#patientName').value.trim();
   if(!name){toast('يرجى إدخال اسم المريض أولاً', 'error');$('#patientName').focus();return false;}
@@ -1208,7 +1598,10 @@ $('#pdfBtn').onclick = () => {
 
 $$('.back-to-home').forEach(btn => btn.onclick = () => showPage('registrationView'));
 
-$('#saveBtn').onclick = function() {
+// ==========================================
+// 11. حفظ السجل في قاعدة البيانات الجديدة (Dexie)
+// ==========================================
+$('#saveBtn').onclick = async function() {
   const nameInput = $('#patientName');
   const ageInput = $('#age');
   let valid = true;
@@ -1227,13 +1620,24 @@ $('#saveBtn').onclick = function() {
   if (btn.classList.contains('loading')) return;
   btn.classList.add('loading');
 
-  const record={id:$('#patientId').value,name:nameInput.value.trim(),date:$('#regDate').value,time:$('#regTime').value,age:ageInput.value,gender:$('#gender').value,phone:$('#phone').value,doctor:$('#doctor').value,note:$('#patientNote').value,resultNote:$('#resultNote').value,tests:getTests(),savedAt:new Date().toISOString()};
+  const record={
+    id: $('#patientId').value,
+    name: nameInput.value.trim(),
+    date: $('#regDate').value,
+    time: $('#regTime').value,
+    age: ageInput.value,
+    gender: $('#gender').value,
+    phone: $('#phone').value,
+    doctor: $('#doctor').value,
+    note: $('#patientNote').value,
+    resultNote: $('#resultNote').value,
+    tests: getTests(),
+    savedAt: new Date().toISOString()
+  };
   
   try{
-    const records=JSON.parse(localStorage.getItem('najafLabRecords')||'[]');
-    const i=records.findIndex(x=>x.id===record.id);
-    if(i>=0) records[i]=record; else records.push(record);
-    localStorage.setItem('najafLabRecords',JSON.stringify(records));
+    // الحفظ في قاعدة البيانات الجديدة
+    await db.records.put(record); 
     
     isDirty = false;
     
@@ -1245,8 +1649,9 @@ $('#saveBtn').onclick = function() {
     }, 600);
     
   }catch(e){ 
+    console.error(e);
     btn.classList.remove('loading');
-    toast('تعذر الحفظ، مساحة التخزين ممتلئة', 'error'); 
+    toast('تعذر الحفظ، حدث خطأ في قاعدة البيانات', 'error'); 
   }
 };
 
@@ -1255,6 +1660,9 @@ $('#clearBtn').onclick = () => {
   document.querySelector('[data-action="new"]').click();
 };
 
+// ==========================================
+// 12. نافذة إضافة التحاليل
+// ==========================================
 $('#addTest').onclick=()=>{ $('#modalBackdrop').style.display='flex'; $('#searchTestInput').value=''; $('#manualName').value=''; $('#manualUnit').value=''; $('#manualRange').value=''; renderTestList(''); $('#searchTestInput').focus(); };
 $('#cancelAdd').onclick=()=>$('#modalBackdrop').style.display='none';
 
@@ -1311,7 +1719,10 @@ $('#confirmManualAdd').onclick = () => {
 
 $('#selectAll').onchange=e=>{$$('#testsTable tbody input[type=checkbox]').forEach(c=>c.checked=e.target.checked); isDirty=true;};
 
-$$('.sidebtn').forEach(b=>b.onclick=()=>{
+// ==========================================
+// 13. التنقل الجانبي (Sidebar Actions)
+// ==========================================
+$$('.sidebtn').forEach(b=>b.onclick=async ()=>{
   const action=b.dataset.action;
   if (action !== 'new' && action !== 'entry' && action !== 'show' && isDirty) {
     if (!confirm('لديك تغييرات غير محفوظة. هل تريد المغادرة؟')) return;
@@ -1341,21 +1752,33 @@ $$('.sidebtn').forEach(b=>b.onclick=()=>{
     case 'show': if(buildResultView()) showPage('resultViewPage'); break;
     case 'print': $('#printBtn').click(); break;
     case 'reports': 
-      const count = JSON.parse(localStorage.getItem('najafLabRecords')||'[]').length;
-      alert(`إحصائيات النظام:\n- إجمالي المرضى المحفوظين: ${count}\n- حالة النظام: يعمل بكفاءة`);
+      const count = await db.records.count();
+      alert(`إحصائيات النظام:\n- إجمالي المرضى المحفوظين: ${count}\n- حالة النظام: يعمل بكفاءة (قاعدة بيانات IndexedDB)`);
       break;
     case 'backup':
-      const blob=new Blob([localStorage.getItem('najafLabRecords')||'[]'],{type:'application/json'});
-      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='najaf-lab-backup.json';a.click();
-      toast('تم إنشاء النسخة الاحتياطية');
+      $('#exportDataBtn').click();
       break;
     case 'exit': if(confirm('هل تريد إغلاق النظام؟')) window.close(); break;
     default: toast('قسم ( '+b.textContent.trim()+' ) قيد التطوير'); break;
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateDashboard();
+// ==========================================
+// 14. تشغيل النظام عند الإقلاع (Initialization)
+// ==========================================
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. فحص الترخيص أولاً
+  if (!checkLicense()) {
+    return; // إيقاف التنفيذ إذا كان غير مفعل
+  }
+
+  // 2. نقل البيانات القديمة إن وجدت
+  await migrateOldData();
+
+  // 3. تحديث لوحة التحكم
+  await updateDashboard();
+  
+  // 4. تركيز المؤشر
   if (window.innerWidth > 1024) {
     $('#patientName').focus();
   }
